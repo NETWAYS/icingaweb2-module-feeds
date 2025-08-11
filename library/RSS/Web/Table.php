@@ -5,6 +5,7 @@ namespace Icinga\Module\RSS\Web;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
+use ipl\Web\Widget\Link;
 
 class Table extends BaseHtmlElement
 {
@@ -23,6 +24,10 @@ class Table extends BaseHtmlElement
         $columns = [];
         foreach ($this->data as $row) {
             foreach($row as $key => $value) {
+                if (str_starts_with($key, '_')) {
+                    continue;
+                }
+
                 if (!in_array($key, $columns)) {
                     $columns[] = $key;
                 }
@@ -53,12 +58,19 @@ class Table extends BaseHtmlElement
         $rows = [];
         foreach ($this->data as $row) {
             $rowElements = [];
+            $link = $row['_link'] ?? null;
             foreach ($columns as $column) {
+                $text = '';
                 if (array_key_exists($column, $row)) {
-                    $rowElements[] = HtmlElement::create('td', null, [$row[$column]]);
-                } else {
-                    $rowElements[] = HtmlElement::create('td', null, ['']);
+                    $text = $row[$column];
                 }
+
+                if ($link !== null) {
+                    $text = new Link($text, $link, Attributes::create([
+                        'data-base-target' => '_next',
+                    ]));
+                }
+                $rowElements[] = HtmlElement::create('td', null, $text);
             }
             $rows[] = HtmlElement::create('tr', null, $rowElements);
         }
