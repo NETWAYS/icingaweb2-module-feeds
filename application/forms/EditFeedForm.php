@@ -2,16 +2,17 @@
 
 namespace Icinga\Module\RSS\Forms;
 
-use Icinga\Web\Notification;
 use ipl\Sql\Connection;
 use ipl\Web\Compat\CompatForm;
+use Icinga\Web\Notification;
 use Icinga\Module\RSS\Storage\StorageInterface;
 use Icinga\Module\RSS\Storage\FeedDefinition;
 
-class CreateFeedForm extends CompatForm
+class EditFeedForm extends CompatForm
 {
     public function __construct(
         protected StorageInterface $storage,
+        protected FeedDefinition $feed,
     ) {}
 
     protected function assemble(): void
@@ -63,7 +64,7 @@ class CreateFeedForm extends CompatForm
         /* $this->addElement($el); */
 
         $this->addElement('submit', 'submit', [
-            'label' => $this->translate('Submit')
+            'label' => $this->translate('Store')
         ]);
     }
 
@@ -72,13 +73,23 @@ class CreateFeedForm extends CompatForm
         $name = $this->getValue('name');
         $url = $this->getValue('url');
 
-        $feed = new FeedDefinition($name, $url);
+        $isRename = $name !== $this->feed->name;
 
-        if ($this->storage->getFeedByName($name) !== null) {
-            Notification::error("A feed with the name {$name} already exsits");
-            return;
+        if ($isRename) {
+            if ($this->storage->getFeedByName($name) !== null) {
+                Notification::error("A feed with the name {$name} already exsits");
+                return;
+            }
+            $this->storage->removeFeed($this->feed);
         }
 
-        $this->storage->addFeed($feed);
+        $this->feed->name = $name;
+        $this->feed->url = $url;
+
+        if ($isRename) {
+            $this->storage->addFeed($this->feed);
+        } else {
+            $this->storage->flush();
+        }
     }
 }

@@ -5,6 +5,7 @@ namespace Icinga\Module\RSS\Controllers;
 use Icinga\Module\RSS\RSSReader;
 use Icinga\Module\RSS\Web\Item;
 use Icinga\Module\RSS\Forms\CreateFeedForm;
+use Icinga\Module\RSS\Forms\EditFeedForm;
 use Icinga\Module\RSS\Storage\Filesystem;
 
 use Icinga\Web\Notification;
@@ -79,12 +80,6 @@ class FeedController extends CompatController
         $storage = new Filesystem();
         $form = new CreateFeedForm($storage);
 
-        /* $formData = [ */
-        /*     'name' => $this->params->get('name'), */
-        /*     'url' => $this->params->get('url'), */
-        /* ]; */
-        /* $form->populate($formData); */
-
         $form->on(CreateFeedForm::ON_SUCCESS, function () {
             $this->redirectNow('__CLOSE__');
         });
@@ -92,8 +87,38 @@ class FeedController extends CompatController
         $form->handleRequest($this->getServerRequest());
 
         $this->addContent($form);
+    }
 
-        /* $this->displayError('TODO: Implement form'); */
-        /* return; */
+    public function editAction(): void
+    {
+        /* $this->assertPermission('rss/edit'); */
+
+        $name = $this->params->shiftRequired('feed');
+
+        $storage = new Filesystem();
+
+        $feed = $storage->getFeedByName($name);
+        if ($feed === null) {
+            $this->displayError('Feed Not Found');
+            return;
+        }
+
+        $title = $this->translate('Edit Feed');
+        $this->setTitle($title);
+
+        $form = new EditFeedForm($storage, $feed);
+
+        $form->populate([
+            'name' => $feed->name,
+            'url' => $feed->url,
+        ]);
+
+        $form->on(EditFeedForm::ON_SUCCESS, function () {
+            $this->redirectNow('__CLOSE__');
+        });
+
+        $form->handleRequest($this->getServerRequest());
+
+        $this->addContent($form);
     }
 }

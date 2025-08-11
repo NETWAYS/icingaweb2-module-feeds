@@ -13,4 +13,6 @@ interface StorageInterface
     public function addFeed(FeedDefinition $feed): bool;
 
     public function reload(): void;
+    
+    public function flush(): void;
 }

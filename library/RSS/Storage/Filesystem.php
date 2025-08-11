@@ -94,7 +94,7 @@ class Filesystem implements StorageInterface
         return true;
     }
 
-    protected function flush(): void
+    public function flush(): void
     {
         $data = [
             'version' => self::VERSION,
