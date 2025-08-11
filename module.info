@@ -1,0 +1,6 @@
+Module: RSS
+Version: 0.1.0
+Requires:
+Description: Simple RSS Reader Module
+  This module fetches external RSS feeds and provides both merged and single
+  view.

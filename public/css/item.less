@@ -1,0 +1,67 @@
+@red: @color-critical;
+@green: @color-ok;
+@yellow: @color-warning;
+@purple: @color-unknown;
+@highlight: @icinga-blue;
+@border-color: @gray-lighter;
+@hover-bg: rgba(255, 255, 255, 0.02);
+@black: #535353;
+@white: #fff;
+
+.feed-items {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.feed-items li {
+    border-bottom: 1px solid @border-color;
+
+    &:hover {
+        background-color: @hover-bg;
+    }
+
+    &::marker { //Why is it even there
+        content: none;
+    }
+
+    &:last-child {
+        border-bottom: 0;
+    }
+}
+
+.feed-item {
+    padding: 0.3rem 0rem;
+    max-width: 100%;
+    width: 100%;
+    line-height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.feed-item-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.feed-item-icon {
+    aspect-ratio: 1/1;
+    width: 32px;
+    font-size: 1.3em;
+}
+
+.feed-content-wrapper {
+    max-width: 100%;
+    width: 100%;
+}
+
+.compact {
+    & .feed-item-icon {
+        width: 20px;
+    }
+}
