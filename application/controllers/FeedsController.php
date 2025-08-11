@@ -22,6 +22,7 @@ class FeedsController extends CompatController
             $data[] = [
                 'Name' => $feed->name,
                 'Link' => $feed->url,
+                '_link' => "RSS/feed/edit?feed={$feed->name}",
             ];
         }
 
