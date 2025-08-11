@@ -1,0 +1,30 @@
+@red: @color-critical;
+@green: @color-ok;
+@yellow: @color-warning;
+@purple: @color-unknown;
+@highlight: @icinga-blue;
+@border-color: @gray-lighter;
+@hover-bg: rgba(255, 255, 255, 0.02);
+@black: #535353;
+@white: #fff;
+
+.common-table {
+    max-width: 68em;
+
+    & th {
+        border-bottom: 1px solid var(--text-color, var(--white, @white));
+        padding-top: 0.5em;
+    }
+
+    & td {
+        border-bottom: 1px solid var(--gray-lighter, @border-color);
+        padding-top: 0.2em;
+        padding-bottom: 0.2em;
+        vertical-align: middle;
+
+        &:hover {
+            background-color: var(--tr-hover-color, @hover-bg);
+            cursor: pointer;
+        }
+    }
+}

@@ -5,3 +5,4 @@ $rssMenu = $this->menuSection('RSS')
     ->setUrl('RSS/feed/single');
 
 $this->provideCssFile('item.less');
+$this->provideCssFile('table.less');
