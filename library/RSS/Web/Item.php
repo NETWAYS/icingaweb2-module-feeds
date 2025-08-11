@@ -21,58 +21,91 @@ class Item extends BaseHtmlElement
         protected bool $compact,
     ) {}
 
-    protected function assemble(): void
+    protected function getTitleElement(): HtmlElement
+    {
+        $title = $this->item->title;
+        if ($title === null || $title === '') {
+            return HtmlElement::create(
+                'span',
+                Attributes::create([
+                    'class' => 'text-dim',
+                ]), [
+                    'No title provided',
+                ]);
+        } else {
+            return HtmlElement::create(
+                'span',
+                Attributes::create([]), [
+                    $this->item->title,
+                ]);
+        }
+    }
+
+    protected function getIconElement(): BaseHtmlElement
     {
         $image = $this->item->image ?? $this->channel->image;
         if ($image) {
-            $iconElement = HtmlElement::create('img',
+            return HtmlElement::create(
+                'img',
                 Attributes::create([
                     'class' => 'feed-item-icon',
                     'src' => $image,
                 ])
             );
         } else {
-            $iconElement = new Icon(
+            return new Icon(
                 'rss',
                 Attributes::create([
                     'class' => 'feed-item-icon',
                 ])
             );
         }
+    }
 
-        $contentElement = null;
-        if (!$this->compact && $this->item->description != null) {
-            // FIXME: This is horribly insecure
-            $description = new Text($this->item->description);
-            $description->setEscaped(true);
-            $contentElement = HtmlElement::create('div',
-                Attributes::create([
-                    'class' => 'feed-content-wrapper',
-                ]),
-                $description,
-            );
-        }
+    protected function getContentElement(): ?BaseHtmlElement
+    {
+        // FIXME: This is horribly insecure
+        $description = new Text($this->item->description);
+        $description->setEscaped(true);
+        return HtmlElement::create('div',
+            Attributes::create([
+                'class' => 'feed-content-wrapper',
+            ]),
+            $description,
+        );
+    }
 
+    protected function getLink(): ?string
+    {
+        return $this->item->link ?? $this->channel->link;
+    }
+
+    protected function assemble(): void
+    {
         $classes = ['feed-item'];
         if ($this->compact) {
             $classes[] = 'compact';
         }
+        $displayContent = !$this->compact && $this->item->description != null;
+        $hasLink = $this->getLink() !== null;
         $this->addHtml(
-            HtmlElement::create('div',
+            HtmlElement::create(
+                'div',
                 Attributes::create([
                     'class' => join(' ', $classes),
                 ]), [
-                    HtmlElement::create('a',
+                    HtmlElement::create(
+                        $hasLink ? 'a' : 'span',
                         Attributes::create([
                             'class' => 'feed-item-info',
                             'target' => '_blank',
-                            'href' => $this->item->link,
+                            'href' => $this->getLink(),
                         ]), [
-                            $iconElement,
-                            $this->item->title,
+                            $this->getIconElement(),
+                            $this->getTitleElement(),
                         ]
                     ),
-                    $contentElement,
+                    $displayContent ? $this->getContentElement() : null,
                 ]
             )
         );
