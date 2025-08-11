@@ -2,6 +2,9 @@
 
 namespace Icinga\Module\RSS;
 
+use Icinga\Module\RSS\Parser\Result\RSSChannel;
+use Icinga\Module\RSS\Parser\Result\RSSItem;
+
 use \SimpleXMLElement;
 use \Exception;
 
@@ -38,7 +41,7 @@ class RSSReader
         return [$headers, $response]; 
     }
 
-    public function fetch() {
+    public function fetch(): ?RSSChannel {
         [$headers, $rawResponse] = $this->fetchRaw();
 
         // FIXME: This assumes the request was successful
@@ -51,9 +54,7 @@ class RSSReader
 
         $xmlElement->rewind();
 
-        $channel = $this->parseChannel($xmlElement);
-
-        return $channel;
+        return $this->parseChannel($xmlElement);
     }
 
     protected function parseChannel(SimpleXMLElement $xml): RSSChannel

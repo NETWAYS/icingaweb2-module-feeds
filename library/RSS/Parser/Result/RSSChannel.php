@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\RSS;
+namespace Icinga\Module\RSS\Parser\Result;
 
 class RSSChannel
 {

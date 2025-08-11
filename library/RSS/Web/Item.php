@@ -8,8 +8,8 @@ use ipl\Html\HtmlElement;
 use ipl\Html\Text;
 use ipl\Web\Widget\Icon;
 
-use Icinga\Module\RSS\RSSChannel;
-use Icinga\Module\RSS\RSSItem;
+use Icinga\Module\RSS\Parser\Result\RSSChannel;
+use Icinga\Module\RSS\Parser\Result\RSSItem;
 
 class Item extends BaseHtmlElement
 {
@@ -24,7 +24,6 @@ class Item extends BaseHtmlElement
     protected function assemble(): void
     {
         $image = $this->item->image ?? $this->channel->image;
-        $iconElement = null;
         if ($image) {
             $iconElement = HtmlElement::create('img',
                 Attributes::create([
