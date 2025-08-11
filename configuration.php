@@ -2,7 +2,7 @@
 
 $rssMenu = $this->menuSection('RSS')
     ->setIcon('rss')
-    ->setUrl('RSS/feed/single');
+    ->setUrl('RSS/feeds');
 
 $this->provideCssFile('item.less');
 $this->provideCssFile('table.less');
