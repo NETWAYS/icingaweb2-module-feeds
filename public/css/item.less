@@ -44,7 +44,7 @@
     white-space: nowrap;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .feed-item-info {
@@ -68,6 +68,20 @@
 .feed-content-wrapper {
     width: 100%;
     white-space: normal;
+}
+
+.feed-item-categories {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 0.4em;
+}
+
+.feed-item-category {
+    padding: 0.2em 0.5em;
+    cursor: default;
+    background-color: @gray-lighter;
 }
 
 .compact {

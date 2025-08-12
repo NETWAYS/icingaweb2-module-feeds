@@ -119,6 +119,10 @@ class RSSParser
                     $dateString = $xmlItemElement->__toString();
                     $item->date = static::parseDateTime($dateString);
                     break;
+                case 'category':
+                    $category = $xmlItemElement->__toString();
+                    $item->categories[] = $category;
+                    break;
                 case 'image':
                     foreach($xmlItemElement as $imgTagName => $imgElement) {
                         if($imgTagName === 'url') {

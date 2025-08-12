@@ -60,6 +60,27 @@ class Item extends BaseHtmlElement
         }
     }
 
+    protected function getCategoriesElement(): ?BaseHtmlElement
+    {
+        $elements = [];
+        foreach ($this->item->categories as $category) {
+            $elements[] = HtmlElement::create(
+                'span',
+                Attributes::create([
+                    'class' => 'feed-item-category',
+                ]),
+                $category,
+            );
+        }
+        return HtmlElement::create(
+            'div',
+            Attributes::create([
+                'class' => 'feed-item-categories',
+            ]),
+            $elements,
+        );
+    }
+
     protected function getContentElement(): ?BaseHtmlElement
     {
         // FIXME: This is horribly insecure
@@ -103,7 +124,10 @@ class Item extends BaseHtmlElement
                             $this->getTitleElement(),
                         ]
                     ),
-                    $displayContent ? $this->getContentElement() : null,
+                    $displayContent ? [
+                        $this->getCategoriesElement(),
+                        $this->getContentElement(),
+                    ] : null,
                 ]
             )
         );
