@@ -10,6 +10,8 @@ use Icinga\Module\RSS\Storage\FeedDefinition;
 
 class EditFeedForm extends CompatForm
 {
+    protected ?string $deleteButtonName = null;
+
     public function __construct(
         protected StorageInterface $storage,
         protected FeedDefinition $feed,
@@ -51,45 +53,67 @@ class EditFeedForm extends CompatForm
         /*         'hard' => $this->translate('Use HARD states'), */
         /*     ) */
         /* )); */
-
-        /* $label = $this->translate('Delete'); */
-        /* $el = $this->createElement( */
-        /*     'submit', */
-        /*     $label, */
-        /*     [ */
-        /*         'data-base-target' => '_main', */
-        /*     ]) */
-        /*     ->setLabel($label); */
-        /* $this->deleteButtonName = $el->getName(); */
-        /* $this->addElement($el); */
-
+        
         $this->addElement('submit', 'submit', [
             'label' => $this->translate('Store')
         ]);
+
+        $label = $this->translate('Delete');
+        $this->deleteButtonName = $label;
+        $this->addElement('submit', 'submit', [
+            'label' => $label,
+        ]);
     }
 
-    protected function onSuccess()
+    public function hasBeenSubmitted(): bool
     {
-        $name = $this->getValue('name');
-        $url = $this->getValue('url');
-
-        $isRename = $name !== $this->feed->name;
-
-        if ($isRename) {
-            if ($this->storage->getFeedByName($name) !== null) {
-                Notification::error("A feed with the name {$name} already exsits");
-                return;
-            }
-            $this->storage->removeFeed($this->feed);
+        if (! $this->hasBeenSent()) {
+            return false;
         }
 
-        $this->feed->name = $name;
-        $this->feed->url = $url;
+        return true;
+    }
 
-        if ($isRename) {
-            $this->storage->addFeed($this->feed);
-        } else {
-            $this->storage->flush();
+    public function hasDeleteButton(): bool
+    {
+        return $this->deleteButtonName !== null;
+    }
+
+    public function shouldBeDeleted()
+    {
+        if (!$this->hasDeleteButton()) {
+            return false;
+        }
+
+        return $this->getElement('submit')->hasBeenPressed();
+    }
+
+    protected function onSuccess(): void
+    {
+        if ($this->shouldBeDeleted()) {
+            $this->storage->removeFeed($this->feed);
+        } else if ($this->getSubmitButton()->hasBeenPressed() ?? false) {
+            $name = $this->getValue('name');
+            $url = $this->getValue('url');
+
+            $isRename = $name !== $this->feed->name;
+
+            if ($isRename) {
+                if ($this->storage->getFeedByName($name) !== null) {
+                    Notification::error("A feed with the name {$name} already exists");
+                    return;
+                }
+                $this->storage->removeFeed($this->feed);
+            }
+
+            $this->feed->name = $name;
+            $this->feed->url = $url;
+
+            if ($isRename) {
+                $this->storage->addFeed($this->feed);
+            } else {
+                $this->storage->flush();
+            }
         }
     }
 }
