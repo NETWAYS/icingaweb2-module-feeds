@@ -7,29 +7,17 @@ use Icinga\Module\RSS\Web\Item;
 use Icinga\Module\RSS\Forms\CreateFeedForm;
 use Icinga\Module\RSS\Forms\EditFeedForm;
 use Icinga\Module\RSS\Storage\Filesystem;
+use Icinga\Module\RSS\Controller\RSSController;
 
 use Icinga\Web\Notification;
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
-use ipl\Web\Compat\CompatController;
 
 use \Exception;
 use \DateTime;
 
-class FeedController extends CompatController
+class FeedController extends RSSController
 {
-    protected function displayError(string $msg): void
-    {
-        $this->addContent(HtmlElement::create(
-            'p',
-            Attributes::create([
-                'tabindex' => -1,
-                'class' => 'autofocus error-message',
-            ]),
-            $msg
-        ));
-    }
-
     public function indexAction(): void
     {
         $url = null;
@@ -61,11 +49,7 @@ class FeedController extends CompatController
             return;
         }
 
-        $title = $name . ' ' . $this->translate("Feed");
-        $this->addControl(
-            HtmlElement::create('h1', null, $title)
-        );
-        $this->setTitle($title);
+        $this->addTitle($this->translate("Feed"));
 
         $limit = $this->params->shift('limit') ?? 50;
         $compact = ($this->params->shift('view') ?? 'minimal') === 'minimal';
@@ -79,31 +63,12 @@ class FeedController extends CompatController
             }
         }
 
-        $index = 1;
-        $items = [];
-        foreach ($data->getItems() as $item) {
-            if ($date !== null && $item->date < $date) {
-                continue;
-            }
-            $items[] = new Item($item, $compact);
-            $index++;
-            if ($index > $limit) {
-                break;
-            }
-        }
-
-        if (count($items) == 0) {
-            $this->displayError('No news to display');
-            return;
-        }
-
-        $list = HtmlElement::create(
-            'ul',
-            Attributes::create(['class' => 'feed-items']),
-            $items
+        $this->renderItems(
+            $data->getItems(),
+            $limit,
+            $date,
+            $compact,
         );
-
-        $this->addContent($list);
 
         $this->setAutorefreshInterval(300);
     }
@@ -112,11 +77,7 @@ class FeedController extends CompatController
     {
         /* $this->assertPermission('rss/create'); */
 
-        $title = $this->translate('Create a new Feed');
-        $this->addControl(
-            HtmlElement::create('h1', null, $title)
-        );
-        $this->setTitle($title);
+        $this->addTitle($this->translate('Create a new Feed'));
 
         $storage = new Filesystem();
         $form = new CreateFeedForm($storage);
@@ -134,11 +95,7 @@ class FeedController extends CompatController
     {
         /* $this->assertPermission('rss/edit'); */
 
-        $title = $this->translate('Edit Feed');
-        $this->addControl(
-            HtmlElement::create('h1', null, $title)
-        );
-        $this->setTitle($title);
+        $this->addTitle($this->translate('Edit Feed'));
 
         $name = $this->params->shiftRequired('feed');
         $storage = new Filesystem();

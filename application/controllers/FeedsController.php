@@ -6,36 +6,20 @@ use Icinga\Module\RSS\RSSReader;
 use Icinga\Module\RSS\Storage\Filesystem;
 use Icinga\Module\RSS\Web\Table;
 use Icinga\Module\RSS\Web\Item;
+use Icinga\Module\RSS\Controller\RSSController;
 
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
-use ipl\Web\Compat\CompatController;
 use ipl\Web\Widget\Link;
 
 use \Exception;
 use \DateTime;
 
-class FeedsController extends CompatController
+class FeedsController extends RSSController
 {
-    protected function displayError(string $msg): void
-    {
-        $this->addContent(HtmlElement::create(
-            'p',
-            Attributes::create([
-                'tabindex' => -1,
-                'class' => 'autofocus error-message',
-            ]),
-            $msg
-        ));
-    }
-
     public function indexAction(): void
     {
-        $title = $this->translate('Feeds');
-        $this->addControl(
-            HtmlElement::create('h1', null, $title)
-        );
-        $this->setTitle($title);
+        $this->addTitle($this->translate('Feeds'));
 
         $storage = new Filesystem();
 
@@ -84,42 +68,19 @@ class FeedsController extends CompatController
             return -($a->compareDate($b));
         });
 
-        $index = 1;
-        $elements = [];
-        foreach ($items as $item) {
-            if ($date !== null && $item->date < $date) {
-                continue;
-            }
-            $elements[] = new Item($item, $compact);
-            $index++;
-            if ($index > $limit) {
-                break;
-            }
-        }
-
-        if (count($items) == 0) {
-            $this->displayError('No news to display');
-            return;
-        }
-
-        $list = HtmlElement::create(
-            'ul',
-            Attributes::create(['class' => 'feed-items']),
-            $elements
+        $this->renderItems(
+            $items,
+            $limit,
+            $date,
+            $compact,
         );
-
-        $this->addContent($list);
 
         $this->setAutorefreshInterval(300);
     }
 
     public function listAction(): void
     {
-        $title = $this->translate('List Feeds');
-        $this->addControl(
-            HtmlElement::create('h1', null, $title)
-        );
-        $this->setTitle($title);
+        $this->addTitle($this->translate('List Feeds'));
 
         $this->addControl(
             new Link('Add', 'RSS/feed/create', Attributes::create([
