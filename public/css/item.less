@@ -78,10 +78,18 @@
     gap: 0.4em;
 }
 
-.feed-item-category {
+.feed-item-category,
+.feed-item-creator {
     padding: 0.2em 0.5em;
     cursor: default;
     background-color: @gray-lighter;
+}
+
+.feed-item-creator {
+    font-weight: bold;
+    box-sizing: border-box;
+    color: @highlight;
+    border: 1px solid @highlight;
 }
 
 .compact {

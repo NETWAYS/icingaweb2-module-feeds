@@ -63,6 +63,15 @@ class Item extends BaseHtmlElement
     protected function getCategoriesElement(): ?BaseHtmlElement
     {
         $elements = [];
+        if ($this->item->creator !== null) {
+            $elements[] = HtmlElement::create(
+                'span',
+                Attributes::create([
+                    'class' => 'feed-item-creator',
+                ]),
+                $this->item->creator,
+            );
+        }
         foreach ($this->item->categories as $category) {
             $elements[] = HtmlElement::create(
                 'span',
