@@ -3,7 +3,6 @@
 namespace Icinga\Module\RSS\Forms;
 
 use Icinga\Web\Notification;
-use ipl\Sql\Connection;
 use ipl\Web\Compat\CompatForm;
 use Icinga\Module\RSS\Storage\StorageInterface;
 use Icinga\Module\RSS\Storage\FeedDefinition;
