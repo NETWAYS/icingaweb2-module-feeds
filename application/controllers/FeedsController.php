@@ -79,7 +79,7 @@ class FeedsController extends CompatController
             return -($a->compareDate($b));
         });
 
-        $index = 0;
+        $index = 1;
         $elements = [];
         foreach ($items as $item) {
             $elements[] = new Item($item, $compact);

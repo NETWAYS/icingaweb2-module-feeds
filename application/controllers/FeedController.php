@@ -69,7 +69,7 @@ class FeedController extends CompatController
         $limit = $this->params->shift('limit') ?? 50;
         $compact = ($this->params->shift('view') ?? 'minimal') === 'minimal';
 
-        $index = 0;
+        $index = 1;
         $items = [];
         foreach ($data->getItems() as $item) {
             $items[] = new Item($item, $compact);
