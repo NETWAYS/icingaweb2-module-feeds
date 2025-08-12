@@ -31,7 +31,21 @@ class FeedController extends CompatController
 
     public function singleAction(): void
     {
-        $url = $this->params->shift('url');
+        $url = null;
+        $name = $this->params->shift('feed');
+        if ($name !== null && $name !== '') {
+            $storage = new Filesystem();
+            $feed = $storage->getFeedByName($name);
+            if ($feed === null) {
+                $this->displayError('Feed not found');
+                return;
+            }
+            $url = $feed->url;
+        }
+
+        if ($url === null) {
+            $url = $this->params->shift('url');
+        }
 
         if ($url === null or $url === '') {
             $this->displayError('No feed configured');
