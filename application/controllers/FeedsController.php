@@ -13,6 +13,7 @@ use ipl\Web\Compat\CompatController;
 use ipl\Web\Widget\Link;
 
 use \Exception;
+use \DateTime;
 
 class FeedsController extends CompatController
 {
@@ -44,6 +45,15 @@ class FeedsController extends CompatController
         }
         $limit = $this->params->shift('limit') ?? 50;
         $compact = ($this->params->shift('view') ?? 'minimal') === 'minimal';
+        $date = $this->params->shift('date');
+        if ($date !== null) {
+            try {
+                $date = new DateTime($date);
+            } catch (Exception $ex) {
+                $this->displayError('Invalid date');
+                return;
+            }
+        }
 
         $items = [];
         $feedsCounter = 0;
@@ -69,11 +79,6 @@ class FeedsController extends CompatController
             return;
         }
 
-        if (count($items) == 0) {
-            $this->displayError('No news to display');
-            return;
-        }
-
         // Sort items
         usort($items, function($a, $b) {
             return -($a->compareDate($b));
@@ -82,11 +87,19 @@ class FeedsController extends CompatController
         $index = 1;
         $elements = [];
         foreach ($items as $item) {
+            if ($date !== null && $item->date < $date) {
+                continue;
+            }
             $elements[] = new Item($item, $compact);
             $index++;
             if ($index > $limit) {
                 break;
             }
+        }
+
+        if (count($items) == 0) {
+            $this->displayError('No news to display');
+            return;
         }
 
         $list = HtmlElement::create(

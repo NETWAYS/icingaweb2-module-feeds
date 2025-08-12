@@ -14,6 +14,7 @@ use ipl\Html\HtmlElement;
 use ipl\Web\Compat\CompatController;
 
 use \Exception;
+use \DateTime;
 
 class FeedController extends CompatController
 {
@@ -68,10 +69,22 @@ class FeedController extends CompatController
 
         $limit = $this->params->shift('limit') ?? 50;
         $compact = ($this->params->shift('view') ?? 'minimal') === 'minimal';
+        $date = $this->params->shift('date');
+        if ($date !== null) {
+            try {
+                $date = new DateTime($date);
+            } catch (Exception $ex) {
+                $this->displayError('Invalid date');
+                return;
+            }
+        }
 
         $index = 1;
         $items = [];
         foreach ($data->getItems() as $item) {
+            if ($date !== null && $item->date < $date) {
+                continue;
+            }
             $items[] = new Item($item, $compact);
             $index++;
             if ($index > $limit) {
