@@ -20,6 +20,13 @@ class FeedController extends RSSController
 {
     public function indexAction(): void
     {
+        $this->getTabs()
+            ->add('view', [
+                'label'     => $this->translate('View'),
+                'url'       => $this->getRequest()->getUrl()
+            ])
+            ->activate('view');
+
         $this->addTitle($this->translate("Feed"));
         $url = $this->getFeedUrl();
         if ($url === null) {
@@ -81,6 +88,8 @@ class FeedController extends RSSController
     {
         /* $this->assertPermission('rss/create'); */
 
+        $this->getTabs()->disableLegacyExtensions();
+
         $this->addTitle($this->translate('Create a new Feed'));
 
         $storage = new Filesystem();
@@ -98,6 +107,8 @@ class FeedController extends RSSController
     public function editAction(): void
     {
         /* $this->assertPermission('rss/edit'); */
+
+        $this->getTabs()->disableLegacyExtensions();
 
         $this->addTitle($this->translate('Edit Feed'));
 

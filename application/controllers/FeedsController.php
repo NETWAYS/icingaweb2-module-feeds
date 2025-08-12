@@ -17,8 +17,24 @@ use \DateTime;
 
 class FeedsController extends RSSController
 {
+    protected function addTabs(string $active): void
+    {
+        $this->getTabs()
+            ->add('view', [
+                'label'     => $this->translate('View'),
+                'url'       => 'RSS/feeds'
+            ])
+            ->add('list', [
+                'label'     => $this->translate('List'),
+                'url'       => 'RSS/feeds/list'
+            ])
+            ->activate($active)
+            ->disableLegacyExtensions();
+    }
+
     public function indexAction(): void
     {
+        $this->addTabs('view');
         $this->addTitle($this->translate('Feeds'));
         $feeds = $this->params->shift('feeds');
         if ($feeds !== null) {
@@ -78,6 +94,7 @@ class FeedsController extends RSSController
 
     public function listAction(): void
     {
+        $this->addTabs('list');
         $this->addTitle($this->translate('List Feeds'));
 
         $this->addControl(
