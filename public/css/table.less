@@ -16,15 +16,19 @@
         padding-top: 0.5em;
     }
 
+    & tbody tr:hover {
+        background-color: var(--tr-hover-color, @hover-bg);
+        cursor: pointer;
+    }
+
     & td {
         border-bottom: 1px solid var(--gray-lighter, @border-color);
         padding-top: 0.2em;
         padding-bottom: 0.2em;
         vertical-align: middle;
+    }
 
-        &:hover {
-            background-color: var(--tr-hover-color, @hover-bg);
-            cursor: pointer;
-        }
+    & td > * {
+        display: block;
     }
 }
