@@ -20,9 +20,6 @@ class FeedsController extends RSSController
     public function indexAction(): void
     {
         $this->addTitle($this->translate('Feeds'));
-
-        $storage = new Filesystem();
-
         $feeds = $this->params->shift('feeds');
         if ($feeds !== null) {
             $feeds = explode(',', $feeds);
@@ -39,6 +36,7 @@ class FeedsController extends RSSController
             }
         }
 
+        $storage = new Filesystem();
         $items = [];
         $feedsCounter = 0;
         foreach ($storage->getFeeds() as $feed) {

@@ -20,24 +20,9 @@ class FeedController extends RSSController
 {
     public function indexAction(): void
     {
-        $url = null;
-        $name = $this->params->shift('feed');
-        if ($name !== null && $name !== '') {
-            $storage = new Filesystem();
-            $feed = $storage->getFeedByName($name);
-            if ($feed === null) {
-                $this->displayError('Feed not found');
-                return;
-            }
-            $url = $feed->url;
-        }
-
+        $this->addTitle($this->translate("Feed"));
+        $url = $this->getFeedUrl();
         if ($url === null) {
-            $url = $this->params->shift('url');
-        }
-
-        if ($url === null or $url === '') {
-            $this->displayError('No feed configured');
             return;
         }
 
@@ -49,18 +34,11 @@ class FeedController extends RSSController
             return;
         }
 
-        $this->addTitle($this->translate("Feed"));
-
-        $limit = $this->params->shift('limit') ?? 50;
-        $compact = ($this->params->shift('view') ?? 'minimal') === 'minimal';
-        $date = $this->params->shift('date');
-        if ($date !== null) {
-            try {
-                $date = new DateTime($date);
-            } catch (Exception $ex) {
-                $this->displayError('Invalid date');
-                return;
-            }
+        $limit = $this->getLimitParam();
+        $compact = $this->getViewParam() === 'minimal';
+        $date = $this->getDateParam();
+        if ($date === false) {
+            return;
         }
 
         $this->renderItems(
@@ -71,6 +49,32 @@ class FeedController extends RSSController
         );
 
         $this->setAutorefreshInterval(300);
+    }
+
+    protected function getFeedUrl(): ?string
+    {
+        $url = null;
+        $name = $this->params->shift('feed');
+        if ($name !== null && $name !== '') {
+            $storage = new Filesystem();
+            $feed = $storage->getFeedByName($name);
+            if ($feed === null) {
+                $this->displayError('Feed not found');
+                return null;
+            }
+            $url = $feed->url;
+        }
+
+        if ($url === null) {
+            $url = $this->params->shift('url');
+        }
+
+        if ($url === null or $url === '') {
+            $this->displayError('No feed configured');
+            return null;
+        }
+
+        return $url;
     }
 
     public function createAction(): void

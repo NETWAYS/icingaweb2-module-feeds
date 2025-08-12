@@ -68,4 +68,39 @@ class RSSController extends CompatController
 
         $this->addContent($list);
     }
+
+    protected function getLimitParam(): int
+    {
+        $limit = $this->params->shift('limit') ?? 200;
+
+        if ($limit <= 0) {
+            $limit = 1;
+        }
+
+        if ($limit > 5000) {
+            $limit = 5000;
+        }
+
+        return $limit;
+    }
+
+    protected function getViewParam(): string
+    {
+        return $this->params->shift('view') ?? 'minimal';
+    }
+
+    protected function getDateParam(): DateTime|bool|null
+    {
+        $date = $this->params->shift('date');
+        if ($date !== null) {
+            try {
+                $date = new DateTime($date);
+                return $date;
+            } catch (Exception $ex) {
+                $this->displayError('Invalid date');
+                return false;
+            }
+        }
+        return null;
+    }
 }
