@@ -72,7 +72,7 @@ class FeedController extends CompatController
         $index = 0;
         $items = [];
         foreach ($data->getItems() as $item) {
-            $items[] = new Item($data, $item, $compact);
+            $items[] = new Item($item, $compact);
             $index++;
             if ($index > $limit) {
                 break;

@@ -8,7 +8,6 @@ use ipl\Html\HtmlElement;
 use ipl\Html\Text;
 use ipl\Web\Widget\Icon;
 
-use Icinga\Module\RSS\Parser\Result\RSSChannel;
 use Icinga\Module\RSS\Parser\Result\RSSItem;
 
 class Item extends BaseHtmlElement
@@ -16,7 +15,6 @@ class Item extends BaseHtmlElement
     protected $tag = 'li';
 
     public function __construct(
-        protected RSSChannel $channel,
         protected RSSItem $item,
         protected bool $compact,
     ) {}
@@ -43,7 +41,7 @@ class Item extends BaseHtmlElement
 
     protected function getIconElement(): BaseHtmlElement
     {
-        $image = $this->item->image ?? $this->channel->image;
+        $image = $this->item->image ?? $this->item->channel->image;
         if ($image) {
             return HtmlElement::create(
                 'img',
@@ -77,7 +75,7 @@ class Item extends BaseHtmlElement
 
     protected function getLink(): ?string
     {
-        return $this->item->link ?? $this->channel->link;
+        return $this->item->link ?? $this->item->channel->link;
     }
 
     protected function assemble(): void
