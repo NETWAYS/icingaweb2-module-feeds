@@ -60,6 +60,12 @@ class FeedController extends CompatController
             return;
         }
 
+        $title = $name . ' ' . $this->translate("Feed");
+        $this->addControl(
+            HtmlElement::create('h1', null, $title)
+        );
+        $this->setTitle($title);
+
         $limit = $this->params->shift('limit') ?? 50;
         $compact = ($this->params->shift('view') ?? 'minimal') === 'minimal';
 
