@@ -60,9 +60,13 @@ class EditFeedForm extends CompatForm
 
         $label = $this->translate('Delete');
         $this->deleteButtonName = $label;
-        $this->addElement('submit', 'submit', [
+        $deleteButton = $this->createElement('submit', 'delete', [
             'label' => $label,
         ]);
+        $this->registerElement($deleteButton);
+        $this->getElement('submit')
+            ->getWrapper()
+            ->prepend($deleteButton);
     }
 
     public function hasBeenSubmitted(): bool
@@ -85,7 +89,7 @@ class EditFeedForm extends CompatForm
             return false;
         }
 
-        return $this->getElement('submit')->hasBeenPressed();
+        return $this->getElement('delete')->hasBeenPressed();
     }
 
     protected function onSuccess(): void
