@@ -22,14 +22,7 @@ class RSSChannel
     {
         if (!$this->sorted) {
             usort($this->items, function($a, $b) {
-                $ad = $a->date;
-                $bd = $b->date;
-
-                if ($ad == $bd) {
-                    return 0;
-                }
-
-                return $ad < $bd ? 1 : -1;
+                return -($a->compareDate($b));
             });
             $this->sorted = true;
         }
