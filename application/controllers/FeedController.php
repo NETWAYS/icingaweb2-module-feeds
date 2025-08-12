@@ -29,7 +29,7 @@ class FeedController extends CompatController
         ));
     }
 
-    public function singleAction(): void
+    public function indexAction(): void
     {
         $url = null;
         $name = $this->params->shift('feed');
