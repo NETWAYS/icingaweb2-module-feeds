@@ -7,6 +7,8 @@ use Icinga\Module\RSS\Parser\Result\RSSItem;
 
 use \SimpleXMLElement;
 use \Exception;
+use \DateTime;
+use \DateTimeInterface;
 
 class RSS1Parser
 {
@@ -58,11 +60,48 @@ class RSS1Parser
         return $channel;
     }
 
+    protected static function parseDateTime(string $dateStr): ?DateTime
+    {
+        $datetime = DateTime::createFromFormat(
+            DateTimeInterface::RFC822,
+            $dateStr,
+        );
+
+        if ($datetime === false) {
+            $datetime = DateTime::createFromFormat(
+                DateTimeInterface::RFC7231,
+                $dateStr,
+            );
+        }
+
+        if ($datetime === false) {
+            $datetime = DateTime::createFromFormat(
+                DateTimeInterface::RFC7231,
+                $dateStr,
+            );
+        }
+
+        if ($datetime === false) {
+            try {
+                $datetime = new DateTime($dateStr);
+            } catch (Exception $ex) {
+                // NOTE: Nothing to do here, but be ultimately failed to parse
+                // the time
+                $datetime = false;
+            }
+        }
+
+        if ($datetime === false) {
+            return null;
+        }
+
+        return $datetime;
+    }
+
     protected static function parseItem(SimpleXMLElement $xml): RSSItem
     {
         // TODO: Check if the element is of the right type
         // TODO: Implement creator
-        // TODO: Implement date
         $item = new RSSItem();
 
         foreach ($xml->children() as $elementName => $xmlItemElement) {
@@ -75,6 +114,10 @@ class RSS1Parser
                     break;
                 case 'description':
                     $item->description = $xmlItemElement->__toString();
+                    break;
+                case 'pubDate':
+                    $dateString = $xmlItemElement->__toString();
+                    $item->date = static::parseDateTime($dateString);
                     break;
                 case 'image':
                     foreach($xmlItemElement as $imgTagName => $imgElement) {

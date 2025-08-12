@@ -2,6 +2,8 @@
 
 namespace Icinga\Module\RSS\Parser\Result;
 
+use \DateTime;
+
 class RSSItem
 {
     public ?string $title = null;
@@ -10,4 +12,5 @@ class RSSItem
     public array $categories = [];
     public ?string $creator = null;
     public ?string $image = null;
+    public ?DateTime $date = null;
 }
