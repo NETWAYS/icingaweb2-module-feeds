@@ -89,6 +89,9 @@ class FeedController extends CompatController
         /* $this->assertPermission('rss/create'); */
 
         $title = $this->translate('Create a new Feed');
+        $this->addControl(
+            HtmlElement::create('h1', null, $title)
+        );
         $this->setTitle($title);
 
         $storage = new Filesystem();
@@ -107,8 +110,13 @@ class FeedController extends CompatController
     {
         /* $this->assertPermission('rss/edit'); */
 
-        $name = $this->params->shiftRequired('feed');
+        $title = $this->translate('Edit Feed');
+        $this->addControl(
+            HtmlElement::create('h1', null, $title)
+        );
+        $this->setTitle($title);
 
+        $name = $this->params->shiftRequired('feed');
         $storage = new Filesystem();
 
         $feed = $storage->getFeedByName($name);

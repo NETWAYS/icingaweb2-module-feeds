@@ -9,11 +9,18 @@ use Icinga\Module\RSS\Web\Table;
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
 use ipl\Web\Compat\CompatController;
+use ipl\Web\Widget\Link;
 
 class FeedsController extends CompatController
 {
     public function indexAction(): void
     {
+        $title = $this->translate('Feeds');
+        $this->addControl(
+            HtmlElement::create('h1', null, $title)
+        );
+        $this->setTitle($title);
+
         $storage = new Filesystem();
         $feeds = $storage->getFeeds();
 
