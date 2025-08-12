@@ -50,7 +50,7 @@ class RSS1Parser
                     break;
                 case 'item':
                     $item = static::parseItem($xmlItemElement);
-                    $channel->items[] = $item;
+                    $channel->addItem($item);
                     break;
             }
         }

@@ -8,5 +8,15 @@ class RSSChannel
     public ?string $link = null;
     public ?string $image = null;
     public ?string $description = null;
-    public array $items = [];
+    protected array $items = [];
+
+    public function addItem(RSSitem $item): void
+    {
+        $this->items[] = $item;
+    }
+
+    public function getItems(): array
+    {
+        return $this->items;
+    }
 }
