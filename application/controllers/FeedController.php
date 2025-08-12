@@ -79,6 +79,11 @@ class FeedController extends CompatController
             }
         }
 
+        if (count($items) == 0) {
+            $this->displayError('No news to display');
+            return;
+        }
+
         $list = HtmlElement::create(
             'ul',
             Attributes::create(['class' => 'feed-items']),

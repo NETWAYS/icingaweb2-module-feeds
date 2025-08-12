@@ -16,6 +16,18 @@ use \Exception;
 
 class FeedsController extends CompatController
 {
+    protected function displayError(string $msg): void
+    {
+        $this->addContent(HtmlElement::create(
+            'p',
+            Attributes::create([
+                'tabindex' => -1,
+                'class' => 'autofocus error-message',
+            ]),
+            $msg
+        ));
+    }
+
     public function indexAction(): void
     {
         $title = $this->translate('Feeds');
@@ -26,11 +38,21 @@ class FeedsController extends CompatController
 
         $storage = new Filesystem();
 
+        $feeds = $this->params->shift('feeds');
+        if ($feeds !== null) {
+            $feeds = explode(',', $feeds);
+        }
         $limit = $this->params->shift('limit') ?? 50;
         $compact = ($this->params->shift('view') ?? 'minimal') === 'minimal';
 
         $items = [];
+        $feedsCounter = 0;
         foreach ($storage->getFeeds() as $feed) {
+            if ($feeds !== null && !in_array($feed->name, $feeds)) {
+                continue;
+            }
+
+            $feedsCounter++;
             try {
                 $reader = new RSSReader($feed->url);
                 $data = $reader->fetch();
@@ -40,6 +62,16 @@ class FeedsController extends CompatController
             }
 
             $items = array_merge($items, $data->getItems());
+        }
+
+        if ($feedsCounter == 0) {
+            $this->displayError('No feeds to display');
+            return;
+        }
+
+        if (count($items) == 0) {
+            $this->displayError('No news to display');
+            return;
         }
 
         // Sort items
