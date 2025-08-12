@@ -101,7 +101,6 @@ class RSSParser
     protected static function parseItem(RSSChannel $channel, SimpleXMLElement $xml): RSSItem
     {
         // TODO: Check if the element is of the right type
-        // TODO: Implement creator
         $item = new RSSItem();
         $item->channel = $channel;
 
@@ -127,6 +126,14 @@ class RSSParser
                             break;
                         }
                     }
+                    break;
+            }
+        }
+
+        foreach ($xml->children('dc', true) as $elementName => $xmlItemElement) {
+            switch($elementName) {
+                case 'creator':
+                    $item->creator = $xmlItemElement->__toString();
                     break;
             }
         }
