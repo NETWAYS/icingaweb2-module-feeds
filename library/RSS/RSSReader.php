@@ -3,7 +3,7 @@
 namespace Icinga\Module\RSS;
 
 use Icinga\Module\RSS\Parser\Result\RSSChannel;
-use Icinga\Module\RSS\Parser\RSS1Parser;
+use Icinga\Module\RSS\Parser\RSSParser;
 
 use \SimpleXMLElement;
 use \Exception;
@@ -46,6 +46,6 @@ class RSSReader
 
         // FIXME: This assumes the request was successful
 
-        return RSS1Parser::parse($rawResponse);
+        return RSSParser::parse($rawResponse);
     }
 }

@@ -10,7 +10,7 @@ use \Exception;
 use \DateTime;
 use \DateTimeInterface;
 
-class RSS1Parser
+class RSSParser
 {
     public static function parse(string $raw): RSSChannel
     {
