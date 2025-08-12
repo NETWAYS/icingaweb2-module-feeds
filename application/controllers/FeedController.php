@@ -87,7 +87,7 @@ class FeedController extends CompatController
 
         $this->addContent($list);
 
-        $this->setAutorefreshInterval(5);
+        $this->setAutorefreshInterval(300);
     }
 
     public function createAction(): void
