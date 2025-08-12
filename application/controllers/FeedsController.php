@@ -21,6 +21,14 @@ class FeedsController extends CompatController
         );
         $this->setTitle($title);
 
+        $this->addControl(
+            new Link('Add', 'RSS/feed/create', Attributes::create([
+                'title' => $this->translate('Create a new Feed'),
+                'class' => 'icon-plus',
+                'data-base-target' => '_next',
+            ]))
+        );
+
         $storage = new Filesystem();
         $feeds = $storage->getFeeds();
 
