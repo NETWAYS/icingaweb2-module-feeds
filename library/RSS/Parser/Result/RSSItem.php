@@ -6,6 +6,7 @@ use \DateTime;
 
 class RSSItem
 {
+    public ?RSSChannel $channel = null;
     public ?string $title = null;
     public ?string $link = null;
     public ?string $description = null;

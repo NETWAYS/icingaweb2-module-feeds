@@ -51,7 +51,7 @@ class RSSParser
                     }
                     break;
                 case 'item':
-                    $item = static::parseItem($xmlItemElement);
+                    $item = static::parseItem($channel, $xmlItemElement);
                     $channel->addItem($item);
                     break;
             }
@@ -98,11 +98,12 @@ class RSSParser
         return $datetime;
     }
 
-    protected static function parseItem(SimpleXMLElement $xml): RSSItem
+    protected static function parseItem(RSSChannel $channel, SimpleXMLElement $xml): RSSItem
     {
         // TODO: Check if the element is of the right type
         // TODO: Implement creator
         $item = new RSSItem();
+        $item->channel = $channel;
 
         foreach ($xml->children() as $elementName => $xmlItemElement) {
             switch($elementName) {
