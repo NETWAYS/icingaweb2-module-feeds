@@ -1,0 +1,35 @@
+<?php
+
+namespace Icinga\Module\RSS\Parser;
+
+enum FeedType: int
+{
+    case Auto = 0;
+    case RSS = 1;
+    case Atom = 2;
+
+    public function display(): string
+    {
+        return match ($this) {
+            self::Auto => 'auto',
+            self::RSS => 'rss',
+            self::Atom => 'atom',
+            default => throw new Exception('Unreachable code')
+        };
+    }
+
+    public static function fromDisplay(string $display): static
+    {
+        return match ($display) {
+            'auto' => self::Auto,
+            'rss' => self::RSS,
+            'atom' => self::Atom,
+            default => throw new Exception('Unreachable code')
+        };
+    }
+
+    public static function all(): array
+    {
+        return array_column(self::cases(), 'name');
+    }
+}
