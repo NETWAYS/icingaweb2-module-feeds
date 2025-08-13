@@ -41,6 +41,7 @@ class CreateFeedForm extends CompatForm
                 'auto' => $this->translate('Determine Automatically'),
                 'rss' => $this->translate('RSS'),
                 'atom' => $this->translate('Atom'),
+                'jsonfeed' => $this->translate('Jsonfeed'),
             ],
         ]);
 
