@@ -3,7 +3,7 @@
 namespace Icinga\Module\RSS\Parser;
 
 use Icinga\Module\RSS\Parser\Result\Feed;
-use Icinga\Module\RSS\Parser\Result\RSSItem;
+use Icinga\Module\RSS\Parser\Result\FeedItem;
 
 use \SimpleXMLElement;
 use \Exception;
@@ -180,10 +180,10 @@ class AtomParser
         return $datetime;
     }
 
-    protected static function parseEntry(Feed $feed, SimpleXMLElement $xml): RSSItem
+    protected static function parseEntry(Feed $feed, SimpleXMLElement $xml): FeedItem
     {
         // TODO: Check if the element is of the right type
-        $item = new RSSItem();
+        $item = new FeedItem();
         $item->feed = $feed;
 
         $linkType = null;

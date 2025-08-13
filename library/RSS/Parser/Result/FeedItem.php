@@ -4,7 +4,7 @@ namespace Icinga\Module\RSS\Parser\Result;
 
 use \DateTime;
 
-class RSSItem
+class FeedItem
 {
     public ?Feed $feed = null;
     public ?string $title = null;
@@ -15,7 +15,7 @@ class RSSItem
     public ?string $image = null;
     public ?DateTime $date = null;
 
-    public function compareDate(RSSItem $other): int {
+    public function compareDate(FeedItem $other): int {
         $ad = $this->date ?? new DateTime('NOW');
         $bd = $other->date ?? new DateTime('NOW');
 

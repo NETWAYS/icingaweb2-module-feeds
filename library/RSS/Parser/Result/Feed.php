@@ -12,7 +12,7 @@ class Feed
 
     protected bool $sorted = true;
 
-    public function addItem(RSSitem $item): void
+    public function addItem(FeedItem $item): void
     {
         $this->items[] = $item;
         $this->sorted = false;

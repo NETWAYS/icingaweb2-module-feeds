@@ -3,7 +3,7 @@
 namespace Icinga\Module\RSS\Parser;
 
 use Icinga\Module\RSS\Parser\Result\Feed;
-use Icinga\Module\RSS\Parser\Result\RSSItem;
+use Icinga\Module\RSS\Parser\Result\FeedItem;
 
 use \Exception;
 use \DateTime;
@@ -69,9 +69,9 @@ class JsonfeedParser
         return $datetime;
     }
 
-    protected static function parseItem(Feed $feed, array $json): RSSItem
+    protected static function parseItem(Feed $feed, array $json): FeedItem
     {
-        $item = new RSSItem();
+        $item = new FeedItem();
         $item->feed = $feed;
 
         $item->title = $json['title'] ?? null;

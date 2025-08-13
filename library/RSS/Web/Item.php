@@ -8,15 +8,15 @@ use ipl\Html\HtmlElement;
 use ipl\Html\Text;
 use ipl\Web\Widget\Icon;
 
-use Icinga\Module\RSS\Parser\Result\RSSItem;
+use Icinga\Module\RSS\Parser\Result\FeedItem;
 
 class Item extends BaseHtmlElement
 {
     protected $tag = 'li';
 
     public function __construct(
-        protected RSSItem $item,
-        protected bool $compact,
+        protected FeedItem $item,
+        protected bool     $compact,
     ) {}
 
     protected function getTitleElement(): HtmlElement
