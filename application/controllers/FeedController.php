@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\RSS\Controllers;
 
-use Icinga\Module\RSS\RSSReader;
+use Icinga\Module\RSS\FeedReader;
 use Icinga\Module\RSS\Web\Item;
 use Icinga\Module\RSS\Forms\CreateFeedForm;
 use Icinga\Module\RSS\Forms\EditFeedForm;
@@ -35,7 +35,7 @@ class FeedController extends RSSController
         }
 
         try {
-            $reader = new RSSReader($url, $type);
+            $reader = new FeedReader($url, $type);
             $data = $reader->fetch();
         } catch (Exception $ex) {
             $this->displayError($ex->getMessage());

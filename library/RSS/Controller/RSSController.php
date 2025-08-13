@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\RSS\Controller;
 
-use Icinga\Module\RSS\RSSReader;
+use Icinga\Module\RSS\FeedReader;
 use Icinga\Module\RSS\Storage\Filesystem;
 use Icinga\Module\RSS\Web\Table;
 use Icinga\Module\RSS\Web\Item;

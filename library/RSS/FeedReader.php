@@ -11,7 +11,7 @@ use Icinga\Module\RSS\Parser\FeedType;
 use \SimpleXMLElement;
 use \Exception;
 
-class RSSReader
+class FeedReader
 {
     public function __construct(
         protected string $url,
