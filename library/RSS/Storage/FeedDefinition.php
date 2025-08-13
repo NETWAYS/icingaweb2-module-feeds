@@ -11,6 +11,7 @@ class FeedDefinition
         public string $url,
         public ?string $description = null,
         public FeedType $feedtype = FeedType::Auto,
+        public bool $trusted = false,
     ) {
     }
 
@@ -21,6 +22,7 @@ class FeedDefinition
             'url' => $this->url,
             'description' => $this->description,
             'feedtype' => $this->feedtype->display(),
+            'trusted' => $this->trusted,
         ];
     }
 
@@ -31,6 +33,7 @@ class FeedDefinition
             $data['url'],
             $data['description'] ?? null,
             FeedType::fromDisplay($data['feedtype'] ?? 'auto'),
+            $data['trusted'] ?? false,
         );
     }
 }

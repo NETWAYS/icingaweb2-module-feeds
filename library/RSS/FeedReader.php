@@ -18,6 +18,7 @@ class FeedReader
     public function __construct(
         protected string $url,
         protected FeedType $type = FeedType::Auto,
+        protected bool $trusted = false,
     ) {}
 
     protected function fetchRaw() {
@@ -53,28 +54,28 @@ class FeedReader
         switch ($this->type) {
             case FeedType::Auto:
                 try {
-                    return RSSParser::parse($rawResponse);
+                    return RSSParser::parse($rawResponse, $this->trusted);
                 } catch (Exception $ex) {
 
                 }
 
                 try {
-                    return AtomParser::parse($rawResponse);
+                    return AtomParser::parse($rawResponse, $this->trusted);
                 } catch (Exception $ex) {
 
                 }
 
                 try {
-                    return JsonfeedParser::parse($rawResponse);
+                    return JsonfeedParser::parse($rawResponse, $this->trusted);
                 } catch (Exception $ex) {
 
                 }
 
                 throw new Exception('Invalid or unsupported feed');
                 break;
-            case FeedType::RSS: return RSSParser::parse($rawResponse);
-            case FeedType::Atom: return AtomParser::parse($rawResponse);
-            case FeedType::Jsonfeed: return JsonfeedParser::parse($rawResponse);
+            case FeedType::RSS: return RSSParser::parse($rawResponse, $this->trusted);
+            case FeedType::Atom: return AtomParser::parse($rawResponse, $this->trusted);
+            case FeedType::Jsonfeed: return JsonfeedParser::parse($rawResponse, $this->trusted);
             default:
                 throw new Exception('Unreachable code');
         }

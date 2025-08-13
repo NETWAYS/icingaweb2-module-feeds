@@ -45,6 +45,19 @@ class CreateFeedForm extends CompatForm
             ],
         ]);
 
+        $this->addElement('select', 'trusted', [
+            'label'       => $this->translate('Trusted'),
+            'required'    => true,
+            'description' => $this->translate(
+                'Should the content of the feed be treated as comming from a trusted source.'
+                . 'This will improve rendering but at the cost of opening up the posibility of XSS atacks'
+            ),
+            'multiOptions' => [
+                'true' => $this->translate('Yes'),
+                'false' => $this->translate('No'),
+            ],
+        ]);
+
         $this->addElement('textarea', 'description', [
             'label'       => $this->translate('Description'),
             'description' => $this->translate(
@@ -64,6 +77,7 @@ class CreateFeedForm extends CompatForm
         $name = $this->getValue('name');
         $url = $this->getValue('url');
         $feedtype = FeedType::fromDisplay($this->getValue('feedtype') ?? 'auto');
+        $trusted = ($this->getValue('trusted') ?? 'false') === 'true';
         $description = $this->getValue('description');
 
         $feed = new FeedDefinition(
@@ -71,6 +85,7 @@ class CreateFeedForm extends CompatForm
             $url,
             $description,
             $feedtype,
+            $trusted,
         );
 
         if ($this->storage->getFeedByName($name) !== null) {

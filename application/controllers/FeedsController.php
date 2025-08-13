@@ -66,7 +66,7 @@ class FeedsController extends RSSController
 
             $feedsCounter++;
             try {
-                $reader = new FeedReader($feed->url, $feed->feedtype);
+                $reader = new FeedReader($feed->url, $feed->feedtype, $feed->trusted);
                 $data = $reader->fetch();
             } catch (Exception $ex) {
                 // TODO: Figure out a way to display the error

@@ -30,7 +30,7 @@ class FeedController extends RSSController
             ->activate('view');
 
         $this->addTitle($this->translate("Feed"));
-        [$url, $type] = $this->getFeedInfo();
+        [$url, $type, $trusted] = $this->getFeedInfo();
         if ($url === null) {
             return;
         }
@@ -44,7 +44,7 @@ class FeedController extends RSSController
         Benchmark::measure('Started fetching feed');
 
         try {
-            $reader = new FeedReader($url, $type);
+            $reader = new FeedReader($url, $type, $trusted);
             $data = $reader->fetch();
         } catch (Exception $ex) {
             $this->displayError($ex->getMessage());
@@ -73,7 +73,7 @@ class FeedController extends RSSController
                 $this->displayError('Feed not found');
                 return [null, null];
             }
-            return [$feed->url, $feed->feedtype];
+            return [$feed->url, $feed->feedtype, $feed->trusted];
         }
 
         $url = $this->params->shift('url');
@@ -85,7 +85,7 @@ class FeedController extends RSSController
 
         $type = $this->params->shift('type') ?? 'auto';
 
-        return [$url, FeedType::fromDisplay($type)];
+        return [$url, FeedType::fromDisplay($type), false];
     }
 
     public function createAction(): void
@@ -135,11 +135,8 @@ class FeedController extends RSSController
             'url' => $feed->url,
             'description' => $feed->description,
             'feedtype' => $feed->feedtype->display(),
+            'trusted' => $feed->trusted ? 'true' : 'false',
         ]);
-
-        $form->on(EditFeedForm::ON_SUCCESS, function () {
-            $this->redirectNow('__CLOSE__');
-        });
 
         $form->handleRequest($this->getServerRequest());
 

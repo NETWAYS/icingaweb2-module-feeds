@@ -11,7 +11,7 @@ use \DateTimeInterface;
 
 class JsonfeedParser
 {
-    public static function parse(string $raw): Feed
+    public static function parse(string $raw, bool $trusted): Feed
     {
         $json = json_decode($raw, true);
         if ($json === null) {
@@ -20,12 +20,13 @@ class JsonfeedParser
 
         // TODO: validate version field
 
-        return static::parseFeed($json);
+        return static::parseFeed($json, $trusted);
     }
 
-    protected static function parseFeed(array $json): Feed
+    protected static function parseFeed(array $json, bool $trusted): Feed
     {
         $feed = new Feed();
+        $feed->trusted = $trusted;
 
         $feed->title = $json['title'] ?? null;
         $feed->link = $json['home_page_url'] ?? $json['feed_url'] ?? null;
@@ -76,7 +77,16 @@ class JsonfeedParser
 
         $item->title = $json['title'] ?? null;
         $item->link = $json['url'] ?? $json['external_url'] ?? null;
-        $item->description = $json['summary'] ?? $json['content_html'] ?? $json['content_text'] ?? null;
+
+        if ($feed->trusted) {
+            $item->description = $json['content_html'] ?? $json['content_text'] ?? $json['summary'] ?? null;
+        } else {
+            $item->description = $json['content_text'] ?? $json['summary'] ?? null;
+            if ($item->description === null && array_key_exists('content_html', $json)) {
+                $item->description = html_entity_decode(strip_tags($json['content_html']));
+            }
+        }
+
         $item->categories = $json['tags'] ?? [];
         if (array_key_exists('author', $json)) {
             $item->creator = $json['author']['name'] ?? null;

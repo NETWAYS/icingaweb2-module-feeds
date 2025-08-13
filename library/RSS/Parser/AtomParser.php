@@ -12,7 +12,7 @@ use \DateTimeInterface;
 
 class AtomParser
 {
-    public static function parse(string $raw): Feed
+    public static function parse(string $raw, bool $trusted): Feed
     {
         // FIXME: This assumes that the string is valid xml
         $xmlElement = new SimpleXMLElement($raw);
@@ -23,13 +23,13 @@ class AtomParser
 
         $xmlElement->rewind();
 
-        return static::parseFeed($xmlElement);
+        return static::parseFeed($xmlElement, $trusted);
     }
 
-    protected static function parseFeed(SimpleXMLElement $xml): Feed
+    protected static function parseFeed(SimpleXMLElement $xml, bool $trusted): Feed
     {
-        // TODO: Check if the element is of the right type
         $feed = new Feed();
+        $feed->trusted = $trusted;
 
         $linkType = null;
 

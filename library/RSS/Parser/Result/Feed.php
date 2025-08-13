@@ -8,6 +8,7 @@ class Feed
     public ?string $link = null;
     public ?string $image = null;
     public ?string $description = null;
+    public bool $trusted = false;
     protected array $items = [];
 
     protected bool $sorted = true;

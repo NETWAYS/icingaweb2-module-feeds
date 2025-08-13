@@ -94,7 +94,7 @@ class Item extends BaseHtmlElement
     {
         // FIXME: This is horribly insecure
         $description = new Text($this->item->description);
-        $description->setEscaped(true);
+        $description->setEscaped($this->item->feed->trusted);
         return HtmlElement::create('div',
             Attributes::create([
                 'class' => 'feed-content-wrapper',
