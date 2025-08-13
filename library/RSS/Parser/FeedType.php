@@ -2,6 +2,8 @@
 
 namespace Icinga\Module\RSS\Parser;
 
+use \Exception;
+
 enum FeedType: int
 {
     case Auto = 0;
@@ -24,7 +26,7 @@ enum FeedType: int
             'auto' => self::Auto,
             'rss' => self::RSS,
             'atom' => self::Atom,
-            default => throw new Exception('Unreachable code')
+            default => throw new Exception('Invalid FeedType')
         };
     }
 
