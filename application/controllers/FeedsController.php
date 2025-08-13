@@ -45,9 +45,9 @@ class FeedsController extends RSSController
         if ($feeds !== null) {
             $feeds = explode(',', $feeds);
         }
-        $limit = $this->params->shift('limit') ?? 50;
-        $compact = ($this->params->shift('view') ?? 'minimal') === 'minimal';
-        $date = $this->params->shift('date');
+        $limit = $this->getLimitParam();
+        $compact = $this->getViewParam() === 'minimal';
+        $date = $this->getDateParam();
         if ($date !== null) {
             try {
                 $date = new DateTime($date);

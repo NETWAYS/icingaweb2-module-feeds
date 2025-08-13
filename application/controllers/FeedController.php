@@ -8,6 +8,7 @@ use Icinga\Module\RSS\Forms\CreateFeedForm;
 use Icinga\Module\RSS\Forms\EditFeedForm;
 use Icinga\Module\RSS\Storage\Filesystem;
 use Icinga\Module\RSS\Controller\RSSController;
+use Icinga\Module\RSS\Parser\FeedType;
 
 use Icinga\Web\Notification;
 use ipl\Html\Attributes;
@@ -28,13 +29,13 @@ class FeedController extends RSSController
             ->activate('view');
 
         $this->addTitle($this->translate("Feed"));
-        $url = $this->getFeedUrl();
+        [$url, $type] = $this->getFeedInfo();
         if ($url === null) {
             return;
         }
 
         try {
-            $reader = new RSSReader($url);
+            $reader = new RSSReader($url, $type);
             $data = $reader->fetch();
         } catch (Exception $ex) {
             $this->displayError($ex->getMessage());
@@ -58,30 +59,29 @@ class FeedController extends RSSController
         $this->setAutorefreshInterval(300);
     }
 
-    protected function getFeedUrl(): ?string
+    protected function getFeedInfo(): array
     {
-        $url = null;
         $name = $this->params->shift('feed');
         if ($name !== null && $name !== '') {
             $storage = new Filesystem();
             $feed = $storage->getFeedByName($name);
             if ($feed === null) {
                 $this->displayError('Feed not found');
-                return null;
+                return [null, null];
             }
-            $url = $feed->url;
+            return [$feed->url, $feed->feedtype];
         }
 
-        if ($url === null) {
-            $url = $this->params->shift('url');
-        }
+        $url = $this->params->shift('url');
 
         if ($url === null or $url === '') {
             $this->displayError('No feed configured');
-            return null;
+            return [null, null];
         }
 
-        return $url;
+        $type = $this->params->shift('type') ?? 'auto';
+
+        return [$url, FeedType::fromDisplay($type)];
     }
 
     public function createAction(): void
