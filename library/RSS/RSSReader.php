@@ -4,6 +4,7 @@ namespace Icinga\Module\RSS;
 
 use Icinga\Module\RSS\Parser\Result\RSSChannel;
 use Icinga\Module\RSS\Parser\RSSParser;
+use Icinga\Module\RSS\Parser\AtomParser;
 
 use \SimpleXMLElement;
 use \Exception;
@@ -46,6 +47,18 @@ class RSSReader
 
         // FIXME: This assumes the request was successful
 
-        return RSSParser::parse($rawResponse);
+        try {
+            return RSSParser::parse($rawResponse);
+        } catch (Exception $ex) {
+
+        }
+
+        try {
+            return AtomParser::parse($rawResponse);
+        } catch (Exception $ex) {
+
+        }
+
+        return null;
     }
 }

@@ -63,9 +63,16 @@ class RSSParser
     protected static function parseDateTime(string $dateStr): ?DateTime
     {
         $datetime = DateTime::createFromFormat(
-            DateTimeInterface::RFC822,
+            DateTimeInterface::RSS,
             $dateStr,
         );
+
+        if ($datetime === false) {
+            $datetime = DateTime::createFromFormat(
+                DateTimeInterface::RFC822,
+                $dateStr,
+            );
+        }
 
         if ($datetime === false) {
             $datetime = DateTime::createFromFormat(
