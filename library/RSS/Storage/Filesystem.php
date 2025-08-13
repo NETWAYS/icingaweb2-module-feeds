@@ -9,7 +9,7 @@ use Icinga\Exception\SystemPermissionException;
 class Filesystem implements StorageInterface
 {
     const FILE_NAME = "feeds.json";
-
+    const JSON_FLAGS = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;
     const VERSION = 1;
 
     protected array $feeds = [];
@@ -49,7 +49,7 @@ class Filesystem implements StorageInterface
             $data = [
                 'version' => self::VERSION,
             ];
-            if (file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT)) === false) {
+            if (file_put_contents($file, json_encode($data, static::JSON_FLAGS)) === false) {
                 throw new SystemPermissionException('Could not write config file "%s"', dirname($file));
             }
         }
@@ -106,7 +106,7 @@ class Filesystem implements StorageInterface
         $this->ensureConfigFile();
 
         $file = $this->getConfigFile();
-        if (file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT)) === false) {
+        if (file_put_contents($file, json_encode($data, static::JSON_FLAGS)) === false) {
             throw new SystemPermissionException('Could not write config file "%s"', dirname($file));
         }
     }
