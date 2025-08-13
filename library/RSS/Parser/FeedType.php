@@ -9,6 +9,7 @@ enum FeedType: int
     case Auto = 0;
     case RSS = 1;
     case Atom = 2;
+    case Jsonfeed = 3;
 
     public function display(): string
     {
@@ -16,6 +17,7 @@ enum FeedType: int
             self::Auto => 'auto',
             self::RSS => 'rss',
             self::Atom => 'atom',
+            self::Jsonfeed => 'jsonfeed',
             default => throw new Exception('Unreachable code')
         };
     }
@@ -26,6 +28,7 @@ enum FeedType: int
             'auto' => self::Auto,
             'rss' => self::RSS,
             'atom' => self::Atom,
+            'jsonfeed' => self::Jsonfeed,
             default => throw new Exception('Invalid FeedType')
         };
     }

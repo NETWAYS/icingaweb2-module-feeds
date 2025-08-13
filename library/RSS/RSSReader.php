@@ -5,6 +5,7 @@ namespace Icinga\Module\RSS;
 use Icinga\Module\RSS\Parser\Result\RSSChannel;
 use Icinga\Module\RSS\Parser\RSSParser;
 use Icinga\Module\RSS\Parser\AtomParser;
+use Icinga\Module\RSS\Parser\JsonfeedParser;
 use Icinga\Module\RSS\Parser\FeedType;
 
 use \SimpleXMLElement;
@@ -60,10 +61,17 @@ class RSSReader
 
                 }
 
+                try {
+                    return JsonfeedParser::parse($rawResponse);
+                } catch (Exception $ex) {
+
+                }
+
                 throw new Exception('Invalid or unsupported feed');
                 break;
             case FeedType::RSS: return RSSParser::parse($rawResponse);
             case FeedType::Atom: return AtomParser::parse($rawResponse);
+            case FeedType::Jsonfeed: return JsonfeedParser::parse($rawResponse);
             default:
                 throw new Exception('Unreachable code');
         }
