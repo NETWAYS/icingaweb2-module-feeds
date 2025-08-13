@@ -231,6 +231,28 @@ class AtomParser
             }
         }
 
+        // Atom Media extension for YouTube
+        foreach ($xml->children('media', true) as $elementName => $xmlItemElement) {
+            switch($elementName) {
+                case 'group':
+                    foreach ($xmlItemElement->children('media', true) as $mediaElementName => $xmlMediaElement) {
+                        switch ($mediaElementName) {
+                            case 'description':
+                                if ($item->description === null) {
+                                    $item->description = $xmlMediaElement->__toString();
+                                }
+                                break;
+                            case 'thumbnail':
+                                if ($item->image === null) {
+                                    $item->image = $xmlMediaElement->attributes()['url'] ?? null;
+                                }
+                                break;
+                        }
+                    }
+                    break;
+            }
+        }
+
         return $item;
     }
 }

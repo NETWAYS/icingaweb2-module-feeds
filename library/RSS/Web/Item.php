@@ -114,7 +114,6 @@ class Item extends BaseHtmlElement
         if ($this->compact) {
             $classes[] = 'compact';
         }
-        $displayContent = !$this->compact && $this->item->description != null;
         $hasLink = $this->getLink() !== null;
         $this->addHtml(
             HtmlElement::create(
@@ -133,10 +132,10 @@ class Item extends BaseHtmlElement
                             $this->getTitleElement(),
                         ]
                     ),
-                    $displayContent ? [
+                    $this->compact ? null : [
                         $this->getCategoriesElement(),
                         $this->getContentElement(),
-                    ] : null,
+                    ],
                 ]
             )
         );
