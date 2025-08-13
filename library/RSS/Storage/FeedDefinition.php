@@ -7,11 +7,11 @@ use Icinga\Module\RSS\Parser\FeedType;
 class FeedDefinition
 {
     public function __construct(
-        public string $name,
-        public string $url,
-        public ?string $description = null,
-        public FeedType $feedtype = FeedType::Auto,
-        public bool $trusted = false,
+        public string   $name,
+        public string   $url,
+        public ?string  $description = null,
+        public FeedType $type = FeedType::Auto,
+        public bool     $trusted = false,
     ) {
     }
 
@@ -21,7 +21,7 @@ class FeedDefinition
             'name' => $this->name,
             'url' => $this->url,
             'description' => $this->description,
-            'feedtype' => $this->feedtype->display(),
+            'type' => $this->type->display(),
             'trusted' => $this->trusted,
         ];
     }
@@ -32,7 +32,7 @@ class FeedDefinition
             $data['name'],
             $data['url'],
             $data['description'] ?? null,
-            FeedType::fromDisplay($data['feedtype'] ?? 'auto'),
+            FeedType::fromDisplay($data['type'] ?? 'auto'),
             $data['trusted'] ?? false,
         );
     }

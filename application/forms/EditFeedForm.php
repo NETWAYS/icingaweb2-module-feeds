@@ -35,7 +35,7 @@ class EditFeedForm extends CompatForm
             'description' => $this->translate('The URL to the feed'),
         ]);
 
-        $this->addElement('select', 'feedtype', [
+        $this->addElement('select', 'type', [
             'label'       => $this->translate('Feed Type'),
             'required'    => true,
             'description' => $this->translate(
@@ -116,7 +116,7 @@ class EditFeedForm extends CompatForm
         } else if ($this->getSubmitButton()->hasBeenPressed() ?? false) {
             $name = $this->getValue('name');
             $url = $this->getValue('url');
-            $feedtype = FeedType::fromDisplay($this->getValue('feedtype') ?? 'auto');
+            $type = FeedType::fromDisplay($this->getValue('type') ?? 'auto');
             $trusted = ($this->getValue('trusted') ?? 'false') === 'true';
             $description = $this->getValue('description');
 
@@ -132,7 +132,7 @@ class EditFeedForm extends CompatForm
 
             $this->feed->name = $name;
             $this->feed->url = $url;
-            $this->feed->feedtype = $feedtype;
+            $this->feed->type = $type;
             $this->feed->description = $description;
             $this->feed->trusted = $trusted;
 

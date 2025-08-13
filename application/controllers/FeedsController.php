@@ -66,7 +66,7 @@ class FeedsController extends RSSController
 
             $feedsCounter++;
             try {
-                $reader = new FeedReader($feed->url, $feed->feedtype, $feed->trusted);
+                $reader = new FeedReader($feed->url, $feed->type, $feed->trusted);
                 $data = $reader->fetch();
             } catch (Exception $ex) {
                 // TODO: Figure out a way to display the error
@@ -121,7 +121,7 @@ class FeedsController extends RSSController
             $data[] = [
                 'Name' => $feed->name,
                 'Link' => $feed->url,
-                'Type' => $this->translate($feed->feedtype->display()),
+                'Type' => $this->translate($feed->type->display()),
                 '_link' => "RSS/feed/edit?feed={$feed->name}",
                 '_title' => $feed->description,
             ];

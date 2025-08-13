@@ -73,7 +73,7 @@ class FeedController extends RSSController
                 $this->displayError('Feed not found');
                 return [null, null];
             }
-            return [$feed->url, $feed->feedtype, $feed->trusted];
+            return [$feed->url, $feed->type, $feed->trusted];
         }
 
         $url = $this->params->shift('url');
@@ -134,7 +134,7 @@ class FeedController extends RSSController
             'name' => $feed->name,
             'url' => $feed->url,
             'description' => $feed->description,
-            'feedtype' => $feed->feedtype->display(),
+            'type' => $feed->type->display(),
             'trusted' => $feed->trusted ? 'true' : 'false',
         ]);
 
