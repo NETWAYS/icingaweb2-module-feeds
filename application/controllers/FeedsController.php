@@ -8,6 +8,7 @@ use Icinga\Module\RSS\Web\Table;
 use Icinga\Module\RSS\Web\Item;
 use Icinga\Module\RSS\Controller\RSSController;
 
+use Icinga\Application\Benchmark;
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
 use ipl\Web\Widget\Link;
@@ -49,17 +50,15 @@ class FeedsController extends RSSController
         $compact = $this->getViewParam() === 'minimal';
         $date = $this->getDateParam();
         if ($date !== null) {
-            try {
-                $date = new DateTime($date);
-            } catch (Exception $ex) {
-                $this->displayError('Invalid date');
-                return;
-            }
+            return;
         }
 
         $storage = StorageFactory::getStorage();
         $items = [];
         $feedsCounter = 0;
+
+        Benchmark::measure('Started fetching feeds');
+
         foreach ($storage->getFeeds() as $feed) {
             if ($feeds !== null && !in_array($feed->name, $feeds)) {
                 continue;
@@ -82,10 +81,14 @@ class FeedsController extends RSSController
             return;
         }
 
+        Benchmark::measure('Started merging feeds');
+
         // Sort items
         usort($items, function($a, $b) {
             return -($a->compareDate($b));
         });
+
+        Benchmark::measure('Started rendering feed');
 
         $this->renderItems(
             $items,

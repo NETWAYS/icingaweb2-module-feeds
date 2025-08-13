@@ -8,6 +8,8 @@ use Icinga\Module\RSS\Parser\AtomParser;
 use Icinga\Module\RSS\Parser\JsonfeedParser;
 use Icinga\Module\RSS\Parser\FeedType;
 
+use Icinga\Application\Benchmark;
+
 use \SimpleXMLElement;
 use \Exception;
 
@@ -47,6 +49,7 @@ class FeedReader
 
     protected function parse(string $rawResponse): ?Feed
     {
+        Benchmark::measure('Started parsing feed');
         switch ($this->type) {
             case FeedType::Auto:
                 try {

@@ -10,6 +10,7 @@ use Icinga\Module\RSS\Storage\StorageFactory;
 use Icinga\Module\RSS\Controller\RSSController;
 use Icinga\Module\RSS\Parser\FeedType;
 
+use Icinga\Application\Benchmark;
 use Icinga\Web\Notification;
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
@@ -33,6 +34,14 @@ class FeedController extends RSSController
         if ($url === null) {
             return;
         }
+        $limit = $this->getLimitParam();
+        $compact = $this->getViewParam() === 'minimal';
+        $date = $this->getDateParam();
+        if ($date === false) {
+            return;
+        }
+
+        Benchmark::measure('Started fetching feed');
 
         try {
             $reader = new FeedReader($url, $type);
@@ -42,12 +51,7 @@ class FeedController extends RSSController
             return;
         }
 
-        $limit = $this->getLimitParam();
-        $compact = $this->getViewParam() === 'minimal';
-        $date = $this->getDateParam();
-        if ($date === false) {
-            return;
-        }
+        Benchmark::measure('Started rendering feed');
 
         $this->renderItems(
             $data->getItems(),
