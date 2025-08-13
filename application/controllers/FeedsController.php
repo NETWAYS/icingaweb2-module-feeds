@@ -3,7 +3,7 @@
 namespace Icinga\Module\RSS\Controllers;
 
 use Icinga\Module\RSS\FeedReader;
-use Icinga\Module\RSS\Storage\Filesystem;
+use Icinga\Module\RSS\Storage\StorageFactory;
 use Icinga\Module\RSS\Web\Table;
 use Icinga\Module\RSS\Web\Item;
 use Icinga\Module\RSS\Controller\RSSController;
@@ -57,7 +57,7 @@ class FeedsController extends RSSController
             }
         }
 
-        $storage = new Filesystem();
+        $storage = StorageFactory::getStorage();
         $items = [];
         $feedsCounter = 0;
         foreach ($storage->getFeeds() as $feed) {
@@ -110,7 +110,7 @@ class FeedsController extends RSSController
             ]))
         );
 
-        $storage = new Filesystem();
+        $storage = StorageFactory::getStorage();
         $feeds = $storage->getFeeds();
 
         $data = [];

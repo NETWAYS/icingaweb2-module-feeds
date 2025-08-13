@@ -6,7 +6,7 @@ use Icinga\Module\RSS\FeedReader;
 use Icinga\Module\RSS\Web\Item;
 use Icinga\Module\RSS\Forms\CreateFeedForm;
 use Icinga\Module\RSS\Forms\EditFeedForm;
-use Icinga\Module\RSS\Storage\Filesystem;
+use Icinga\Module\RSS\Storage\StorageFactory;
 use Icinga\Module\RSS\Controller\RSSController;
 use Icinga\Module\RSS\Parser\FeedType;
 
@@ -63,7 +63,7 @@ class FeedController extends RSSController
     {
         $name = $this->params->shift('feed');
         if ($name !== null && $name !== '') {
-            $storage = new Filesystem();
+            $storage = StorageFactory::getStorage();
             $feed = $storage->getFeedByName($name);
             if ($feed === null) {
                 $this->displayError('Feed not found');
@@ -92,7 +92,7 @@ class FeedController extends RSSController
 
         $this->addTitle($this->translate('Create a new Feed'));
 
-        $storage = new Filesystem();
+        $storage = StorageFactory::getStorage();
         $form = new CreateFeedForm($storage);
 
         $form->on(CreateFeedForm::ON_SUCCESS, function () {
@@ -113,7 +113,7 @@ class FeedController extends RSSController
         $this->addTitle($this->translate('Edit Feed'));
 
         $name = $this->params->shiftRequired('feed');
-        $storage = new Filesystem();
+        $storage = StorageFactory::getStorage();
 
         $feed = $storage->getFeedByName($name);
         if ($feed === null) {
