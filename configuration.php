@@ -6,3 +6,4 @@ $rssMenu = $this->menuSection('RSS')
 
 $this->provideCssFile('item.less');
 $this->provideCssFile('table.less');
+$this->provideCssFile('view-mode-switcher.less');

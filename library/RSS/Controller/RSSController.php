@@ -2,14 +2,23 @@
 
 namespace Icinga\Module\RSS\Controller;
 
+use GuzzleHttp\Psr7\ServerRequest;
+use Icinga\Application\Config;
+use Icinga\Data\ConfigObject;
 use Icinga\Module\RSS\Web\Item;
 
+use Icinga\Module\RSS\Web\ViewModeSwitcher;
+use Icinga\User\Preferences;
+use Icinga\User\Preferences\PreferencesStore;
+use Icinga\Util\Json;
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
 use ipl\Web\Compat\CompatController;
 
 use \Exception;
 use \DateTime;
+use ipl\Web\Control\LimitControl;
+use ipl\Web\Url;
 
 class RSSController extends CompatController
 {
@@ -80,11 +89,6 @@ class RSSController extends CompatController
         return $limit;
     }
 
-    protected function getViewParam(): string
-    {
-        return $this->params->shift('view') ?? 'minimal';
-    }
-
     protected function getDateParam(): DateTime|bool|null
     {
         $date = $this->params->shift('date');
@@ -98,5 +102,113 @@ class RSSController extends CompatController
             }
         }
         return null;
+    }
+
+
+
+    /**
+     * Create and return the ViewModeSwitcher
+     *
+     * This automatically shifts the view mode URL parameter from {@link $params}.
+     *
+     * @param LimitControl $limitControl
+     * @param bool $verticalPagination
+     *
+     * @return ViewModeSwitcher
+     */
+    public function createViewModeSwitcher(
+        LimitControl $limitControl,
+        bool $verticalPagination = false
+    ): ViewModeSwitcher {
+        $controllerName = $this->getRequest()->getControllerName();
+
+        $viewModeSwitcher = new ViewModeSwitcher();
+
+        $viewModeSwitcher->setIdProtector([$this->getRequest(), 'protectId']);
+
+        $user = $this->Auth()->getUser();
+        if (($preferredModes = $user->getAdditional('rss.view_modes')) === null) {
+            try {
+                $preferredModes = Json::decode(
+                    $user->getPreferences()->getValue('rss', 'view_modes', '[]'),
+                    true
+                );
+            } catch (JsonDecodeException $e) {
+                Logger::error('Failed to load preferred view modes for user "%s": %s', $user->getUsername(), $e);
+                $preferredModes = [];
+            }
+
+            $user->setAdditional('rss.view_modes', $preferredModes);
+        }
+
+        $requestRoute = $this->getRequest()->getUrl()->getPath();
+        if (isset($preferredModes[$requestRoute])) {
+            $viewModeSwitcher->setDefaultViewMode($preferredModes[$requestRoute]);
+        }
+
+        $viewModeSwitcher->populate([
+            $viewModeSwitcher->getViewModeParam() => $this->params->shift($viewModeSwitcher->getViewModeParam())
+        ]);
+
+        $session = $this->Window()->getSessionNamespace(
+            'rss-viewmode-' . $this->Window()->getContainerId()
+        );
+
+        $viewModeSwitcher->on(
+            ViewModeSwitcher::ON_SUCCESS,
+            function (ViewModeSwitcher $viewModeSwitcher) use (
+                $user,
+                $preferredModes,
+                $verticalPagination,
+                &$session
+            ) {
+                $viewMode = $viewModeSwitcher->getValue($viewModeSwitcher->getViewModeParam());
+                $requestUrl = Url::fromRequest();
+
+                $preferredModes[$requestUrl->getPath()] = $viewMode;
+                $user->setAdditional('rss.view_modes', $preferredModes);
+
+                try {
+                    $preferencesStore = PreferencesStore::create(new ConfigObject([
+                        //TODO: Don't set store key as it will no longer be needed once we drop support for
+                        // lower version of icingaweb2 then v2.11.
+                        //https://github.com/Icinga/icingaweb2/pull/4765
+                        'store'     => Config::app()->get('global', 'config_backend', 'db'),
+                        'resource'  => Config::app()->get('global', 'config_resource')
+                    ]), $user);
+                    $preferencesStore->load();
+                    $preferencesStore->save(
+                        new Preferences(['rss' => ['view_modes' => Json::encode($preferredModes)]])
+                    );
+                } catch (Exception $e) {
+                    Logger::error('Failed to save preferred view mode for user "%s": %s', $user->getUsername(), $e);
+                }
+
+                $limitParam = LimitControl::DEFAULT_LIMIT_PARAM;
+
+                $requestUrl->setParam($viewModeSwitcher->getViewModeParam(), $viewMode);
+                if (! $requestUrl->hasParam($limitParam)) {
+                    if ($viewMode === 'minimal' || $viewMode === 'grid') {
+                        $session->set('request_path', $requestUrl->getPath());
+                    } elseif (
+                        $viewModeSwitcher->getDefaultViewMode() === 'minimal'
+                        || $viewModeSwitcher->getDefaultViewMode() === 'grid'
+                    ) {
+
+                        $session->clear();
+                    }
+
+                }
+
+                $this->redirectNow($requestUrl);
+            }
+        )->handleRequest(ServerRequest::fromGlobals());
+
+        $requestPath =  $session->get('request_path');
+        if ($requestPath && $requestPath !== $requestRoute) {
+            $session->clear();
+        }
+
+        return $viewModeSwitcher;
     }
 }

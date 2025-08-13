@@ -11,12 +11,8 @@ use Icinga\Module\RSS\Controller\RSSController;
 use Icinga\Module\RSS\Parser\FeedType;
 
 use Icinga\Application\Benchmark;
-use Icinga\Web\Notification;
-use ipl\Html\Attributes;
-use ipl\Html\HtmlElement;
 
 use \Exception;
-use \DateTime;
 
 class FeedController extends RSSController
 {
@@ -35,7 +31,6 @@ class FeedController extends RSSController
             return;
         }
         $limit = $this->getLimitParam();
-        $compact = $this->getViewParam() === 'minimal';
         $date = $this->getDateParam();
         if ($date === false) {
             return;
@@ -53,11 +48,18 @@ class FeedController extends RSSController
 
         Benchmark::measure('Started rendering feed');
 
+        $limitControl = $this->createLimitControl();
+        $viewModeSwitcher = $this->createViewModeSwitcher($limitControl);
+
+        $this->addControl($limitControl);
+        $this->addControl($viewModeSwitcher);
+
+        $size = $viewModeSwitcher->getViewMode();
         $this->renderItems(
             $data->getItems(),
             $limit,
             $date,
-            $compact,
+            $size === 'minimal',
         );
 
         $this->setAutorefreshInterval(300);

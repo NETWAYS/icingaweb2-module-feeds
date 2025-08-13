@@ -47,7 +47,6 @@ class FeedsController extends RSSController
             $feeds = explode(',', $feeds);
         }
         $limit = $this->getLimitParam();
-        $compact = $this->getViewParam() === 'minimal';
         $date = $this->getDateParam();
         if ($date !== null) {
             return;
@@ -90,11 +89,18 @@ class FeedsController extends RSSController
 
         Benchmark::measure('Started rendering feed');
 
+        $limitControl = $this->createLimitControl();
+        $viewModeSwitcher = $this->createViewModeSwitcher($limitControl);
+
+        $this->addControl($limitControl);
+        $this->addControl($viewModeSwitcher);
+
+        $size = $viewModeSwitcher->getViewMode();
         $this->renderItems(
             $items,
             $limit,
             $date,
-            $compact,
+            $size === 'minimal',
         );
 
         $this->setAutorefreshInterval(300);
