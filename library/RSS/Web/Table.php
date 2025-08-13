@@ -59,6 +59,7 @@ class Table extends BaseHtmlElement
         foreach ($this->data as $row) {
             $rowElements = [];
             $link = $row['_link'] ?? null;
+            $title = $row['_title'] ?? null;
             foreach ($columns as $column) {
                 $text = '';
                 if (array_key_exists($column, $row)) {
@@ -72,7 +73,13 @@ class Table extends BaseHtmlElement
                 }
                 $rowElements[] = HtmlElement::create('td', null, $text);
             }
-            $rows[] = HtmlElement::create('tr', null, $rowElements);
+            $rows[] = HtmlElement::create(
+                'tr',
+                Attributes::create([
+                    'title' => $title,
+                ]), 
+                $rowElements
+            );
         }
 
         $tableBody = HtmlElement::create('tbody', null, $rows);
