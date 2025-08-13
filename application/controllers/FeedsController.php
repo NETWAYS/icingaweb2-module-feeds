@@ -17,8 +17,10 @@ use \DateTime;
 
 class FeedsController extends RSSController
 {
-    protected function addTabs(string $active): void
-    {
+    protected function addTabs(
+        string $active,
+        bool $disableExtensions = true,
+    ): void {
         $this->getTabs()
             ->add('view', [
                 'label'     => $this->translate('View'),
@@ -28,13 +30,16 @@ class FeedsController extends RSSController
                 'label'     => $this->translate('List'),
                 'url'       => 'RSS/feeds/list'
             ])
-            ->activate($active)
-            ->disableLegacyExtensions();
+            ->activate($active);
+
+        if ($disableExtensions) {
+            $this->getTabs()->disableLegacyExtensions();
+        }
     }
 
     public function indexAction(): void
     {
-        $this->addTabs('view');
+        $this->addTabs('view', false);
         $this->addTitle($this->translate('Feeds'));
         $feeds = $this->params->shift('feeds');
         if ($feeds !== null) {
@@ -62,7 +67,7 @@ class FeedsController extends RSSController
 
             $feedsCounter++;
             try {
-                $reader = new RSSReader($feed->url);
+                $reader = new RSSReader($feed->url, $feed->feedtype);
                 $data = $reader->fetch();
             } catch (Exception $ex) {
                 // TODO: Figure out a way to display the error
@@ -113,6 +118,7 @@ class FeedsController extends RSSController
             $data[] = [
                 'Name' => $feed->name,
                 'Link' => $feed->url,
+                'Type' => $this->translate($feed->feedtype->display()),
                 '_link' => "RSS/feed/edit?feed={$feed->name}",
             ];
         }

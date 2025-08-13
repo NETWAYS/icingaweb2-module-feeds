@@ -6,6 +6,7 @@ use Icinga\Web\Notification;
 use ipl\Web\Compat\CompatForm;
 use Icinga\Module\RSS\Storage\StorageInterface;
 use Icinga\Module\RSS\Storage\FeedDefinition;
+use Icinga\Module\RSS\Parser\FeedType;
 
 class CreateFeedForm extends CompatForm
 {
@@ -30,6 +31,19 @@ class CreateFeedForm extends CompatForm
             'description' => $this->translate('The URL to the feed'),
         ]);
 
+        $this->addElement('select', 'feedtype', [
+            'label'       => $this->translate('Feed Type'),
+            'required'    => true,
+            'description' => $this->translate(
+                'The type of feed that can be found at the defined URL'
+            ),
+            'multiOptions' => [
+                'auto' => $this->translate('Determine Automatically'),
+                'rss' => $this->translate('RSS'),
+                'atom' => $this->translate('Atom'),
+            ],
+        ]);
+
         $this->addElement('textarea', 'description', [
             'label'       => $this->translate('Description'),
             'description' => $this->translate(
@@ -38,18 +52,6 @@ class CreateFeedForm extends CompatForm
             ),
             'rows' => 4,
         ]);
-
-        /* $this->addElement('select', 'Statetype', array( */
-        /*     'label'       => $this->translate('State Type'), */
-        /*     'required'    => true, */
-        /*     'description' => $this->translate( */
-        /*         'Whether this process should be based on Icinga hard or soft states' */
-        /*     ), */
-        /*     'multiOptions' => array( */
-        /*         'soft' => $this->translate('Use SOFT states'), */
-        /*         'hard' => $this->translate('Use HARD states'), */
-        /*     ) */
-        /* )); */
 
         $this->addElement('submit', 'submit', [
             'label' => $this->translate('Submit')
@@ -60,9 +62,15 @@ class CreateFeedForm extends CompatForm
     {
         $name = $this->getValue('name');
         $url = $this->getValue('url');
+        $feedtype = FeedType::fromDisplay($this->getValue('feedtype') ?? 'auto');
         $description = $this->getValue('description');
 
-        $feed = new FeedDefinition($name, $url, $description);
+        $feed = new FeedDefinition(
+            $name,
+            $url,
+            $description,
+            $feedtype,
+        );
 
         if ($this->storage->getFeedByName($name) !== null) {
             Notification::error("A feed with the name {$name} already exsits");

@@ -130,6 +130,7 @@ class FeedController extends RSSController
             'name' => $feed->name,
             'url' => $feed->url,
             'description' => $feed->description,
+            'feedtype' => $feed->feedtype->display(),
         ]);
 
         $form->on(EditFeedForm::ON_SUCCESS, function () {

@@ -2,12 +2,15 @@
 
 namespace Icinga\Module\RSS\Storage;
 
+use Icinga\Module\RSS\Parser\FeedType;
+
 class FeedDefinition
 {
     public function __construct(
         public string $name,
         public string $url,
         public ?string $description = null,
+        public FeedType $feedtype = FeedType::Auto,
     ) {
     }
 
@@ -17,6 +20,7 @@ class FeedDefinition
             'name' => $this->name,
             'url' => $this->url,
             'description' => $this->description,
+            'feedtype' => $this->feedtype->display(),
         ];
     }
 
@@ -26,6 +30,7 @@ class FeedDefinition
             $data['name'],
             $data['url'],
             $data['description'] ?? null,
+            FeedType::fromDisplay($data['feedtype'] ?? 'auto'),
         );
     }
 }
