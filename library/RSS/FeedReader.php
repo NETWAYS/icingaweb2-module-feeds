@@ -2,6 +2,8 @@
 
 namespace Icinga\Module\RSS;
 
+use Icinga\Application\Icinga;
+use Icinga\Application\Version;
 use Icinga\Module\RSS\Parser\Result\Feed;
 use Icinga\Module\RSS\Parser\RSSParser;
 use Icinga\Module\RSS\Parser\AtomParser;
@@ -21,6 +23,20 @@ class FeedReader
         protected bool $trusted = false,
     ) {}
 
+    protected function getUserAgentString(): string
+    {
+        $rssVersion = Icinga::app()
+            ->getModuleManager()
+            ->getModule('RSS')
+            ->getVersion();
+
+        $phpVersion = PHP_VERSION;
+
+        $icingaWeb2Version = Version::get();
+
+        return "IcingaWeb2 Module RSS/{$rssVersion} (icinga-web={$icingaWeb2Version['appVersion']}; php={$phpVersion})";
+    }
+
     protected function fetchRaw() {
         $headers = [];
         $ch = curl_init();
@@ -39,7 +55,7 @@ class FeedReader
             }
         );
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'User-Agent: IcingaWeb2 RSS Module',
+            "User-Agent: {$this->getUserAgentString()}",
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         $response = curl_exec($ch);
