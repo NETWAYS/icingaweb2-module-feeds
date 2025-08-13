@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\RSS\Parser\Result;
 
-class RSSChannel
+class Feed
 {
     public ?string $title = null;
     public ?string $link = null;

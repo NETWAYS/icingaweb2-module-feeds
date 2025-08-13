@@ -41,7 +41,7 @@ class Item extends BaseHtmlElement
 
     protected function getIconElement(): BaseHtmlElement
     {
-        $image = $this->item->image ?? $this->item->channel->image;
+        $image = $this->item->image ?? $this->item->feed->image;
         if ($image) {
             return HtmlElement::create(
                 'img',
@@ -105,7 +105,7 @@ class Item extends BaseHtmlElement
 
     protected function getLink(): ?string
     {
-        return $this->item->link ?? $this->item->channel->link;
+        return $this->item->link ?? $this->item->feed->link;
     }
 
     protected function assemble(): void

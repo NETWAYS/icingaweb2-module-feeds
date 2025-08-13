@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\RSS;
 
-use Icinga\Module\RSS\Parser\Result\RSSChannel;
+use Icinga\Module\RSS\Parser\Result\Feed;
 use Icinga\Module\RSS\Parser\RSSParser;
 use Icinga\Module\RSS\Parser\AtomParser;
 use Icinga\Module\RSS\Parser\JsonfeedParser;
@@ -45,7 +45,7 @@ class FeedReader
         return [$headers, $response]; 
     }
 
-    protected function parse(string $rawResponse): ?RSSChannel
+    protected function parse(string $rawResponse): ?Feed
     {
         switch ($this->type) {
             case FeedType::Auto:
@@ -79,7 +79,7 @@ class FeedReader
         throw new Exception('Unreachable code');
     }
 
-    public function fetch(): ?RSSChannel {
+    public function fetch(): ?Feed {
         [$headers, $rawResponse] = $this->fetchRaw();
 
         // FIXME: This assumes the request was successful

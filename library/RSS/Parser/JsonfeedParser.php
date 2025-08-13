@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\RSS\Parser;
 
-use Icinga\Module\RSS\Parser\Result\RSSChannel;
+use Icinga\Module\RSS\Parser\Result\Feed;
 use Icinga\Module\RSS\Parser\Result\RSSItem;
 
 use \Exception;
@@ -11,7 +11,7 @@ use \DateTimeInterface;
 
 class JsonfeedParser
 {
-    public static function parse(string $raw): RSSChannel
+    public static function parse(string $raw): Feed
     {
         $json = json_decode($raw, true);
         if ($json === null) {
@@ -20,17 +20,17 @@ class JsonfeedParser
 
         // TODO: validate version field
 
-        return static::parseChannel($json);
+        return static::parseFeed($json);
     }
 
-    protected static function parseChannel(array $json): RSSChannel
+    protected static function parseFeed(array $json): Feed
     {
-        $channel = new RSSChannel();
+        $feed = new Feed();
 
-        $channel->title = $json['title'] ?? null;
-        $channel->link = $json['home_page_url'] ?? $json['feed_url'] ?? null;
-        $channel->image = $json['icon'] ?? $json['favicon'] ?? null;
-        $channel->description = $json['description'] ?? null;
+        $feed->title = $json['title'] ?? null;
+        $feed->link = $json['home_page_url'] ?? $json['feed_url'] ?? null;
+        $feed->image = $json['icon'] ?? $json['favicon'] ?? null;
+        $feed->description = $json['description'] ?? null;
 
         $items = $json['items'] ?? null;
         if ($items === null) {
@@ -38,11 +38,11 @@ class JsonfeedParser
         }
 
         foreach ($items as $jsonItem) {
-            $item = static::parseItem($channel, $jsonItem);
-            $channel->addItem($item);
+            $item = static::parseItem($feed, $jsonItem);
+            $feed->addItem($item);
         }
 
-        return $channel;
+        return $feed;
     }
 
     protected static function parseDateTime(string $dateStr): ?DateTime
@@ -69,10 +69,10 @@ class JsonfeedParser
         return $datetime;
     }
 
-    protected static function parseItem(RSSChannel $channel, array $json): RSSItem
+    protected static function parseItem(Feed $feed, array $json): RSSItem
     {
         $item = new RSSItem();
-        $item->channel = $channel;
+        $item->feed = $feed;
 
         $item->title = $json['title'] ?? null;
         $item->link = $json['url'] ?? $json['external_url'] ?? null;

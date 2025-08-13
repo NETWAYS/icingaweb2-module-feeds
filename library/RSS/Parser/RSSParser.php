@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\RSS\Parser;
 
-use Icinga\Module\RSS\Parser\Result\RSSChannel;
+use Icinga\Module\RSS\Parser\Result\Feed;
 use Icinga\Module\RSS\Parser\Result\RSSItem;
 
 use \SimpleXMLElement;
@@ -12,7 +12,7 @@ use \DateTimeInterface;
 
 class RSSParser
 {
-    public static function parse(string $raw): RSSChannel
+    public static function parse(string $raw): Feed
     {
         // FIXME: This assumes that the string is valid xml
         $xmlElement = new SimpleXMLElement($raw);
@@ -23,41 +23,41 @@ class RSSParser
 
         $xmlElement->rewind();
 
-        return static::parseChannel($xmlElement);
+        return static::parseFeed($xmlElement);
     }
 
-    protected static function parseChannel(SimpleXMLElement $xml): RSSChannel
+    protected static function parseFeed(SimpleXMLElement $xml): Feed
     {
         // TODO: Check if the element is of the right type
-        $channel = new RSSChannel();
+        $feed = new Feed();
 
         foreach ($xml->getChildren() as $elementName => $xmlItemElement) {
             switch($elementName) {
                 case 'title':
-                    $channel->title = $xmlItemElement->__toString();
+                    $feed->title = $xmlItemElement->__toString();
                     break;
                 case 'link':
-                    $channel->link = $xmlItemElement->__toString();
+                    $feed->link = $xmlItemElement->__toString();
                     break;
                 case 'description':
-                    $channel->description = $xmlItemElement->__toString();
+                    $feed->description = $xmlItemElement->__toString();
                     break;
                 case 'image':
                     foreach($xmlItemElement as $imgTagName => $imgElement) {
                         if($imgTagName === 'url') {
-                            $channel->image = $imgElement->__toString();
+                            $feed->image = $imgElement->__toString();
                             break;
                         }
                     }
                     break;
                 case 'item':
-                    $item = static::parseItem($channel, $xmlItemElement);
-                    $channel->addItem($item);
+                    $item = static::parseItem($feed, $xmlItemElement);
+                    $feed->addItem($item);
                     break;
             }
         }
 
-        return $channel;
+        return $feed;
     }
 
     protected static function parseDateTime(string $dateStr): ?DateTime
@@ -105,11 +105,11 @@ class RSSParser
         return $datetime;
     }
 
-    protected static function parseItem(RSSChannel $channel, SimpleXMLElement $xml): RSSItem
+    protected static function parseItem(Feed $feed, SimpleXMLElement $xml): RSSItem
     {
         // TODO: Check if the element is of the right type
         $item = new RSSItem();
-        $item->channel = $channel;
+        $item->feed = $feed;
 
         foreach ($xml->children() as $elementName => $xmlItemElement) {
             switch($elementName) {
