@@ -129,6 +129,7 @@ class FeedController extends RSSController
         $form->populate([
             'name' => $feed->name,
             'url' => $feed->url,
+            'description' => $feed->description,
         ]);
 
         $form->on(EditFeedForm::ON_SUCCESS, function () {

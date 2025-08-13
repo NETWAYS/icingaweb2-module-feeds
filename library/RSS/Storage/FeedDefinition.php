@@ -7,6 +7,7 @@ class FeedDefinition
     public function __construct(
         public string $name,
         public string $url,
+        public ?string $description = null,
     ) {
     }
 
@@ -15,6 +16,7 @@ class FeedDefinition
         return [
             'name' => $this->name,
             'url' => $this->url,
+            'description' => $this->description,
         ];
     }
 
@@ -22,7 +24,8 @@ class FeedDefinition
     {
         return new self(
             $data['name'],
-            $data['url']
+            $data['url'],
+            $data['description'] ?? null,
         );
     }
 }

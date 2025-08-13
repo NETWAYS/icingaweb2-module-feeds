@@ -30,14 +30,15 @@ class CreateFeedForm extends CompatForm
             'description' => $this->translate('The URL to the feed'),
         ]);
 
-        /* $this->addElement('textarea', 'Description', array( */
-        /*     'label'       => $this->translate('Description'), */
-        /*     'description' => $this->translate( */
-        /*         'A slightly more detailed description for this process, about 100-150 characters long' */
-        /*     ), */
-        /*     'rows' => 4, */
-        /* )); */
-        /**/
+        $this->addElement('textarea', 'description', [
+            'label'       => $this->translate('Description'),
+            'description' => $this->translate(
+                'A slightly more detailed description for this process, '
+                . 'about 100-150 characters long'
+            ),
+            'rows' => 4,
+        ]);
+
         /* $this->addElement('select', 'Statetype', array( */
         /*     'label'       => $this->translate('State Type'), */
         /*     'required'    => true, */
@@ -50,17 +51,6 @@ class CreateFeedForm extends CompatForm
         /*     ) */
         /* )); */
 
-        /* $label = $this->translate('Delete'); */
-        /* $el = $this->createElement( */
-        /*     'submit', */
-        /*     $label, */
-        /*     [ */
-        /*         'data-base-target' => '_main', */
-        /*     ]) */
-        /*     ->setLabel($label); */
-        /* $this->deleteButtonName = $el->getName(); */
-        /* $this->addElement($el); */
-
         $this->addElement('submit', 'submit', [
             'label' => $this->translate('Submit')
         ]);
@@ -70,8 +60,9 @@ class CreateFeedForm extends CompatForm
     {
         $name = $this->getValue('name');
         $url = $this->getValue('url');
+        $description = $this->getValue('description');
 
-        $feed = new FeedDefinition($name, $url);
+        $feed = new FeedDefinition($name, $url, $description);
 
         if ($this->storage->getFeedByName($name) !== null) {
             Notification::error("A feed with the name {$name} already exsits");

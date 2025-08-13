@@ -34,13 +34,14 @@ class EditFeedForm extends CompatForm
             'description' => $this->translate('The URL to the feed'),
         ]);
 
-        /* $this->addElement('textarea', 'Description', array( */
-        /*     'label'       => $this->translate('Description'), */
-        /*     'description' => $this->translate( */
-        /*         'A slightly more detailed description for this process, about 100-150 characters long' */
-        /*     ), */
-        /*     'rows' => 4, */
-        /* )); */
+        $this->addElement('textarea', 'description', [
+            'label'       => $this->translate('Description'),
+            'description' => $this->translate(
+                'A slightly more detailed description for this process, '
+                . 'about 100-150 characters long'
+            ),
+            'rows' => 4,
+        ]);
         /**/
         /* $this->addElement('select', 'Statetype', array( */
         /*     'label'       => $this->translate('State Type'), */
@@ -99,6 +100,7 @@ class EditFeedForm extends CompatForm
         } else if ($this->getSubmitButton()->hasBeenPressed() ?? false) {
             $name = $this->getValue('name');
             $url = $this->getValue('url');
+            $description = $this->getValue('description');
 
             $isRename = $name !== $this->feed->name;
 
@@ -112,6 +114,7 @@ class EditFeedForm extends CompatForm
 
             $this->feed->name = $name;
             $this->feed->url = $url;
+            $this->feed->description = $description;
 
             if ($isRename) {
                 $this->storage->addFeed($this->feed);
