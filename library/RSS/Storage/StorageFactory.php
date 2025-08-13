@@ -10,7 +10,7 @@ class StorageFactory
     {
         // TODO: Once there are multiple storage options they can be determined
         // from the config file
-        return new Filesystem();
+        return new FilesystemStorage();
     }
 
     public static function getStorage(): StorageInterface

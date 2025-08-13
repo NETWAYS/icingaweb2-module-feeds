@@ -6,7 +6,7 @@ use Exception;
 use Icinga\Application\Icinga;
 use Icinga\Exception\SystemPermissionException;
 
-class Filesystem implements StorageInterface
+class FilesystemStorage implements StorageInterface
 {
     const FILE_NAME = "feeds.json";
     const JSON_FLAGS = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;

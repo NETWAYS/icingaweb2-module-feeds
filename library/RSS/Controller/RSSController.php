@@ -2,15 +2,11 @@
 
 namespace Icinga\Module\RSS\Controller;
 
-use Icinga\Module\RSS\FeedReader;
-use Icinga\Module\RSS\Storage\Filesystem;
-use Icinga\Module\RSS\Web\Table;
 use Icinga\Module\RSS\Web\Item;
 
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
 use ipl\Web\Compat\CompatController;
-use ipl\Web\Widget\Link;
 
 use \Exception;
 use \DateTime;
