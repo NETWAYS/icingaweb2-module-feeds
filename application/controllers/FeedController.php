@@ -152,6 +152,10 @@ class FeedController extends RSSController
             'trusted' => $feed->trusted ? 'true' : 'false',
         ]);
 
+        $form->on(CreateFeedForm::ON_SUCCESS, function () {
+            $this->redirectNow('__CLOSE__');
+        });
+
         $form->handleRequest($this->getServerRequest());
 
         $this->addContent($form);
