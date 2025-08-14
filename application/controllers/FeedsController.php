@@ -55,7 +55,6 @@ class FeedsController extends RSSController
         if ($feeds !== null) {
             $feeds = explode(',', $feeds);
         }
-        $limit = $this->getLimitParam();
         $date = $this->getDateParam();
         if ($date !== null) {
             return;
@@ -107,7 +106,7 @@ class FeedsController extends RSSController
         $size = $viewModeSwitcher->getViewMode();
         $this->renderItems(
             $items,
-            $limit,
+            $limitControl->getLimit(),
             $date,
             $size === 'minimal',
         );

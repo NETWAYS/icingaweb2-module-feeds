@@ -208,6 +208,15 @@ class RSSController extends CompatController
             }
         )->handleRequest(ServerRequest::fromGlobals());
 
+        $viewMode = $viewModeSwitcher->getViewMode();
+        if ($viewMode === 'minimal' || $viewMode === 'grid') {
+            $hasLimitParam = Url::fromRequest()->hasParam($limitControl->getLimitParam());
+
+            if (!$hasLimitParam) {
+                $limitControl->setDefaultLimit($limitControl->getDefaultLimit() * 2);
+            }
+        }
+
         $requestPath =  $session->get('request_path');
         if ($requestPath && $requestPath !== $requestRoute) {
             $session->clear();
