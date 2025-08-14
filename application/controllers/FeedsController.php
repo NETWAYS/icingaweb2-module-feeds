@@ -23,13 +23,13 @@ class FeedsController extends RSSController
         bool $disableExtensions = true,
     ): void {
         $this->getTabs()
-            ->add('view', [
-                'label'     => $this->translate('View'),
-                'url'       => 'RSS/feeds'
-            ])
             ->add('list', [
                 'label'     => $this->translate('List'),
                 'url'       => 'RSS/feeds/list'
+            ])
+            ->add('view', [
+                'label'     => $this->translate('View'),
+                'url'       => 'RSS/feeds'
             ])
             ->activate($active);
 
