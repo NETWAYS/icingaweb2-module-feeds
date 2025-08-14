@@ -137,8 +137,11 @@ class FeedsController extends RSSController
                 'Name' => $feed->name,
                 'Link' => $feed->url,
                 'Type' => $this->translate($feed->type->display()),
-                '_link' => "RSS/feed/edit?feed={$feed->name}",
+                '_link' => "RSS/feed?feed={$feed->name}",
                 '_title' => $feed->description,
+                '_actions' => [
+                    $this->translate('Edit') => "RSS/feed/edit?feed={$feed->name}",
+                ],
             ];
         }
 
