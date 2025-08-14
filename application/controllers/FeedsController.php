@@ -126,7 +126,7 @@ class FeedsController extends RSSController
         $this->assertPermission('RSS/list');
 
         $this->addTabs('list');
-        $this->addTitle($this->translate('List Feeds'));
+        $this->addTitle($this->translate('Feed List'));
 
         if ($this->hasPermission('RSS/modify')) {
             $this->addControl(
