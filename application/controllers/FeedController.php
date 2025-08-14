@@ -10,6 +10,8 @@ use Icinga\Module\RSS\Storage\StorageFactory;
 use Icinga\Module\RSS\Controller\RSSController;
 use Icinga\Module\RSS\Parser\FeedType;
 
+use ipl\Html\Attributes;
+use ipl\Html\HtmlElement;
 use Icinga\Application\Benchmark;
 
 use \Exception;
@@ -25,7 +27,15 @@ class FeedController extends RSSController
             ])
             ->activate('view');
 
-        $this->addTitle($this->translate("Feed"));
+        $controlWrapper = HtmlElement::create('div',
+            Attributes::create([
+                'class' => 'control-wrapper',
+            ]),
+            []
+        );
+        $this->addControl($controlWrapper);
+
+        $this->addTitle($this->translate('Feed'), $controlWrapper);
         [$url, $type, $trusted] = $this->getFeedInfo();
         if ($url === null) {
             return;
@@ -51,8 +61,8 @@ class FeedController extends RSSController
         $limitControl = $this->createLimitControl();
         $viewModeSwitcher = $this->createViewModeSwitcher($limitControl);
 
-        $this->addControl($limitControl);
-        $this->addControl($viewModeSwitcher);
+        $controlWrapper->add($limitControl);
+        $controlWrapper->add($viewModeSwitcher);
 
         $size = $viewModeSwitcher->getViewMode();
         $this->renderItems(

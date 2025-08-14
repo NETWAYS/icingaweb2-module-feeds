@@ -34,11 +34,15 @@ class RSSController extends CompatController
         ));
     }
 
-    protected function addTitle(string $title) {
-        $this->addControl(
-            HtmlElement::create('h1', null, $title)
-        );
+    protected function addTitle(string $title, ?HtmlElement $parent = null): HtmlElement {
+        $titleElement = HtmlElement::create('h1', null, $title);
+        if ($parent !== null) {
+            $parent->add($titleElement);
+        } else {
+            $this->addControl($titleElement);
+        }
         $this->setTitle($title);
+        return $titleElement;
     }
 
     protected function renderItems(

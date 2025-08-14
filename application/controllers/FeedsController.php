@@ -41,7 +41,16 @@ class FeedsController extends RSSController
     public function indexAction(): void
     {
         $this->addTabs('view', false);
-        $this->addTitle($this->translate('Feeds'));
+
+        $controlWrapper = HtmlElement::create('div',
+            Attributes::create([
+                'class' => 'control-wrapper',
+            ]),
+            []
+        );
+        $this->addControl($controlWrapper);
+
+        $this->addTitle($this->translate('Feeds'), $controlWrapper);
         $feeds = $this->params->shift('feeds');
         if ($feeds !== null) {
             $feeds = explode(',', $feeds);
@@ -92,8 +101,8 @@ class FeedsController extends RSSController
         $limitControl = $this->createLimitControl();
         $viewModeSwitcher = $this->createViewModeSwitcher($limitControl);
 
-        $this->addControl($limitControl);
-        $this->addControl($viewModeSwitcher);
+        $controlWrapper->add($limitControl);
+        $controlWrapper->add($viewModeSwitcher);
 
         $size = $viewModeSwitcher->getViewMode();
         $this->renderItems(

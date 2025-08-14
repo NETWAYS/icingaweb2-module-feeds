@@ -1,0 +1,21 @@
+@border-color: @gray-lighter;
+
+.control-wrapper {
+    display: grid;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    grid-template-columns: 1fr auto auto;
+    gap: 0.5em;
+    border-bottom: 1px solid var(--gray-lighter, @border-color);
+    margin-top: -0.5em;
+
+    h1 {
+        width: 100%;
+        border-bottom: none;
+    }
+}
+
+.text-dim {
+    opacity: 0.5;
+}
