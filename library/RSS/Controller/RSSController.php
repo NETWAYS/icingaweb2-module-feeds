@@ -7,7 +7,7 @@ use Icinga\Application\Config;
 use Icinga\Data\ConfigObject;
 use Icinga\Module\RSS\Web\Item;
 
-use Icinga\Module\RSS\Web\ViewModeSwitcher;
+use Icinga\Module\RSS\Web\FeedViewModeSwitcher;
 use Icinga\User\Preferences;
 use Icinga\User\Preferences\PreferencesStore;
 use Icinga\Util\Json;
@@ -118,15 +118,15 @@ class RSSController extends CompatController
      * @param LimitControl $limitControl
      * @param bool $verticalPagination
      *
-     * @return ViewModeSwitcher
+     * @return FeedViewModeSwitcher
      */
     public function createViewModeSwitcher(
         LimitControl $limitControl,
         bool $verticalPagination = false
-    ): ViewModeSwitcher {
+    ): FeedViewModeSwitcher {
         $controllerName = $this->getRequest()->getControllerName();
 
-        $viewModeSwitcher = new ViewModeSwitcher();
+        $viewModeSwitcher = new FeedViewModeSwitcher();
 
         $viewModeSwitcher->setIdProtector([$this->getRequest(), 'protectId']);
 
@@ -159,8 +159,8 @@ class RSSController extends CompatController
         );
 
         $viewModeSwitcher->on(
-            ViewModeSwitcher::ON_SUCCESS,
-            function (ViewModeSwitcher $viewModeSwitcher) use (
+            FeedViewModeSwitcher::ON_SUCCESS,
+            function (FeedViewModeSwitcher $viewModeSwitcher) use (
                 $user,
                 $preferredModes,
                 $verticalPagination,

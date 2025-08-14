@@ -15,7 +15,7 @@ use ipl\Web\Widget\IcingaIcon;
 /**
  * A modified version of a view mode switcher with only two options
  */
-class ViewModeSwitcher extends Form
+class FeedViewModeSwitcher extends Form
 {
     use FormUid;
 
