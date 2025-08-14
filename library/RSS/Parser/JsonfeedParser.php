@@ -81,10 +81,7 @@ class JsonfeedParser
         if ($feed->trusted) {
             $item->description = $json['content_html'] ?? $json['content_text'] ?? $json['summary'] ?? null;
         } else {
-            $item->description = $json['content_text'] ?? $json['summary'] ?? null;
-            if ($item->description === null && array_key_exists('content_html', $json)) {
-                $item->description = html_entity_decode(strip_tags($json['content_html']));
-            }
+            $item->description = $json['content_text'] ?? $json['summary'] ?? $json['content_html'] ?? null;
         }
 
         $item->categories = $json['tags'] ?? [];

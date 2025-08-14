@@ -92,9 +92,14 @@ class Item extends BaseHtmlElement
 
     protected function getContentElement(): ?BaseHtmlElement
     {
-        // FIXME: This is horribly insecure
-        $description = new Text($this->item->description);
-        $description->setEscaped($this->item->feed->trusted);
+        $text = $this->item->description;
+        $trusted = $this->item->feed->trusted;
+        if ($trusted) {
+            $description = new Text($this->item->description);
+            $description->setEscaped(true);
+        } else {
+            $description = html_entity_decode(strip_tags($text));
+        }
         return HtmlElement::create('div',
             Attributes::create([
                 'class' => 'feed-content-wrapper',
