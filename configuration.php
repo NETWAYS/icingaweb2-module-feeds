@@ -1,8 +1,17 @@
 <?php
 
-$rssMenu = $this->menuSection('RSS')
-    ->setIcon('rss')
-    ->setUrl('RSS/feeds/list');
+use Icinga\Authentication\Auth;
+
+$auth = Auth::getInstance();
+if ($auth->hasPermission('RSS/list')) {
+    $rssMenu = $this->menuSection('RSS')
+        ->setIcon('rss')
+        ->setUrl('RSS/feeds/list');
+} else if ($auth->hasPermission('RSS/view')) {
+    $rssMenu = $this->menuSection('RSS')
+        ->setIcon('rss')
+        ->setUrl('RSS/feeds');
+}
 
 $this->provideCssFile('general.less');
 $this->provideCssFile('item.less');
