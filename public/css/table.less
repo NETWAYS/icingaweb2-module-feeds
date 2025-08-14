@@ -11,24 +11,29 @@
 .common-table {
     max-width: 68em;
 
-    & th {
+    th {
         border-bottom: 1px solid var(--text-color, var(--white, @white));
         padding-top: 0.5em;
     }
 
-    & tbody tr:hover {
+    tbody tr:hover {
         background-color: var(--tr-hover-color, @hover-bg);
         cursor: pointer;
     }
 
-    & td {
+    td {
         border-bottom: 1px solid var(--gray-lighter, @border-color);
         padding-top: 0.2em;
         padding-bottom: 0.2em;
         vertical-align: middle;
     }
 
-    & td > * {
+    td > * {
         display: block;
+    }
+
+    .table-actions {
+        width: 1%;
+        white-space: nowrap;
     }
 }

@@ -39,16 +39,22 @@ class Table extends BaseHtmlElement
             }
         }
 
-        if ($hasAction) {
-            $columns[] = '';
-        }
-
         $headers = [];
         foreach ($columns as $column) {
             $headers[] = HtmlElement::create(
                 'th',
                 Attributes::create([]),
                 $column
+            );
+        }
+
+        if ($hasAction) {
+            $headers[] = HtmlElement::create(
+                'th',
+                Attributes::create([
+                    'class' => 'table-actions',
+                ]),
+                ''
             );
         }
 
@@ -93,6 +99,7 @@ class Table extends BaseHtmlElement
                 foreach ($actions as $name => $target) {
                     $actionElements[] = new Link($name, $target, Attributes::create([
                         'data-base-target' => '_next',
+                        'class' => 'table-actions',
                     ]));
                 }
                 $rowElements[] = HtmlElement::create('td', null, $actionElements);
