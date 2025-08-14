@@ -20,6 +20,8 @@ class FeedController extends RSSController
 {
     public function indexAction(): void
     {
+        $this->assertPermission('RSS/view');
+
         $this->getTabs()
             ->add('view', [
                 'label'     => $this->translate('View'),
@@ -88,11 +90,12 @@ class FeedController extends RSSController
         }
 
         $url = $this->params->shift('url');
-
         if ($url === null or $url === '') {
             $this->displayError('No feed configured');
             return [null, null];
         }
+
+        $this->assertPermission('RSS/view/arbitrary');
 
         $type = $this->params->shift('type') ?? 'auto';
 
@@ -101,7 +104,7 @@ class FeedController extends RSSController
 
     public function createAction(): void
     {
-        /* $this->assertPermission('rss/create'); */
+        $this->assertPermission('RSS/modify');
 
         $this->getTabs()->disableLegacyExtensions();
 
@@ -121,7 +124,7 @@ class FeedController extends RSSController
 
     public function editAction(): void
     {
-        /* $this->assertPermission('rss/edit'); */
+        $this->assertPermission('RSS/modify');
 
         $this->getTabs()->disableLegacyExtensions();
 

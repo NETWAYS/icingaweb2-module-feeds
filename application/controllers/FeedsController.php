@@ -22,16 +22,21 @@ class FeedsController extends RSSController
         string $active,
         bool $disableExtensions = true,
     ): void {
-        $this->getTabs()
-            ->add('list', [
-                'label'     => $this->translate('List'),
-                'url'       => 'RSS/feeds/list'
-            ])
-            ->add('view', [
-                'label'     => $this->translate('View'),
-                'url'       => 'RSS/feeds'
-            ])
-            ->activate($active);
+        if ($this->hasPermission('RSS/list')) {
+            $this->getTabs()->add('list', [
+                'label' => $this->translate('List'),
+                'url' => 'RSS/feeds/list'
+            ]);
+        }
+
+        if ($this->hasPermission('RSS/view')) {
+            $this->getTabs()->add('view', [
+                'label' => $this->translate('View'),
+                'url' => 'RSS/feeds'
+            ]);
+        }
+
+        $this->getTabs()->activate($active);
 
         if ($disableExtensions) {
             $this->getTabs()->disableLegacyExtensions();
@@ -40,6 +45,8 @@ class FeedsController extends RSSController
 
     public function indexAction(): void
     {
+        $this->assertPermission('RSS/view');
+
         $this->addTabs('view', false);
 
         $controlWrapper = HtmlElement::create('div',
@@ -116,32 +123,43 @@ class FeedsController extends RSSController
 
     public function listAction(): void
     {
+        $this->assertPermission('RSS/list');
+
         $this->addTabs('list');
         $this->addTitle($this->translate('List Feeds'));
 
-        $this->addControl(
-            new Link('Add', 'RSS/feed/create', Attributes::create([
-                'title' => $this->translate('Create a new Feed'),
-                'class' => 'icon-plus',
-                'data-base-target' => '_next',
-            ]))
-        );
+        if ($this->hasPermission('RSS/modify')) {
+            $this->addControl(
+                new Link('Add', 'RSS/feed/create', Attributes::create([
+                    'title' => $this->translate('Create a new Feed'),
+                    'class' => 'icon-plus',
+                    'data-base-target' => '_next',
+                ]))
+            );
+        }
 
         $storage = StorageFactory::getStorage();
         $feeds = $storage->getFeeds();
 
         $data = [];
         foreach ($feeds as $feed) {
-            $data[] = [
-                'Name' => $feed->name,
-                'Link' => $feed->url,
-                'Type' => $this->translate($feed->type->display()),
-                '_link' => "RSS/feed?feed={$feed->name}",
+            $feedData = [
+                $this->translate('Name') => $feed->name,
+                $this->translate('Type') => $this->translate($feed->type->display()),
                 '_title' => $feed->description,
-                '_actions' => [
-                    $this->translate('Edit') => "RSS/feed/edit?feed={$feed->name}",
-                ],
             ];
+
+            if ($this->hasPermission('RSS/view')) {
+                $feedData['_link'] = "RSS/feed?feed={$feed->name}";
+            }
+
+            if ($this->hasPermission('RSS/modify')) {
+                $feedData['_actions'] = [
+                    $this->translate('Edit') => "RSS/feed/edit?feed={$feed->name}",
+                ];
+            }
+
+            $data[] = $feedData;
         }
 
         $table = new Table($data);
