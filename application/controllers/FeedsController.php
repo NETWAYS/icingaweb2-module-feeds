@@ -91,7 +91,7 @@ class FeedsController extends BaseController
         }
 
         if ($feedsCounter == 0) {
-            $this->displayError('No feeds to display');
+            $this->displayError($this->translate('No feeds to display'));
             return;
         }
 
@@ -130,7 +130,7 @@ class FeedsController extends BaseController
 
         if ($this->hasPermission('RSS/modify')) {
             $this->addControl(
-                new Link('Add', 'RSS/feed/create', Attributes::create([
+                new Link($this->translate('Add'), 'RSS/feed/create', Attributes::create([
                     'title' => $this->translate('Create a new Feed'),
                     'class' => 'icon-plus',
                     'data-base-target' => '_next',

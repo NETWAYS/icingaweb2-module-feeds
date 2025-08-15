@@ -21,7 +21,7 @@ class CreateFeedForm extends CompatForm
             'label'      => $this->translate('Name'),
             'required'   => true,
             'description' => $this->translate(
-                'This is the unique identifier of this process'
+                'This is the unique identifier of this feed'
             ),
         ]);
 
@@ -61,7 +61,7 @@ class CreateFeedForm extends CompatForm
         $this->addElement('textarea', 'description', [
             'label'       => $this->translate('Description'),
             'description' => $this->translate(
-                'A slightly more detailed description for this process, '
+                'A slightly more detailed description for this feed, '
                 . 'about 100-150 characters long'
             ),
             'rows' => 4,

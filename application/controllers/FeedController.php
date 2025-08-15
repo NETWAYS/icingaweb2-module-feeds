@@ -91,7 +91,7 @@ class FeedController extends BaseController
 
         $url = $this->params->shift('url');
         if ($url === null or $url === '') {
-            $this->displayError('No feed configured');
+            $this->displayError($this->translate('No feed configured'));
             return [null, null, null];
         }
 
@@ -135,7 +135,7 @@ class FeedController extends BaseController
 
         $feed = $storage->getFeedByName($name);
         if ($feed === null) {
-            $this->displayError('Feed Not Found');
+            $this->displayError($this->translate('Feed Not Found'));
             return;
         }
 

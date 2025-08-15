@@ -65,7 +65,7 @@ class BaseController extends CompatController
         }
 
         if (count($elements) == 0) {
-            $this->displayError('No news to display');
+            $this->displayError($this->translate('No news to display'));
             return;
         }
 
@@ -101,7 +101,7 @@ class BaseController extends CompatController
                 $date = new DateTime($date);
                 return $date;
             } catch (Exception $ex) {
-                $this->displayError('Invalid date');
+                $this->displayError($this->translate('Invalid date'));
                 return false;
             }
         }
