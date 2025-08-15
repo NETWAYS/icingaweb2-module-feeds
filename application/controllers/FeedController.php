@@ -84,7 +84,7 @@ class FeedController extends RSSController
             $feed = $storage->getFeedByName($name);
             if ($feed === null) {
                 $this->displayError('Feed not found');
-                return [null, null];
+                return [null, null, null];
             }
             return [$feed->url, $feed->type, $feed->trusted];
         }
@@ -92,7 +92,7 @@ class FeedController extends RSSController
         $url = $this->params->shift('url');
         if ($url === null or $url === '') {
             $this->displayError('No feed configured');
-            return [null, null];
+            return [null, null, null];
         }
 
         $this->assertPermission('RSS/view/arbitrary');
