@@ -7,7 +7,7 @@ use Icinga\Module\RSS\Web\Item;
 use Icinga\Module\RSS\Forms\CreateFeedForm;
 use Icinga\Module\RSS\Forms\EditFeedForm;
 use Icinga\Module\RSS\Storage\StorageFactory;
-use Icinga\Module\RSS\Controller\RSSController;
+use Icinga\Module\RSS\Controller\BaseController;
 use Icinga\Module\RSS\Parser\FeedType;
 
 use ipl\Html\Attributes;
@@ -16,7 +16,7 @@ use Icinga\Application\Benchmark;
 
 use \Exception;
 
-class FeedController extends RSSController
+class FeedController extends BaseController
 {
     public function indexAction(): void
     {

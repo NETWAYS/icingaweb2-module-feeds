@@ -6,7 +6,7 @@ use Icinga\Module\RSS\FeedReader;
 use Icinga\Module\RSS\Storage\StorageFactory;
 use Icinga\Module\RSS\Web\Table;
 use Icinga\Module\RSS\Web\Item;
-use Icinga\Module\RSS\Controller\RSSController;
+use Icinga\Module\RSS\Controller\BaseController;
 
 use Icinga\Application\Benchmark;
 use ipl\Html\Attributes;
@@ -16,7 +16,7 @@ use ipl\Web\Widget\Link;
 use \Exception;
 use \DateTime;
 
-class FeedsController extends RSSController
+class FeedsController extends BaseController
 {
     protected function addTabs(
         string $active,

@@ -20,7 +20,7 @@ use \DateTime;
 use ipl\Web\Control\LimitControl;
 use ipl\Web\Url;
 
-class RSSController extends CompatController
+class BaseController extends CompatController
 {
     protected function displayError(string $msg): void
     {
