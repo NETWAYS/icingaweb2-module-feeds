@@ -1,13 +1,13 @@
 <?php
 
-namespace Icinga\Module\RSS\Controller;
+namespace Icinga\Module\Feeds\Controller;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use Icinga\Application\Config;
 use Icinga\Data\ConfigObject;
-use Icinga\Module\RSS\Web\Item;
+use Icinga\Module\Feeds\Web\Item;
 
-use Icinga\Module\RSS\Web\FeedViewModeSwitcher;
+use Icinga\Module\Feeds\Web\FeedViewModeSwitcher;
 use Icinga\User\Preferences;
 use Icinga\User\Preferences\PreferencesStore;
 use Icinga\Util\Json;
@@ -131,10 +131,10 @@ class BaseController extends CompatController
         $viewModeSwitcher->setIdProtector([$this->getRequest(), 'protectId']);
 
         $user = $this->Auth()->getUser();
-        if (($preferredModes = $user->getAdditional('rss.view_modes')) === null) {
+        if (($preferredModes = $user->getAdditional('feeds.view_modes')) === null) {
             try {
                 $preferredModes = Json::decode(
-                    $user->getPreferences()->getValue('rss', 'view_modes', '[]'),
+                    $user->getPreferences()->getValue('feeds', 'view_modes', '[]'),
                     true
                 );
             } catch (JsonDecodeException $e) {
@@ -142,7 +142,7 @@ class BaseController extends CompatController
                 $preferredModes = [];
             }
 
-            $user->setAdditional('rss.view_modes', $preferredModes);
+            $user->setAdditional('feeds.view_modes', $preferredModes);
         }
 
         $requestRoute = $this->getRequest()->getUrl()->getPath();
@@ -155,7 +155,7 @@ class BaseController extends CompatController
         ]);
 
         $session = $this->Window()->getSessionNamespace(
-            'rss-viewmode-' . $this->Window()->getContainerId()
+            'feeds-viewmode-' . $this->Window()->getContainerId()
         );
 
         $viewModeSwitcher->on(
@@ -170,7 +170,7 @@ class BaseController extends CompatController
                 $requestUrl = Url::fromRequest();
 
                 $preferredModes[$requestUrl->getPath()] = $viewMode;
-                $user->setAdditional('rss.view_modes', $preferredModes);
+                $user->setAdditional('feeds.view_modes', $preferredModes);
 
                 try {
                     $preferencesStore = PreferencesStore::create(new ConfigObject([
@@ -182,7 +182,7 @@ class BaseController extends CompatController
                     ]), $user);
                     $preferencesStore->load();
                     $preferencesStore->save(
-                        new Preferences(['rss' => ['view_modes' => Json::encode($preferredModes)]])
+                        new Preferences(['feeds' => ['view_modes' => Json::encode($preferredModes)]])
                     );
                 } catch (Exception $e) {
                     Logger::error('Failed to save preferred view mode for user "%s": %s', $user->getUsername(), $e);

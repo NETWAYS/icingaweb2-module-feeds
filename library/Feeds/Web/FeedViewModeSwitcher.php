@@ -2,7 +2,7 @@
 
 /* Icinga DB Web | (c) 2020 Icinga GmbH | GPLv2 */
 
-namespace Icinga\Module\RSS\Web;
+namespace Icinga\Module\Feeds\Web;
 
 use ipl\Html\Attributes;
 use ipl\Html\Form;

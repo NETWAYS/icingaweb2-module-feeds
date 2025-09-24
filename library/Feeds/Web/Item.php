@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\RSS\Web;
+namespace Icinga\Module\Feeds\Web;
 
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Attributes;
@@ -8,7 +8,7 @@ use ipl\Html\HtmlElement;
 use ipl\Html\Text;
 use ipl\Web\Widget\Icon;
 
-use Icinga\Module\RSS\Parser\Result\FeedItem;
+use Icinga\Module\Feeds\Parser\Result\FeedItem;
 
 class Item extends BaseHtmlElement
 {

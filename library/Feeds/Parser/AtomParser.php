@@ -1,9 +1,9 @@
 <?php
 
-namespace Icinga\Module\RSS\Parser;
+namespace Icinga\Module\Feeds\Parser;
 
-use Icinga\Module\RSS\Parser\Result\Feed;
-use Icinga\Module\RSS\Parser\Result\FeedItem;
+use Icinga\Module\Feeds\Parser\Result\Feed;
+use Icinga\Module\Feeds\Parser\Result\FeedItem;
 
 use \SimpleXMLElement;
 use \Exception;

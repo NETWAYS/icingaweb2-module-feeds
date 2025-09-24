@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\RSS\Parser\Result;
+namespace Icinga\Module\Feeds\Parser\Result;
 
 class Feed
 {

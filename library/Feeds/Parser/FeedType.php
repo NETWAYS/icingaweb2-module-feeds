@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\RSS\Parser;
+namespace Icinga\Module\Feeds\Parser;
 
 use \Exception;
 
