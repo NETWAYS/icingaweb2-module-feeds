@@ -7,7 +7,7 @@ if ($auth->hasPermission('feeds/list')) {
     $rssMenu = $this->menuSection('Feeds')
         ->setIcon('rss')
         ->setUrl('feeds/feeds/list');
-} else if ($auth->hasPermission('feeds/view')) {
+} elseif ($auth->hasPermission('feeds/view')) {
     $rssMenu = $this->menuSection('Feeds')
         ->setIcon('rss')
         ->setUrl('feeds/feeds');

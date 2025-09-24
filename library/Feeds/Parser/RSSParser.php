@@ -31,7 +31,7 @@ class RSSParser
         $feed = new Feed();
 
         foreach ($xml->getChildren() as $elementName => $xmlItemElement) {
-            switch($elementName) {
+            switch ($elementName) {
                 case 'title':
                     $feed->title = $xmlItemElement->__toString();
                     break;
@@ -42,8 +42,8 @@ class RSSParser
                     $feed->description = $xmlItemElement->__toString();
                     break;
                 case 'image':
-                    foreach($xmlItemElement as $imgTagName => $imgElement) {
-                        if($imgTagName === 'url') {
+                    foreach ($xmlItemElement as $imgTagName => $imgElement) {
+                        if ($imgTagName === 'url') {
                             $feed->image = $imgElement->__toString();
                             break;
                         }
@@ -111,7 +111,7 @@ class RSSParser
         $item->feed = $feed;
 
         foreach ($xml->children() as $elementName => $xmlItemElement) {
-            switch($elementName) {
+            switch ($elementName) {
                 case 'title':
                     $item->title = $xmlItemElement->__toString();
                     break;
@@ -130,8 +130,8 @@ class RSSParser
                     $item->categories[] = $category;
                     break;
                 case 'image':
-                    foreach($xmlItemElement as $imgTagName => $imgElement) {
-                        if($imgTagName === 'url') {
+                    foreach ($xmlItemElement as $imgTagName => $imgElement) {
+                        if ($imgTagName === 'url') {
                             $item->image = $imgElement->__toString();
                             break;
                         }
@@ -141,7 +141,7 @@ class RSSParser
         }
 
         foreach ($xml->children('dc', true) as $elementName => $xmlItemElement) {
-            switch($elementName) {
+            switch ($elementName) {
                 case 'creator':
                     $item->creator = $xmlItemElement->__toString();
                     break;

@@ -28,7 +28,8 @@ class FeedController extends BaseController
             ])
             ->activate('view');
 
-        $controlWrapper = HtmlElement::create('div',
+        $controlWrapper = HtmlElement::create(
+            'div',
             Attributes::create([
                 'class' => 'control-wrapper',
             ]),

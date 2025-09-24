@@ -21,7 +21,7 @@ class Feed
     public function getItems(): array
     {
         if (!$this->sorted) {
-            usort($this->items, function($a, $b) {
+            usort($this->items, function ($a, $b) {
                 return -($a->compareDate($b));
             });
             $this->sorted = true;

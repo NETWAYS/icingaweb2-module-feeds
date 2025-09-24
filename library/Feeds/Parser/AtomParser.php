@@ -33,7 +33,7 @@ class AtomParser
         $linkType = null;
 
         foreach ($xml->children() as $elementName => $xmlItemElement) {
-            switch($elementName) {
+            switch ($elementName) {
                 case 'title':
                     $feed->title = $xmlItemElement->__toString();
                     break;
@@ -63,7 +63,7 @@ class AtomParser
 
     protected static function linkRelToType(?string $rel): int
     {
-        return match($rel) {
+        return match ($rel) {
             null => 0,
             "alternate" => 0,
             "related" => 2,
@@ -77,8 +77,8 @@ class AtomParser
     {
         $rel = null;
         $href = null;
-        foreach($xml->attributes() as $key => $value) {
-            switch($key) {
+        foreach ($xml->attributes() as $key => $value) {
+            switch ($key) {
                 case 'rel':
                     $rel = $value;
                     break;
@@ -101,8 +101,8 @@ class AtomParser
     {
         $term = null;
         $label = null;
-        foreach($xml->attributes() as $key => $value) {
-            switch($key) {
+        foreach ($xml->attributes() as $key => $value) {
+            switch ($key) {
                 case 'term':
                     $term = $value;
                     break;
@@ -123,8 +123,8 @@ class AtomParser
     {
         $name = null;
         $email = null;
-        foreach($xml->children() as $elementName => $element) {
-            switch($elementName) {
+        foreach ($xml->children() as $elementName => $element) {
+            switch ($elementName) {
                 case 'name':
                     $name = $element->__toString();
                     break;
@@ -188,7 +188,7 @@ class AtomParser
         $linkType = null;
 
         foreach ($xml->children() as $elementName => $xmlItemElement) {
-            switch($elementName) {
+            switch ($elementName) {
                 case 'title':
                     $item->title = $xmlItemElement->__toString();
                     break;
@@ -232,7 +232,7 @@ class AtomParser
 
         // Atom Media extension for YouTube
         foreach ($xml->children('media', true) as $elementName => $xmlItemElement) {
-            switch($elementName) {
+            switch ($elementName) {
                 case 'group':
                     foreach ($xmlItemElement->children('media', true) as $mediaElementName => $xmlMediaElement) {
                         switch ($mediaElementName) {
