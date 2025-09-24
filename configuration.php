@@ -3,14 +3,14 @@
 use Icinga\Authentication\Auth;
 
 $auth = Auth::getInstance();
-if ($auth->hasPermission('RSS/list')) {
-    $rssMenu = $this->menuSection('RSS')
+if ($auth->hasPermission('feeds/list')) {
+    $rssMenu = $this->menuSection('Feeds')
         ->setIcon('rss')
-        ->setUrl('RSS/feeds/list');
-} else if ($auth->hasPermission('RSS/view')) {
-    $rssMenu = $this->menuSection('RSS')
+        ->setUrl('feeds/feeds/list');
+} else if ($auth->hasPermission('feeds/view')) {
+    $rssMenu = $this->menuSection('Feeds')
         ->setIcon('rss')
-        ->setUrl('RSS/feeds');
+        ->setUrl('feeds/feeds');
 }
 
 $this->provideCssFile('general.less');
@@ -19,18 +19,18 @@ $this->provideCssFile('table.less');
 $this->provideCssFile('view-mode-switcher.less');
 
 $this->providePermission(
-    'RSS/list',
-    $this->translate('Allow to see the list of configured RSS feeds.'),
+    'feeds/list',
+    $this->translate('Allow to see the list of configured feeds.'),
 );
 $this->providePermission(
-    'RSS/view',
-    $this->translate('Allow to view configured RSS feeds.'),
+    'feeds/view',
+    $this->translate('Allow to view configured feeds.'),
 );
 $this->providePermission(
-    'RSS/view/arbitrary',
-    $this->translate('Allow to view an arbitrary RSS feed by providing an url.'),
+    'feeds/view/arbitrary',
+    $this->translate('Allow to view an arbitrary feed by providing an url.'),
 );
 $this->providePermission(
-    'RSS/modify',
-    $this->translate('Allow creating and modifying RSS feeds.'),
+    'feeds/modify',
+    $this->translate('Allow creating and modifying feeds.'),
 );

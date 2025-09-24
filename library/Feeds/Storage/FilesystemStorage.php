@@ -1,8 +1,7 @@
 <?php
 
-namespace Icinga\Module\RSS\Storage;
+namespace Icinga\Module\Feeds\Storage;
 
-use Exception;
 use Icinga\Application\Icinga;
 use Icinga\Exception\SystemPermissionException;
 
@@ -19,7 +18,7 @@ class FilesystemStorage implements StorageInterface
     {
         return Icinga::app()
             ->getModuleManager()
-            ->getModule('RSS')
+            ->getModule('feeds')
             ->getConfigDir() . DIRECTORY_SEPARATOR . self::FILE_NAME;
     }
 

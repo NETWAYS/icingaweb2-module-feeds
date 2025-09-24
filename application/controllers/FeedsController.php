@@ -1,12 +1,12 @@
 <?php
 
-namespace Icinga\Module\RSS\Controllers;
+namespace Icinga\Module\Feeds\Controllers;
 
-use Icinga\Module\RSS\FeedReader;
-use Icinga\Module\RSS\Storage\StorageFactory;
-use Icinga\Module\RSS\Web\Table;
-use Icinga\Module\RSS\Web\Item;
-use Icinga\Module\RSS\Controller\BaseController;
+use Icinga\Module\Feeds\FeedReader;
+use Icinga\Module\Feeds\Storage\StorageFactory;
+use Icinga\Module\Feeds\Web\Table;
+use Icinga\Module\Feeds\Web\Item;
+use Icinga\Module\Feeds\Controller\BaseController;
 
 use Icinga\Application\Benchmark;
 use ipl\Html\Attributes;
@@ -14,7 +14,6 @@ use ipl\Html\HtmlElement;
 use ipl\Web\Widget\Link;
 
 use \Exception;
-use \DateTime;
 
 class FeedsController extends BaseController
 {
@@ -22,17 +21,17 @@ class FeedsController extends BaseController
         string $active,
         bool $disableExtensions = true,
     ): void {
-        if ($this->hasPermission('RSS/list')) {
+        if ($this->hasPermission('feeds/list')) {
             $this->getTabs()->add('list', [
                 'label' => $this->translate('List'),
-                'url' => 'RSS/feeds/list'
+                'url' => 'feeds/feeds/list'
             ]);
         }
 
-        if ($this->hasPermission('RSS/view')) {
+        if ($this->hasPermission('feeds/view')) {
             $this->getTabs()->add('view', [
                 'label' => $this->translate('View'),
-                'url' => 'RSS/feeds'
+                'url' => 'feeds/feeds'
             ]);
         }
 
@@ -45,7 +44,7 @@ class FeedsController extends BaseController
 
     public function indexAction(): void
     {
-        $this->assertPermission('RSS/view');
+        $this->assertPermission('feeds/view');
 
         $this->addTabs('view', false);
 
@@ -123,14 +122,14 @@ class FeedsController extends BaseController
 
     public function listAction(): void
     {
-        $this->assertPermission('RSS/list');
+        $this->assertPermission('feeds/list');
 
         $this->addTabs('list');
         $this->addTitle($this->translate('Feed List'));
 
-        if ($this->hasPermission('RSS/modify')) {
+        if ($this->hasPermission('feeds/modify')) {
             $this->addControl(
-                new Link($this->translate('Add'), 'RSS/feed/create', Attributes::create([
+                new Link($this->translate('Add'), 'feeds/feed/create', Attributes::create([
                     'title' => $this->translate('Create a new Feed'),
                     'class' => 'icon-plus',
                     'data-base-target' => '_next',
@@ -149,13 +148,13 @@ class FeedsController extends BaseController
                 '_title' => $feed->description,
             ];
 
-            if ($this->hasPermission('RSS/view')) {
-                $feedData['_link'] = "RSS/feed?feed={$feed->name}";
+            if ($this->hasPermission('feeds/view')) {
+                $feedData['_link'] = "feeds/feed?feed={$feed->name}";
             }
 
-            if ($this->hasPermission('RSS/modify')) {
+            if ($this->hasPermission('feeds/modify')) {
                 $feedData['_actions'] = [
-                    $this->translate('Edit') => "RSS/feed/edit?feed={$feed->name}",
+                    $this->translate('Edit') => "feeds/feed/edit?feed={$feed->name}",
                 ];
             }
 

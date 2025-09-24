@@ -1,8 +1,8 @@
 <?php
 
-namespace Icinga\Module\RSS\Storage;
+namespace Icinga\Module\Feeds\Storage;
 
-use Icinga\Module\RSS\Parser\FeedType;
+use Icinga\Module\Feeds\Parser\FeedType;
 
 class FeedDefinition
 {

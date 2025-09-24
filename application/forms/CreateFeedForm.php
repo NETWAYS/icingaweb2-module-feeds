@@ -1,12 +1,12 @@
 <?php
 
-namespace Icinga\Module\RSS\Forms;
+namespace Icinga\Module\Feeds\Forms;
 
 use Icinga\Web\Notification;
 use ipl\Web\Compat\CompatForm;
-use Icinga\Module\RSS\Storage\StorageInterface;
-use Icinga\Module\RSS\Storage\FeedDefinition;
-use Icinga\Module\RSS\Parser\FeedType;
+use Icinga\Module\Feeds\Storage\StorageInterface;
+use Icinga\Module\Feeds\Storage\FeedDefinition;
+use Icinga\Module\Feeds\Parser\FeedType;
 
 class CreateFeedForm extends CompatForm
 {

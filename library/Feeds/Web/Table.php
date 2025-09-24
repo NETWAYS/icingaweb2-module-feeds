@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\RSS\Web;
+namespace Icinga\Module\Feeds\Web;
 
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Attributes;

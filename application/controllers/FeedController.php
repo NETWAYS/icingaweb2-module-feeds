@@ -1,14 +1,13 @@
 <?php
 
-namespace Icinga\Module\RSS\Controllers;
+namespace Icinga\Module\Feeds\Controllers;
 
-use Icinga\Module\RSS\FeedReader;
-use Icinga\Module\RSS\Web\Item;
-use Icinga\Module\RSS\Forms\CreateFeedForm;
-use Icinga\Module\RSS\Forms\EditFeedForm;
-use Icinga\Module\RSS\Storage\StorageFactory;
-use Icinga\Module\RSS\Controller\BaseController;
-use Icinga\Module\RSS\Parser\FeedType;
+use Icinga\Module\Feeds\FeedReader;
+use Icinga\Module\Feeds\Forms\CreateFeedForm;
+use Icinga\Module\Feeds\Forms\EditFeedForm;
+use Icinga\Module\Feeds\Storage\StorageFactory;
+use Icinga\Module\Feeds\Controller\BaseController;
+use Icinga\Module\Feeds\Parser\FeedType;
 
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
@@ -20,7 +19,7 @@ class FeedController extends BaseController
 {
     public function indexAction(): void
     {
-        $this->assertPermission('RSS/view');
+        $this->assertPermission('feeds/view');
 
         $this->getTabs()
             ->add('view', [
@@ -95,7 +94,7 @@ class FeedController extends BaseController
             return [null, null, null];
         }
 
-        $this->assertPermission('RSS/view/arbitrary');
+        $this->assertPermission('feeds/view/arbitrary');
 
         $type = $this->params->shift('type') ?? 'auto';
 
@@ -104,7 +103,7 @@ class FeedController extends BaseController
 
     public function createAction(): void
     {
-        $this->assertPermission('RSS/modify');
+        $this->assertPermission('feeds/modify');
 
         $this->getTabs()->disableLegacyExtensions();
 
@@ -124,7 +123,7 @@ class FeedController extends BaseController
 
     public function editAction(): void
     {
-        $this->assertPermission('RSS/modify');
+        $this->assertPermission('feeds/modify');
 
         $this->getTabs()->disableLegacyExtensions();
 

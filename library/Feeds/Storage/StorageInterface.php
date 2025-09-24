@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\RSS\Storage;
+namespace Icinga\Module\Feeds\Storage;
 
 interface StorageInterface
 {

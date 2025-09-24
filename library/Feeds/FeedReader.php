@@ -1,18 +1,17 @@
 <?php
 
-namespace Icinga\Module\RSS;
+namespace Icinga\Module\Feeds;
 
 use Icinga\Application\Icinga;
 use Icinga\Application\Version;
-use Icinga\Module\RSS\Parser\Result\Feed;
-use Icinga\Module\RSS\Parser\RSSParser;
-use Icinga\Module\RSS\Parser\AtomParser;
-use Icinga\Module\RSS\Parser\JsonfeedParser;
-use Icinga\Module\RSS\Parser\FeedType;
+use Icinga\Module\Feeds\Parser\Result\Feed;
+use Icinga\Module\Feeds\Parser\RSSParser;
+use Icinga\Module\Feeds\Parser\AtomParser;
+use Icinga\Module\Feeds\Parser\JsonfeedParser;
+use Icinga\Module\Feeds\Parser\FeedType;
 
 use Icinga\Application\Benchmark;
 
-use \SimpleXMLElement;
 use \Exception;
 
 class FeedReader
@@ -25,16 +24,16 @@ class FeedReader
 
     protected function getUserAgentString(): string
     {
-        $rssVersion = Icinga::app()
+        $moduleVersion = Icinga::app()
             ->getModuleManager()
-            ->getModule('RSS')
+            ->getModule('feeds')
             ->getVersion();
 
         $phpVersion = PHP_VERSION;
 
         $icingaWeb2Version = Version::get();
 
-        return "IcingaWeb2 Module RSS/{$rssVersion} (icinga-web={$icingaWeb2Version['appVersion']}; php={$phpVersion})";
+        return "IcingaWeb2 Module Feeds/{$moduleVersion} (icinga-web={$icingaWeb2Version['appVersion']}; php={$phpVersion})";
     }
 
     protected function fetchRaw() {
