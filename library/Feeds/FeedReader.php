@@ -19,7 +19,6 @@ class FeedReader
     public function __construct(
         protected string $url,
         protected FeedType $type = FeedType::Auto,
-        protected bool $trusted = false,
     ) {}
 
     protected function getUserAgentString(): string
@@ -69,28 +68,28 @@ class FeedReader
         switch ($this->type) {
             case FeedType::Auto:
                 try {
-                    return RSSParser::parse($rawResponse, $this->trusted);
+                    return RSSParser::parse($rawResponse);
                 } catch (Exception $ex) {
 
                 }
 
                 try {
-                    return AtomParser::parse($rawResponse, $this->trusted);
+                    return AtomParser::parse($rawResponse);
                 } catch (Exception $ex) {
 
                 }
 
                 try {
-                    return JsonfeedParser::parse($rawResponse, $this->trusted);
+                    return JsonfeedParser::parse($rawResponse);
                 } catch (Exception $ex) {
 
                 }
 
                 throw new Exception('Invalid or unsupported feed');
                 break;
-            case FeedType::RSS: return RSSParser::parse($rawResponse, $this->trusted);
-            case FeedType::Atom: return AtomParser::parse($rawResponse, $this->trusted);
-            case FeedType::Jsonfeed: return JsonfeedParser::parse($rawResponse, $this->trusted);
+            case FeedType::RSS: return RSSParser::parse($rawResponse);
+            case FeedType::Atom: return AtomParser::parse($rawResponse);
+            case FeedType::Jsonfeed: return JsonfeedParser::parse($rawResponse);
             default:
                 throw new Exception('Unreachable code');
         }

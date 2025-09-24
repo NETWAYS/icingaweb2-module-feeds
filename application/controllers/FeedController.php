@@ -37,7 +37,7 @@ class FeedController extends BaseController
         $this->addControl($controlWrapper);
 
         $this->addTitle($this->translate('Feed'), $controlWrapper);
-        [$url, $type, $trusted] = $this->getFeedInfo();
+        [$url, $type] = $this->getFeedInfo();
         if ($url === null) {
             return;
         }
@@ -49,7 +49,7 @@ class FeedController extends BaseController
         Benchmark::measure('Started fetching feed');
 
         try {
-            $reader = new FeedReader($url, $type, $trusted);
+            $reader = new FeedReader($url, $type);
             $data = $reader->fetch();
         } catch (Exception $ex) {
             $this->displayError($ex->getMessage());
@@ -83,22 +83,22 @@ class FeedController extends BaseController
             $feed = $storage->getFeedByName($name);
             if ($feed === null) {
                 $this->displayError('Feed not found');
-                return [null, null, null];
+                return [null, null];
             }
-            return [$feed->url, $feed->type, $feed->trusted];
+            return [$feed->url, $feed->type];
         }
 
         $url = $this->params->shift('url');
         if ($url === null or $url === '') {
             $this->displayError($this->translate('No feed configured'));
-            return [null, null, null];
+            return [null, null];
         }
 
         $this->assertPermission('feeds/view/arbitrary');
 
         $type = $this->params->shift('type') ?? 'auto';
 
-        return [$url, FeedType::fromDisplay($type), false];
+        return [$url, FeedType::fromDisplay($type)];
     }
 
     public function createAction(): void
@@ -148,7 +148,6 @@ class FeedController extends BaseController
             'url' => $feed->url,
             'description' => $feed->description,
             'type' => $feed->type->display(),
-            'trusted' => $feed->trusted ? 'true' : 'false',
         ]);
 
         $form->on(CreateFeedForm::ON_SUCCESS, function () {

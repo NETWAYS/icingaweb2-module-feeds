@@ -2,9 +2,11 @@
 
 namespace Icinga\Module\Feeds\Web;
 
+use Icinga\Web\Helper\HtmlPurifier;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
+use ipl\Html\HtmlString;
 use ipl\Html\Text;
 use ipl\Web\Widget\Icon;
 
@@ -93,13 +95,9 @@ class Item extends BaseHtmlElement
     protected function getContentElement(): ?BaseHtmlElement
     {
         $text = $this->item->description;
-        $trusted = $this->item->feed->trusted;
-        if ($trusted) {
-            $description = new Text($this->item->description);
-            $description->setEscaped(true);
-        } else {
-            $description = html_entity_decode(strip_tags($text));
-        }
+        $text = HtmlPurifier::process($text);
+        $description = new HtmlString($text);
+
         return HtmlElement::create('div',
             Attributes::create([
                 'class' => 'feed-content-wrapper',
