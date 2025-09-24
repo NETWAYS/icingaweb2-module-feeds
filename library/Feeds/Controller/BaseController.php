@@ -34,7 +34,8 @@ class BaseController extends CompatController
         ));
     }
 
-    protected function addTitle(string $title, ?HtmlElement $parent = null): HtmlElement {
+    protected function addTitle(string $title, ?HtmlElement $parent = null): HtmlElement
+    {
         $titleElement = HtmlElement::create('h1', null, $title);
         if ($parent !== null) {
             $parent->add($titleElement);
@@ -194,14 +195,11 @@ class BaseController extends CompatController
                 if (! $requestUrl->hasParam($limitParam)) {
                     if ($viewMode === 'minimal' || $viewMode === 'grid') {
                         $session->set('request_path', $requestUrl->getPath());
-                    } elseif (
-                        $viewModeSwitcher->getDefaultViewMode() === 'minimal'
+                    } elseif ($viewModeSwitcher->getDefaultViewMode() === 'minimal'
                         || $viewModeSwitcher->getDefaultViewMode() === 'grid'
                     ) {
-
                         $session->clear();
                     }
-
                 }
 
                 $this->redirectNow($requestUrl);

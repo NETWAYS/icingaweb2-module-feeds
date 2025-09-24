@@ -25,7 +25,7 @@ class Table extends BaseHtmlElement
         $columns = [];
         $hasAction = false;
         foreach ($this->data as $row) {
-            foreach($row as $key => $value) {
+            foreach ($row as $key => $value) {
                 if ($key === '_actions') {
                     $hasAction = true;
                 }
@@ -109,7 +109,7 @@ class Table extends BaseHtmlElement
                 'tr',
                 Attributes::create([
                     'title' => $title,
-                ]), 
+                ]),
                 $rowElements
             );
         }

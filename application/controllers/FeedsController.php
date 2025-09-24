@@ -48,7 +48,8 @@ class FeedsController extends BaseController
 
         $this->addTabs('view', false);
 
-        $controlWrapper = HtmlElement::create('div',
+        $controlWrapper = HtmlElement::create(
+            'div',
             Attributes::create([
                 'class' => 'control-wrapper',
             ]),
@@ -97,7 +98,7 @@ class FeedsController extends BaseController
         Benchmark::measure('Started merging feeds');
 
         // Sort items
-        usort($items, function($a, $b) {
+        usort($items, function ($a, $b) {
             return -($a->compareDate($b));
         });
 

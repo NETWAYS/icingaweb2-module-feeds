@@ -12,7 +12,8 @@ class CreateFeedForm extends CompatForm
 {
     public function __construct(
         protected StorageInterface $storage,
-    ) {}
+    ) {
+    }
 
     protected function assemble(): void
     {

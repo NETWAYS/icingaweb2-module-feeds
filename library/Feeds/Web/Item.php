@@ -19,7 +19,8 @@ class Item extends BaseHtmlElement
     public function __construct(
         protected FeedItem $item,
         protected bool     $compact,
-    ) {}
+    ) {
+    }
 
     protected function getTitleElement(): HtmlElement
     {
@@ -29,15 +30,19 @@ class Item extends BaseHtmlElement
                 'span',
                 Attributes::create([
                     'class' => 'text-dim',
-                ]), [
+                ]),
+                [
                     'No title provided',
-                ]);
+                ]
+            );
         } else {
             return HtmlElement::create(
                 'span',
-                Attributes::create([]), [
+                Attributes::create([]),
+                [
                     $this->item->title,
-                ]);
+                ]
+            );
         }
     }
 
@@ -98,7 +103,8 @@ class Item extends BaseHtmlElement
         $text = HtmlPurifier::process($text);
         $description = new HtmlString($text);
 
-        return HtmlElement::create('div',
+        return HtmlElement::create(
+            'div',
             Attributes::create([
                 'class' => 'feed-content-wrapper',
             ]),
@@ -123,14 +129,16 @@ class Item extends BaseHtmlElement
                 'div',
                 Attributes::create([
                     'class' => join(' ', $classes),
-                ]), [
+                ]),
+                [
                     HtmlElement::create(
                         $hasLink ? 'a' : 'span',
                         Attributes::create([
                             'class' => 'feed-item-info',
                             'target' => '_blank',
                             'href' => $this->getLink(),
-                        ]), [
+                        ]),
+                        [
                             $this->getIconElement(),
                             $this->getTitleElement(),
                         ]

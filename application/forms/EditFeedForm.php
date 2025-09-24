@@ -15,7 +15,8 @@ class EditFeedForm extends CompatForm
     public function __construct(
         protected StorageInterface $storage,
         protected FeedDefinition $feed,
-    ) {}
+    ) {
+    }
 
     protected function assemble(): void
     {
@@ -99,7 +100,7 @@ class EditFeedForm extends CompatForm
     {
         if ($this->shouldBeDeleted()) {
             $this->storage->removeFeed($this->feed);
-        } else if ($this->getSubmitButton()->hasBeenPressed() ?? false) {
+        } elseif ($this->getSubmitButton()->hasBeenPressed() ?? false) {
             $name = $this->getValue('name');
             $url = $this->getValue('url');
             $type = FeedType::fromDisplay($this->getValue('type') ?? 'auto');

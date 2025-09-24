@@ -15,7 +15,8 @@ class FeedItem
     public ?string $image = null;
     public ?DateTime $date = null;
 
-    public function compareDate(FeedItem $other): int {
+    public function compareDate(FeedItem $other): int
+    {
         $ad = $this->date ?? new DateTime('NOW');
         $bd = $other->date ?? new DateTime('NOW');
 
