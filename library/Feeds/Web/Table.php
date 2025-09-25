@@ -87,7 +87,7 @@ class Table extends BaseHtmlElement
 
                 if ($link !== null) {
                     $text = new Link($text, $link, Attributes::create([
-                        'data-base-target' => '_self',
+                        'data-base-target' => '_next',
                     ]));
                 }
                 $rowElements[] = HtmlElement::create('td', null, $text);
