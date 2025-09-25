@@ -3,11 +3,12 @@
 namespace Icinga\Module\Feeds\Web;
 
 use Icinga\Web\Helper\HtmlPurifier;
-use ipl\Html\BaseHtmlElement;
 use ipl\Html\Attributes;
+use ipl\Html\BaseHtmlElement;
 use ipl\Html\HtmlElement;
 use ipl\Html\HtmlString;
 use ipl\Web\Widget\Icon;
+use ipl\Web\Widget\TimeAgo;
 
 use Icinga\Module\Feeds\Parser\Result\FeedItem;
 
@@ -116,6 +117,11 @@ class Item extends BaseHtmlElement
         return $this->item->link ?? $this->item->feed->link;
     }
 
+    protected function getDate(): BaseHtmlElement
+    {
+        return (new TimeAgo($this->item->date->getTimestamp()));
+    }
+
     protected function assemble(): void
     {
         $classes = ['feed-item'];
@@ -140,6 +146,15 @@ class Item extends BaseHtmlElement
                         [
                             $this->getIconElement(),
                             $this->getTitleElement(),
+                        ]
+                    ),
+                    HtmlElement::create(
+                        'div',
+                        Attributes::create([
+                            'class' => 'feed-item-extended-info',
+                        ]),
+                        [
+                            $this->getDate(),
                         ]
                     ),
                     $this->compact ? null : [
