@@ -80,7 +80,7 @@ class FeedsController extends BaseController
 
             try {
                 $reader = new FeedReader($feed->url, $feed->type);
-                $data = $reader->fetch($feed->name, $cacheDuration);
+                $data = $reader->fetch('feed-' . $feed->name, $cacheDuration);
                 $feedsCounter++;
             } catch (Exception $ex) {
                 // TODO: Figure out a way to display the error

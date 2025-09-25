@@ -8,7 +8,6 @@ use Icinga\Module\Feeds\Storage\StorageFactory;
 use Icinga\Module\Feeds\Controller\BaseController;
 use Icinga\Module\Feeds\Parser\FeedType;
 
-use Icinga\Web\FileCache;
 use ipl\Html\Attributes;
 use ipl\Html\Form;
 use ipl\Html\HtmlElement;
@@ -89,7 +88,7 @@ class FeedController extends BaseController
                 $this->displayError('Feed not found');
                 return [null, null, null];
             }
-            return [$feed->url, $feed->type, $feed->name];
+            return [$feed->url, $feed->type, 'feed-' . $feed->name];
         }
 
         $url = $this->params->shift('url');
@@ -101,8 +100,9 @@ class FeedController extends BaseController
         $this->assertPermission('feeds/view/arbitrary');
 
         $type = $this->params->shift('type') ?? 'auto';
+        $name = 'url-' . sha1($url . ':' . $type);
 
-        return [$url, FeedType::fromDisplay($type), null];
+        return [$url, FeedType::fromDisplay($type), $name];
     }
 
     public function createAction(): void
