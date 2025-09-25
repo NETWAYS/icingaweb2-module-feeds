@@ -7,7 +7,6 @@ use ipl\Html\BaseHtmlElement;
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
 use ipl\Html\HtmlString;
-use ipl\Html\Text;
 use ipl\Web\Widget\Icon;
 
 use Icinga\Module\Feeds\Parser\Result\FeedItem;

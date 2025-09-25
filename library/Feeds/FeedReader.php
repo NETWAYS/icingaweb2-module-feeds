@@ -12,9 +12,9 @@ use Icinga\Module\Feeds\Parser\FeedType;
 
 use Icinga\Application\Benchmark;
 
-use \Exception;
+use Exception;
 
-use \GuzzleHttp\Client;
+use GuzzleHttp\Client;
 
 class FeedReader
 {
@@ -39,7 +39,7 @@ class FeedReader
         return "icingaweb2-module-feeds/{$moduleVersion} icinga-web-version/{$icingaWeb2Version['appVersion']} php-version/{$phpVersion}";
     }
 
-    protected function fetchFeed()
+    protected function fetchFeed(): string
     {
         $client = new Client([
              // Magic number I know, but just to be safe
@@ -80,7 +80,6 @@ class FeedReader
                 }
 
                 throw new Exception('Unsupported feed type or invalid data in feed');
-                break;
             case FeedType::RSS:
                 return RSSParser::parse($rawResponse);
             case FeedType::Atom:
@@ -90,8 +89,6 @@ class FeedReader
             default:
                 throw new Exception('Unsupported feed type');
         }
-
-        throw new Exception('Unreachable code');
     }
 
     public function fetch(): ?Feed

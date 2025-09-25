@@ -10,10 +10,11 @@ use Icinga\Module\Feeds\Controller\BaseController;
 use Icinga\Module\Feeds\Parser\FeedType;
 
 use ipl\Html\Attributes;
+use ipl\Html\Form;
 use ipl\Html\HtmlElement;
 use Icinga\Application\Benchmark;
 
-use \Exception;
+use Exception;
 
 class FeedController extends BaseController
 {
@@ -113,7 +114,7 @@ class FeedController extends BaseController
         $storage = StorageFactory::getStorage();
         $form = new CreateFeedForm($storage);
 
-        $form->on(CreateFeedForm::ON_SUCCESS, function () {
+        $form->on(Form::ON_SUCCESS, function () {
             $this->redirectNow('__CLOSE__');
         });
 
@@ -151,7 +152,7 @@ class FeedController extends BaseController
             'type' => $feed->type->display(),
         ]);
 
-        $form->on(CreateFeedForm::ON_SUCCESS, function () {
+        $form->on(Form::ON_SUCCESS, function () {
             $this->redirectNow('__CLOSE__');
         });
 

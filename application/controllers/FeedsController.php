@@ -5,7 +5,6 @@ namespace Icinga\Module\Feeds\Controllers;
 use Icinga\Module\Feeds\FeedReader;
 use Icinga\Module\Feeds\Storage\StorageFactory;
 use Icinga\Module\Feeds\Web\Table;
-use Icinga\Module\Feeds\Web\Item;
 use Icinga\Module\Feeds\Controller\BaseController;
 
 use Icinga\Application\Benchmark;
@@ -13,7 +12,7 @@ use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
 use ipl\Web\Widget\Link;
 
-use \Exception;
+use Exception;
 
 class FeedsController extends BaseController
 {
