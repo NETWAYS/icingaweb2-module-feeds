@@ -45,6 +45,16 @@ class EditFeedForm extends CompatForm
             'label'       => $this->translate('URL'),
             'required'    => true,
             'description' => $this->translate('The URL to the feed'),
+            'validators' => [
+                new CallbackValidator(function (string $value, CallbackValidator $validator) {
+                    if (! filter_var($value, FILTER_VALIDATE_URL)) {
+                        $validator->addMessage($this->translate('Invalid URL'));
+                        return false;
+                    }
+
+                    return true;
+                })
+            ],
         ]);
 
         $this->addElement('select', 'type', [
