@@ -126,12 +126,12 @@ class FeedsController extends BaseController
         $this->assertPermission('feeds/list');
 
         $this->addTabs('list');
-        $this->addTitle($this->translate('Feed List'));
+        $this->addTitle($this->translate('Feeds'));
 
         if ($this->hasPermission('feeds/modify')) {
             $this->addControl(
                 new Link($this->translate('Add'), 'feeds/feed/create', Attributes::create([
-                    'title' => $this->translate('Create a new Feed'),
+                    'title' => $this->translate('Create a new feed'),
                     'class' => 'icon-plus',
                     'data-base-target' => '_next',
                 ]))

@@ -15,7 +15,7 @@ class JsonfeedParser
     {
         $json = json_decode($raw, true);
         if ($json === null) {
-            throw new Exception('Invalid Jsonfeed');
+            throw new Exception('Invalid JSONfeed');
         }
 
         // TODO: validate version field
@@ -34,7 +34,7 @@ class JsonfeedParser
 
         $items = $json['items'] ?? null;
         if ($items === null) {
-            throw new Exception('Jsonfeed contains no items');
+            throw new Exception('JSONfeed contains no items');
         }
 
         foreach ($items as $jsonItem) {

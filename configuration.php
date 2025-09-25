@@ -20,17 +20,17 @@ $this->provideCssFile('view-mode-switcher.less');
 
 $this->providePermission(
     'feeds/list',
-    $this->translate('Allow to see the list of configured feeds.'),
+    $this->translate('Allow to see the list of configured feeds'),
 );
 $this->providePermission(
     'feeds/view',
-    $this->translate('Allow to view configured feeds.'),
+    $this->translate('Allow to view configured feeds'),
 );
 $this->providePermission(
     'feeds/view/arbitrary',
-    $this->translate('Allow to view an arbitrary feed by providing an url.'),
+    $this->translate('Allow to view an arbitrary feed by providing an URL'),
 );
 $this->providePermission(
     'feeds/modify',
-    $this->translate('Allow creating and modifying feeds.'),
+    $this->translate('Allow creating and modifying feeds'),
 );
