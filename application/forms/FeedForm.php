@@ -5,6 +5,8 @@ namespace Icinga\Module\Feeds\Forms;
 use ipl\Web\Compat\CompatForm;
 use ipl\Validator\StringLengthValidator;
 use ipl\Validator\CallbackValidator;
+use ipl\Web\Common\CsrfCounterMeasure;
+use Icinga\Web\Session;
 use Icinga\Web\Notification;
 use Icinga\Module\Feeds\Storage\StorageInterface;
 use Icinga\Module\Feeds\Storage\FeedDefinition;
@@ -12,6 +14,8 @@ use Icinga\Module\Feeds\Parser\FeedType;
 
 class FeedForm extends CompatForm
 {
+    use CsrfCounterMeasure;
+
     protected ?string $deleteButtonName = null;
 
     public function __construct(
@@ -22,6 +26,8 @@ class FeedForm extends CompatForm
 
     protected function assemble(): void
     {
+        $this->addElement($this->createCsrfCounterMeasure(Session::getSession()->getId()));
+
         $this->addElement('text', 'name', [
             'label'      => $this->translate('Name'),
             'required'   => true,
@@ -96,6 +102,21 @@ class FeedForm extends CompatForm
                 ->getWrapper()
                 ->prepend($deleteButton);
         }
+    }
+
+    public function isValid()
+    {
+        if ($this->getPressedSubmitElement()->getName() === 'delete') {
+            $csrfElement = $this->getElement('CSRFToken');
+
+            if (! $csrfElement->isValid()) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return parent::isValid();
     }
 
     public function hasBeenSubmitted(): bool
