@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Feeds\Parser;
 
-use \Exception;
+use Exception;
 
 enum FeedType: int
 {

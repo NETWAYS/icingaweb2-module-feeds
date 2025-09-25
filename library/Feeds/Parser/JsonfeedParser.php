@@ -5,9 +5,9 @@ namespace Icinga\Module\Feeds\Parser;
 use Icinga\Module\Feeds\Parser\Result\Feed;
 use Icinga\Module\Feeds\Parser\Result\FeedItem;
 
-use \Exception;
-use \DateTime;
-use \DateTimeInterface;
+use Exception;
+use DateTime;
+use DateTimeInterface;
 
 class JsonfeedParser
 {

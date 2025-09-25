@@ -31,13 +31,12 @@ class FeedViewModeSwitcher extends Form
     const DEFAULT_VIEW_MODE_PARAM = 'view';
 
     /** @var array View mode-icon pairs */
-    public static $viewModes = [
+    public static array $viewModes = [
         'minimal'  => 'minimal',
         'common'   => 'default'
     ];
 
-    /** @var string */
-    protected $defaultViewMode;
+    protected string $defaultViewMode;
 
     /** @var string */
     protected $method = 'POST';
@@ -45,8 +44,7 @@ class FeedViewModeSwitcher extends Form
     /** @var callable */
     protected $protector;
 
-    /** @var string */
-    protected $viewModeParam = self::DEFAULT_VIEW_MODE_PARAM;
+    protected string $viewModeParam = self::DEFAULT_VIEW_MODE_PARAM;
 
     /**
      * Get the default mode
@@ -119,7 +117,7 @@ class FeedViewModeSwitcher extends Form
      *
      * @return $this
      */
-    public function setViewMode(string $name)
+    public function setViewMode(string $name): static
     {
         $this->populate([$this->getViewModeParam() => $name]);
 
@@ -149,7 +147,7 @@ class FeedViewModeSwitcher extends Form
         return $id;
     }
 
-    protected function assemble()
+    protected function assemble(): void
     {
         $viewModeParam = $this->getViewModeParam();
 

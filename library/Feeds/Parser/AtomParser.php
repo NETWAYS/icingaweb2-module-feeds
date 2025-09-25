@@ -5,10 +5,10 @@ namespace Icinga\Module\Feeds\Parser;
 use Icinga\Module\Feeds\Parser\Result\Feed;
 use Icinga\Module\Feeds\Parser\Result\FeedItem;
 
-use \SimpleXMLElement;
-use \Exception;
-use \DateTime;
-use \DateTimeInterface;
+use SimpleXMLElement;
+use Exception;
+use DateTime;
+use DateTimeInterface;
 
 class AtomParser
 {
@@ -64,8 +64,7 @@ class AtomParser
     protected static function linkRelToType(?string $rel): int
     {
         return match ($rel) {
-            null => 0,
-            "alternate" => 0,
+            null, "alternate" => 0,
             "related" => 2,
             "via" => 1,
             "self" => 3,

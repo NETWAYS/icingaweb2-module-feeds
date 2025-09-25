@@ -60,7 +60,7 @@ class CreateFeedForm extends CompatForm
         ]);
     }
 
-    protected function onSuccess()
+    protected function onSuccess(): void
     {
         $name = $this->getValue('name');
         $url = $this->getValue('url');
