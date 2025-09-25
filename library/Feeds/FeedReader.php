@@ -15,6 +15,7 @@ use Icinga\Application\Benchmark;
 use Exception;
 
 use GuzzleHttp\Client;
+use Icinga\Web\FileCache;
 
 class FeedReader
 {
@@ -91,7 +92,7 @@ class FeedReader
         }
     }
 
-    public function fetch(): ?Feed
+    protected function fetchImpl(): ?Feed
     {
         try {
             $response = $this->fetchFeed();
@@ -100,5 +101,20 @@ class FeedReader
         }
 
         return $this->parse($response);
+    }
+
+    public function fetch(?string $cacheKey = null, int $cacheDuration = 0): ?Feed
+    {
+        $cache = FileCache::instance('feeds');
+        if ($cacheKey !== null && $cacheDuration > 0) {
+            if (!$cache->has($cacheKey, time() - $cacheDuration)) {
+                $data = $this->fetchImpl();
+                $cache->store($cacheKey, serialize($data));
+            } else {
+                $data = unserialize($cache->get($cacheKey));
+            }
+            return $data;
+        }
+        return $this->fetchImpl();
     }
 }
