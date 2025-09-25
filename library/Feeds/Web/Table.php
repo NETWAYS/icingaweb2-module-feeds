@@ -11,12 +11,13 @@ class Table extends BaseHtmlElement
 {
     protected $tag = 'table';
 
-    public function __construct(
-        protected array $data,
-    ) {
-        $this->attributes = new Attributes([
-            'class' => 'common-table'
-        ]);
+    protected $defaultAttributes = ['class' => ['common-table', 'table-row-selectable']];
+
+    protected array $data;
+
+    public function __construct(array $data)
+    {
+        $this->data = $data;
     }
 
     protected function assemble(): void

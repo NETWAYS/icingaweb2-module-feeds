@@ -1,33 +1,14 @@
-@red: @color-critical;
-@green: @color-ok;
-@yellow: @color-warning;
-@purple: @color-unknown;
-@highlight: @icinga-blue;
-@border-color: @gray-lighter;
-@hover-bg: rgba(255, 255, 255, 0.02);
-@black: #535353;
-@white: #fff;
-
 .feed-items {
     padding: 0;
     margin: 0;
     list-style: none;
-    max-width: 1200px;
 }
 
 .feed-items li {
-    border-bottom: 1px solid @border-color;
+    border-bottom: 1px solid @gray-lighter;
 
     &:hover {
-        background-color: @hover-bg;
-    }
-
-    &::marker { //Why is it even there
-        content: none;
-    }
-
-    &:last-child {
-        border-bottom: 0;
+        background-color: @tr-hover-color;
     }
 }
 
@@ -85,8 +66,8 @@
 .feed-item-creator {
     font-weight: bold;
     box-sizing: border-box;
-    color: @highlight;
-    border: 1px solid @highlight;
+    color: @icinga-blue;
+    border: 1px solid @icinga-blue;
 }
 
 .compact {

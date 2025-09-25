@@ -13,9 +13,7 @@ if ($auth->hasPermission('feeds/list')) {
         ->setUrl('feeds/feeds');
 }
 
-$this->provideCssFile('general.less');
 $this->provideCssFile('item.less');
-$this->provideCssFile('table.less');
 $this->provideCssFile('view-mode-switcher.less');
 
 $this->providePermission(
