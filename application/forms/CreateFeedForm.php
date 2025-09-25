@@ -33,16 +33,16 @@ class CreateFeedForm extends CompatForm
         ]);
 
         $this->addElement('select', 'type', [
-            'label'       => $this->translate('Feed Type'),
+            'label'       => $this->translate('Feed type'),
             'required'    => true,
             'description' => $this->translate(
                 'The type of feed that can be found at the defined URL'
             ),
             'multiOptions' => [
-                'auto' => $this->translate('Determine Automatically'),
+                'auto' => $this->translate('Determine automatically'),
                 'rss' => $this->translate('RSS'),
                 'atom' => $this->translate('Atom'),
-                'jsonfeed' => $this->translate('Jsonfeed'),
+                'jsonfeed' => $this->translate('JSONfeed'),
             ],
         ]);
 

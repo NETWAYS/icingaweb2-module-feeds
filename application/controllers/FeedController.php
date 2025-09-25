@@ -108,7 +108,7 @@ class FeedController extends BaseController
 
         $this->getTabs()->disableLegacyExtensions();
 
-        $this->addTitle($this->translate('Create a new Feed'));
+        $this->addTitle($this->translate('Create a new feed'));
 
         $storage = StorageFactory::getStorage();
         $form = new CreateFeedForm($storage);
@@ -128,18 +128,18 @@ class FeedController extends BaseController
 
         $this->getTabs()->disableLegacyExtensions();
 
-        $this->addTitle($this->translate('Edit Feed'));
+        $this->addTitle($this->translate('Edit feed'));
 
         $name = $this->params->shiftRequired('feed');
         $storage = StorageFactory::getStorage();
 
         $feed = $storage->getFeedByName($name);
         if ($feed === null) {
-            $this->displayError($this->translate('Feed Not Found'));
+            $this->displayError($this->translate('Feed not found'));
             return;
         }
 
-        $title = $this->translate('Edit Feed');
+        $title = $this->translate('Edit feed');
         $this->setTitle($title);
 
         $form = new EditFeedForm($storage, $feed);
