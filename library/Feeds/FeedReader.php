@@ -14,6 +14,8 @@ use Icinga\Application\Benchmark;
 
 use \Exception;
 
+use \GuzzleHttp\Client;
+
 class FeedReader
 {
     public function __construct(
@@ -33,60 +35,51 @@ class FeedReader
 
         $icingaWeb2Version = Version::get();
 
-        return "IcingaWeb2 Module Feeds/{$moduleVersion} (icinga-web={$icingaWeb2Version['appVersion']}; php={$phpVersion})";
+        // Note: Use single space to separate key-value pairs, use slash to separate keys and values
+        return "icingaweb2-module-feeds/{$moduleVersion} icinga-web-version/{$icingaWeb2Version['appVersion']} php-version/{$phpVersion}";
     }
 
-    protected function fetchRaw()
+    protected function fetchFeed()
     {
-        $headers = [];
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt(
-            $ch,
-            CURLOPT_HEADERFUNCTION,
-            function ($curl, $header) use (&$headers) {
-                $len = strlen($header);
-                $header = explode(':', $header, 2);
-                if (count($header) < 2) { // ignore invalid headers
-                    return $len;
-                }
-
-                $headers[strtolower(trim($header[0]))][] = trim($header[1]);
-
-                return $len;
-            }
-        );
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "User-Agent: {$this->getUserAgentString()}",
+        $client = new Client([
+             // Magic number I know, but just to be safe
+            'timeout' => 10,
         ]);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
 
-        return [$headers, $response];
+        $response = $client->request('GET', $this->url, [
+            'headers' => [
+                'User-Agent' => $this->getUserAgentString(),
+            ],
+        ]);
+
+        return $response->getBody()->getContents();
     }
 
     protected function parse(string $rawResponse): ?Feed
     {
         Benchmark::measure('Started parsing feed');
+
         switch ($this->type) {
             case FeedType::Auto:
                 try {
                     return RSSParser::parse($rawResponse);
                 } catch (Exception $ex) {
+                    // Not an RSS feed
                 }
 
                 try {
                     return AtomParser::parse($rawResponse);
                 } catch (Exception $ex) {
+                    // Not an Atom feed
                 }
 
                 try {
                     return JsonfeedParser::parse($rawResponse);
                 } catch (Exception $ex) {
+                    // Not an JSONFeed feed
                 }
 
-                throw new Exception('Invalid or unsupported feed');
+                throw new Exception('Unsupported feed type or invalid data in feed');
                 break;
             case FeedType::RSS:
                 return RSSParser::parse($rawResponse);
@@ -95,18 +88,20 @@ class FeedReader
             case FeedType::Jsonfeed:
                 return JsonfeedParser::parse($rawResponse);
             default:
-                throw new Exception('Unreachable code');
+                throw new Exception('Unsupported feed type');
         }
-    
+
         throw new Exception('Unreachable code');
     }
 
     public function fetch(): ?Feed
     {
-        [$headers, $rawResponse] = $this->fetchRaw();
+        try {
+            $response = $this->fetchFeed();
+        } catch (Exception $ex) {
+            throw new Exception('Could not fetch feed: ' . $ex->getMessage(), $ex->getCode(), $ex);
+        }
 
-        // FIXME: This assumes the request was successful
-
-        return $this->parse($rawResponse);
+        return $this->parse($response);
     }
 }
