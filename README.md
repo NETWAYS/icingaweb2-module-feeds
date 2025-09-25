@@ -10,10 +10,6 @@ Icinga Web Module for web feeds like RSS or Atom.
 * Dashboards for specific feeds
 * Combined feed for all configured feeds
 
-## Installation Requirements
-
-* PHP version ≥ 8.0
-
 ## Documentation
 
 Documentation for this module is available at [doc](doc/).
