@@ -3,6 +3,8 @@
 namespace Icinga\Module\Feeds\Forms;
 
 use ipl\Web\Compat\CompatForm;
+use ipl\Validator\StringLengthValidator;
+use ipl\Validator\CallbackValidator;
 use Icinga\Web\Notification;
 use Icinga\Module\Feeds\Storage\StorageInterface;
 use Icinga\Module\Feeds\Storage\FeedDefinition;
@@ -20,19 +22,39 @@ class EditFeedForm extends CompatForm
 
     protected function assemble(): void
     {
-        // TODO: Add validation
         $this->addElement('text', 'name', [
             'label'      => $this->translate('Name'),
             'required'   => true,
             'description' => $this->translate(
                 'This is the unique identifier of this feed'
             ),
+            'validators' => [
+                new StringLengthValidator(['max' => 255]),
+                new CallbackValidator(function (string $value, CallbackValidator $validator) {
+                    if (!preg_match('/^[a-zA-Z0-9\-_ ]+$/', $value)) {
+                        $validator->addMessage($this->translate('The name must only contain alphanumeric characters'));
+                        return false;
+                    }
+
+                    return true;
+                })
+            ],
         ]);
 
         $this->addElement('text', 'url', [
             'label'       => $this->translate('URL'),
             'required'    => true,
             'description' => $this->translate('The URL to the feed'),
+            'validators' => [
+                new CallbackValidator(function (string $value, CallbackValidator $validator) {
+                    if (! filter_var($value, FILTER_VALIDATE_URL)) {
+                        $validator->addMessage($this->translate('Invalid URL'));
+                        return false;
+                    }
+
+                    return true;
+                })
+            ],
         ]);
 
         $this->addElement('select', 'type', [
@@ -56,6 +78,7 @@ class EditFeedForm extends CompatForm
                 . 'about 100-150 characters long'
             ),
             'rows' => 4,
+            'validators' => [new StringLengthValidator(['max' => 255])],
         ]);
 
         $this->addElement('submit', 'submit', [
