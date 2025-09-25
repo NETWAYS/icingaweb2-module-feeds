@@ -10,13 +10,13 @@ use Icinga\Module\Feeds\Storage\StorageInterface;
 use Icinga\Module\Feeds\Storage\FeedDefinition;
 use Icinga\Module\Feeds\Parser\FeedType;
 
-class EditFeedForm extends CompatForm
+class FeedForm extends CompatForm
 {
     protected ?string $deleteButtonName = null;
 
     public function __construct(
         protected StorageInterface $storage,
-        protected FeedDefinition $feed,
+        protected ?FeedDefinition $feed,
     ) {
     }
 
@@ -82,18 +82,20 @@ class EditFeedForm extends CompatForm
         ]);
 
         $this->addElement('submit', 'submit', [
-            'label' => $this->translate('Store')
+            'label' => $this->isCreateForm() ? $this->translate('Create') : $this->translate('Store')
         ]);
 
-        $label = $this->translate('Delete');
-        $this->deleteButtonName = $label;
-        $deleteButton = $this->createElement('submit', 'delete', [
-            'label' => $label,
-        ]);
-        $this->registerElement($deleteButton);
-        $this->getElement('submit')
-            ->getWrapper()
-            ->prepend($deleteButton);
+        if (!$this->isCreateForm()) {
+            $label = $this->translate('Delete');
+            $this->deleteButtonName = $label;
+            $deleteButton = $this->createElement('submit', 'delete', [
+                'label' => $label,
+            ]);
+            $this->registerElement($deleteButton);
+            $this->getElement('submit')
+                ->getWrapper()
+                ->prepend($deleteButton);
+        }
     }
 
     public function hasBeenSubmitted(): bool
@@ -103,6 +105,11 @@ class EditFeedForm extends CompatForm
         }
 
         return true;
+    }
+
+    protected function isCreateForm(): bool
+    {
+        return $this->feed === null;
     }
 
     public function hasDeleteButton(): bool
@@ -128,6 +135,23 @@ class EditFeedForm extends CompatForm
             $url = $this->getValue('url');
             $type = FeedType::fromDisplay($this->getValue('type') ?? 'auto');
             $description = $this->getValue('description');
+
+            if ($this->isCreateForm()) {
+                $feed = new FeedDefinition(
+                    $name,
+                    $url,
+                    $description,
+                    $type,
+                );
+
+                if ($this->storage->getFeedByName($name) !== null) {
+                    Notification::error("A feed with the name {$name} already exists");
+                    return;
+                }
+
+                $this->storage->addFeed($feed);
+                return;
+            }
 
             $isRename = $name !== $this->feed->name;
 

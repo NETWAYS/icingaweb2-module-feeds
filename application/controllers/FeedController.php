@@ -3,8 +3,7 @@
 namespace Icinga\Module\Feeds\Controllers;
 
 use Icinga\Module\Feeds\FeedReader;
-use Icinga\Module\Feeds\Forms\CreateFeedForm;
-use Icinga\Module\Feeds\Forms\EditFeedForm;
+use Icinga\Module\Feeds\Forms\FeedForm;
 use Icinga\Module\Feeds\Storage\StorageFactory;
 use Icinga\Module\Feeds\Controller\BaseController;
 use Icinga\Module\Feeds\Parser\FeedType;
@@ -112,7 +111,7 @@ class FeedController extends BaseController
         $this->addTitle($this->translate('Create a new feed'));
 
         $storage = StorageFactory::getStorage();
-        $form = new CreateFeedForm($storage);
+        $form = new FeedForm($storage, null);
 
         $form->on(Form::ON_SUCCESS, function () {
             $this->redirectNow('__CLOSE__');
@@ -143,7 +142,7 @@ class FeedController extends BaseController
         $title = $this->translate('Edit feed');
         $this->setTitle($title);
 
-        $form = new EditFeedForm($storage, $feed);
+        $form = new FeedForm($storage, $feed);
 
         $form->populate([
             'name' => $feed->name,
