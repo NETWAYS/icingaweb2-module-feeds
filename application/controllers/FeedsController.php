@@ -77,6 +77,7 @@ class FeedsController extends BaseController
 
         Benchmark::measure('Started fetching feeds');
 
+        $failed = [];
         $cacheDuration = $this->Config()->get('cache', 'duration', 900);
         foreach ($storage->getFeeds() as $feed) {
             if ($feeds !== null && !in_array($feed->name, $feeds)) {
@@ -87,13 +88,15 @@ class FeedsController extends BaseController
                 $reader = new FeedReader($feed->url, $feed->type);
                 $data = $reader->fetch('feed-' . $feed->name, $cacheDuration);
                 $feedsCounter++;
-            } catch (Exception $ex) {
-                // TODO: Figure out a way to display the error
+            } catch (Exception) {
+                $failed[] = $feed->name;
                 continue;
             }
 
             $items = array_merge($items, $data->getItems());
         }
+
+        $this->renderFailedFeedNotification($failed);
 
         if ($feedsCounter == 0) {
             $this->displayError($this->translate('No feeds to display'));
@@ -124,6 +127,26 @@ class FeedsController extends BaseController
         );
 
         $this->setAutorefreshInterval(300);
+    }
+
+    protected function renderFailedFeedNotification(array $failed): void
+    {
+        if (count($failed) > 0) {
+            if (count($failed) === 1) {
+                $text = sprintf($this->translate('Feed %s failed to load'), $failed[0]);
+            } elseif (count($failed) <= 3) {
+                $failedNames = join(', ', $failed);
+                $text = sprintf($this->translate('Feeds %s failed to load'), $failedNames);
+            } else {
+                $failedNames = join(', ', array_slice($failed, 0, 3));
+                $text = sprintf($this->translate('%d feeds failed to load, including: %s'), count($failed), $failedNames);
+            }
+            $this->addContent(HtmlElement::create(
+                'span',
+                Attributes::create(['class' => 'feed-list-error']),
+                $text
+            ));
+        }
     }
 
     public function listAction(): void
