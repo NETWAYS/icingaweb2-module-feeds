@@ -18,10 +18,38 @@
     opacity: 0.5;
 }
 
-a.table-actions {
-    padding: 0.25em 0.5em;
+// Just so that it looks like IcingaDB lists
+.feed-table tr {
+    border-bottom: 1px solid @gray-lighter;
+}
+
+// Quick actions for the feeds table, since we don't require the IcingaDB module
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+  margin: 0 -.5em;
+  padding: 0;
+
+  a {
+    text-decoration: none;
+  }
+
+  a,
+  button {
+    padding: .25em;
+    .rounded-corners();
+    display: inline-flex;
+    align-items: baseline;
 
     &:hover {
-        background-color: @icinga-blue-light;
+      background: @gray-lighter;
     }
+  }
+
+  li {
+    margin: 0 .25em .5em .25em;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
 }

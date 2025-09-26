@@ -4,7 +4,7 @@ namespace Icinga\Module\Feeds\Controllers;
 
 use Icinga\Module\Feeds\FeedReader;
 use Icinga\Module\Feeds\Storage\StorageFactory;
-use Icinga\Module\Feeds\Web\Table;
+use Icinga\Module\Feeds\Web\FeedsTable;
 use Icinga\Module\Feeds\Controller\BaseController;
 
 use Icinga\Application\Benchmark;
@@ -132,7 +132,7 @@ class FeedsController extends BaseController
             $this->addControl(
                 new Link($this->translate('Add'), 'feeds/feed/create', Attributes::create([
                     'title' => $this->translate('Create a new feed'),
-                    'class' => 'icon-plus',
+                    'class' => 'icon-plus action-link',
                     'data-base-target' => '_next',
                 ]))
             );
@@ -141,28 +141,7 @@ class FeedsController extends BaseController
         $storage = StorageFactory::getStorage();
         $feeds = $storage->getFeeds();
 
-        $data = [];
-        foreach ($feeds as $feed) {
-            $feedData = [
-                $this->translate('Name') => $feed->name,
-                $this->translate('Type') => $this->translate($feed->type->display()),
-                '_title' => $feed->description,
-            ];
-
-            if ($this->hasPermission('feeds/view')) {
-                $feedData['_link'] = "feeds/feed?feed={$feed->name}";
-            }
-
-            if ($this->hasPermission('feeds/modify')) {
-                $feedData['_actions'] = [
-                    $this->translate('Edit') => "feeds/feed/edit?feed={$feed->name}",
-                ];
-            }
-
-            $data[] = $feedData;
-        }
-
-        $table = new Table($data);
+        $table = new FeedsTable($feeds);
         $this->addContent($table);
     }
 }
