@@ -109,7 +109,12 @@ class FeedController extends BaseController
     {
         $this->assertPermission('feeds/modify');
 
-        $this->getTabs()->disableLegacyExtensions();
+        $this->getTabs()
+            ->add('create', [
+                'label'     => $this->translate('Create'),
+                'url'       => $this->getRequest()->getUrl()
+            ])
+            ->activate('create');
 
         $this->addTitle($this->translate('Create a new feed'));
 
@@ -130,7 +135,12 @@ class FeedController extends BaseController
     {
         $this->assertPermission('feeds/modify');
 
-        $this->getTabs()->disableLegacyExtensions();
+        $this->getTabs()
+            ->add('edit', [
+                'label'     => $this->translate('Edit'),
+                'url'       => $this->getRequest()->getUrl()
+            ])
+            ->activate('edit');
 
         $this->addTitle($this->translate('Edit feed'));
 
