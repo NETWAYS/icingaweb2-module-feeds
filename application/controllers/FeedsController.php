@@ -139,7 +139,7 @@ class FeedsController extends BaseController
                 $text = sprintf($this->translate('Feeds %s failed to load'), $failedNames);
             } else {
                 $failedNames = join(', ', array_slice($failed, 0, 3));
-                $text = sprintf($this->translate('Multiple feeds failed to load, including: %s'), $failedNames);
+                $text = sprintf($this->translate('%d feeds failed to load, including: %s'), count($failed), $failedNames);
             }
             $this->addContent(HtmlElement::create(
                 'span',
