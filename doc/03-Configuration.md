@@ -1,6 +1,10 @@
 # Configuration
 
-The module configuration is stored in `/etc/icingaweb2/modules/feeds/config.ini`:
+The module configuration is stored in `/etc/icingaweb2/modules/feeds/config.ini`.
+
+All options use defaults, there is no need to create this file.
+
+Example:
 
 ```ini
 [http]
@@ -22,6 +26,8 @@ To configure feed in the dashboard you can adjust the URLs. Example:
 
 ```
 feeds/feed?feed=myfeed&limit=25
+
+feeds/feed?feed=myfeed&limit=20&view=minimal
 
 feeds/feeds?feeds=myfeed,yourfeed&limit=10
 ```
