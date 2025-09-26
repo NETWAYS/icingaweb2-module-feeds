@@ -4,12 +4,12 @@ namespace Icinga\Module\Feeds\Web;
 
 use Icinga\Authentication\Auth;
 
-use ipl\Html\Table;
-use ipl\Web\Url;
 use ipl\Html\Html;
+use ipl\Html\Table;
 use ipl\Html\Text;
-use ipl\Web\Widget\Link;
 use ipl\I18n\Translation;
+use ipl\Web\Url;
+use ipl\Web\Widget\Link;
 
 /**
  * FeedsTable lists all configured feeds and their quick actions (e.g. edit)

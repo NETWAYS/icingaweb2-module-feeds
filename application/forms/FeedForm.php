@@ -3,16 +3,21 @@
 namespace Icinga\Module\Feeds\Forms;
 
 use Icinga\Module\Feeds\FeedCache;
-use ipl\Web\Compat\CompatForm;
-use ipl\Validator\StringLengthValidator;
-use ipl\Validator\CallbackValidator;
-use ipl\Web\Common\CsrfCounterMeasure;
-use Icinga\Web\Session;
-use Icinga\Web\Notification;
-use Icinga\Module\Feeds\Storage\StorageInterface;
-use Icinga\Module\Feeds\Storage\FeedDefinition;
-use Icinga\Module\Feeds\Parser\FeedType;
 
+use Icinga\Module\Feeds\Parser\FeedType;
+use Icinga\Module\Feeds\Storage\FeedDefinition;
+use Icinga\Module\Feeds\Storage\StorageInterface;
+use Icinga\Web\Notification;
+use Icinga\Web\Session;
+
+use ipl\Validator\CallbackValidator;
+use ipl\Validator\StringLengthValidator;
+use ipl\Web\Common\CsrfCounterMeasure;
+use ipl\Web\Compat\CompatForm;
+
+/**
+ * FeedForm is used to create and edit feeds in the configuration
+ */
 class FeedForm extends CompatForm
 {
     use CsrfCounterMeasure;

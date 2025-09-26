@@ -2,21 +2,23 @@
 
 namespace Icinga\Module\Feeds;
 
+use Icinga\Module\Feeds\Parser\AtomParser;
+use Icinga\Module\Feeds\Parser\FeedType;
+use Icinga\Module\Feeds\Parser\JsonfeedParser;
+use Icinga\Module\Feeds\Parser\RSSParser;
+use Icinga\Module\Feeds\Parser\Result\Feed;
+
 use Icinga\Application\Config;
 use Icinga\Application\Icinga;
 use Icinga\Application\Version;
-use Icinga\Module\Feeds\Parser\Result\Feed;
-use Icinga\Module\Feeds\Parser\RSSParser;
-use Icinga\Module\Feeds\Parser\AtomParser;
-use Icinga\Module\Feeds\Parser\JsonfeedParser;
-use Icinga\Module\Feeds\Parser\FeedType;
-
 use Icinga\Application\Benchmark;
 
 use Exception;
-
 use GuzzleHttp\Client;
 
+/**
+ * FeedReader handles fetching and parsing the feeds
+ */
 class FeedReader
 {
     public function __construct(
@@ -26,6 +28,9 @@ class FeedReader
     ) {
     }
 
+    /**
+     * getUserAgentString returns the User Agent we use for the HTTP call
+     */
     protected function getUserAgentString(): string
     {
         $moduleVersion = Icinga::app()
@@ -41,6 +46,9 @@ class FeedReader
         return "icingaweb2-module-feeds/{$moduleVersion} icinga-web-version/{$icingaWeb2Version['appVersion']} php-version/{$phpVersion}";
     }
 
+    /**
+     * fetchFeed calls the defined URL and returns the response body content
+     */
     protected function fetchFeed(): string
     {
         $timeoutInSeconds = $this->config->get('http', 'timeout', 5);
@@ -58,6 +66,9 @@ class FeedReader
         return $response->getBody()->getContents();
     }
 
+    /**
+     * parse tries to parse the response body
+     */
     protected function parse(string $rawResponse): ?Feed
     {
         Benchmark::measure('Started parsing feed');

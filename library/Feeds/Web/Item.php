@@ -2,13 +2,13 @@
 
 namespace Icinga\Module\Feeds\Web;
 
+use Icinga\Module\Feeds\Parser\Result\FeedItem;
+
 use ipl\Html\Attributes;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\HtmlElement;
 use ipl\Web\Widget\Icon;
 use ipl\Web\Widget\TimeAgo;
-
-use Icinga\Module\Feeds\Parser\Result\FeedItem;
 
 class Item extends BaseHtmlElement
 {

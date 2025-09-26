@@ -9,8 +9,14 @@ use Exception;
 use DateTime;
 use DateTimeInterface;
 
+/**
+ * JsonfeedParser is used to parse JSONFeed feeds
+ */
 class JsonfeedParser
 {
+    /**
+     * parse tries to parse the given string into a Feed object
+     */
     public static function parse(string $raw): Feed
     {
         $json = json_decode($raw, true);

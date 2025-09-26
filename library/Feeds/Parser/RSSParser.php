@@ -10,8 +10,14 @@ use Exception;
 use DateTime;
 use DateTimeInterface;
 
+/**
+ * RSSParser is used to parse RSS feeds
+ */
 class RSSParser
 {
+    /**
+     * parse tries to parse the given string into a Feed object
+     */
     public static function parse(string $raw): Feed
     {
         // FIXME: This assumes that the string is valid xml
