@@ -102,6 +102,9 @@ class FeedReader
         return $this->parse($response);
     }
 
+    /**
+    * fetch loads a feed either from the cache or from its URL
+    */
     public function fetch(?string $cacheKey = null, int $cacheDuration = 0): ?Feed
     {
         $cache = FeedCache::instance('feeds');
