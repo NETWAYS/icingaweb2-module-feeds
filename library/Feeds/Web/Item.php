@@ -2,11 +2,9 @@
 
 namespace Icinga\Module\Feeds\Web;
 
-use Icinga\Web\Helper\HtmlPurifier;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Attributes;
 use ipl\Html\HtmlElement;
-use ipl\Html\HtmlString;
 use ipl\Web\Widget\Icon;
 
 use Icinga\Module\Feeds\Parser\Result\FeedItem;
@@ -99,8 +97,7 @@ class Item extends BaseHtmlElement
     protected function getContentElement(): ?BaseHtmlElement
     {
         $text = $this->item->description;
-        $text = HtmlPurifier::process($text);
-        $description = new HtmlString($text);
+        $description = new FeedContent($text);
 
         return HtmlElement::create(
             'div',
