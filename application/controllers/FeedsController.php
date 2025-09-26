@@ -96,6 +96,8 @@ class FeedsController extends BaseController
             $items = array_merge($items, $data->getItems());
         }
 
+        $this->renderFailedFeedNotification($failed);
+
         if ($feedsCounter == 0) {
             $this->displayError($this->translate('No feeds to display'));
             return;
@@ -115,8 +117,6 @@ class FeedsController extends BaseController
 
         $controlWrapper->add($limitControl);
         $controlWrapper->add($viewModeSwitcher);
-
-        $this->renderFailedFeedNotification($failed);
 
         $size = $viewModeSwitcher->getViewMode();
         $this->renderItems(
