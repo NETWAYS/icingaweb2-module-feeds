@@ -46,6 +46,12 @@
 .feed-content-wrapper {
     width: 100%;
     white-space: normal;
+
+    // This makes sure images don't overflow the view and also limits the image's height
+    & img {
+        max-width: 100%;
+        max-height: 70vH;
+    }
 }
 
 .feed-item-categories {
