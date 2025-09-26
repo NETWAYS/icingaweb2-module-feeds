@@ -9,7 +9,7 @@ class FeedDefinition
     public function __construct(
         public string   $name,
         public string   $url,
-        public ?string  $description = null,
+        public string   $description = '',
         public FeedType $type = FeedType::Auto,
     ) {
     }
@@ -17,20 +17,21 @@ class FeedDefinition
     public function toArray(): array
     {
         return [
-            'name' => $this->name,
-            'url' => $this->url,
-            'description' => $this->description,
+            'name' => trim($this->name),
+            'url' => trim($this->url),
+            'description' => trim($this->description),
             'type' => $this->type->display(),
         ];
     }
 
     public static function fromArray(array $data): FeedDefinition
     {
+        $description = $data['description'] ?? null;
         return new self(
-            $data['name'],
-            $data['url'],
-            $data['description'] ?? null,
-            FeedType::fromDisplay($data['type'] ?? 'auto'),
+            trim($data['name']),
+            trim($data['url']),
+            trim($data['description']),
+            FeedType::fromDisplay(trim($data['type']) ?? 'auto'),
         );
     }
 }
