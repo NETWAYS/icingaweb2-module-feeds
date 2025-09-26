@@ -6,10 +6,6 @@
 
 .feed-items li {
     border-bottom: 1px solid @gray-lighter;
-
-    &:hover {
-        background-color: @tr-hover-color;
-    }
 }
 
 .feed-item {
@@ -22,6 +18,11 @@
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+
+    & header {
+        display: flex;
+        justify-content: space-between;
+    }
 }
 
 .feed-item-info {
@@ -91,6 +92,7 @@
     border: 1px solid @icinga-blue;
 }
 
+// Styles for the compact item list
 .compact {
     & .feed-item-info span {
         font-weight: normal;

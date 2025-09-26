@@ -2,10 +2,11 @@
 
 namespace Icinga\Module\Feeds\Web;
 
-use ipl\Html\BaseHtmlElement;
 use ipl\Html\Attributes;
+use ipl\Html\BaseHtmlElement;
 use ipl\Html\HtmlElement;
 use ipl\Web\Widget\Icon;
+use ipl\Web\Widget\TimeAgo;
 
 use Icinga\Module\Feeds\Parser\Result\FeedItem;
 
@@ -22,6 +23,7 @@ class Item extends BaseHtmlElement
     protected function getTitleElement(): HtmlElement
     {
         $title = $this->item->title;
+
         if ($title === null || $title === '') {
             return HtmlElement::create(
                 'span',
@@ -32,20 +34,21 @@ class Item extends BaseHtmlElement
                     'No title provided',
                 ]
             );
-        } else {
-            return HtmlElement::create(
-                'span',
-                Attributes::create([]),
-                [
-                    $this->item->title,
-                ]
-            );
         }
+
+        return HtmlElement::create(
+            'span',
+            Attributes::create([]),
+            [
+                $this->item->title,
+            ]
+        );
     }
 
     protected function getIconElement(): BaseHtmlElement
     {
         $image = $this->item->image ?? $this->item->feed->image;
+
         if ($image) {
             return HtmlElement::create(
                 'img',
@@ -54,19 +57,20 @@ class Item extends BaseHtmlElement
                     'src' => $image,
                 ])
             );
-        } else {
-            return new Icon(
-                'rss',
-                Attributes::create([
-                    'class' => 'feed-item-icon',
-                ])
-            );
         }
+
+        return new Icon(
+            'rss',
+            Attributes::create([
+                'class' => 'feed-item-icon',
+            ])
+        );
     }
 
     protected function getCategoriesElement(): ?BaseHtmlElement
     {
         $elements = [];
+
         if ($this->item->creator !== null) {
             $elements[] = HtmlElement::create(
                 'span',
@@ -76,6 +80,7 @@ class Item extends BaseHtmlElement
                 $this->item->creator,
             );
         }
+
         foreach ($this->item->categories as $category) {
             $elements[] = HtmlElement::create(
                 'span',
@@ -85,6 +90,7 @@ class Item extends BaseHtmlElement
                 $category,
             );
         }
+
         return HtmlElement::create(
             'div',
             Attributes::create([
@@ -113,38 +119,77 @@ class Item extends BaseHtmlElement
         return $this->item->link ?? $this->item->feed->link;
     }
 
+    protected function getDate(): BaseHtmlElement
+    {
+        return (new TimeAgo($this->item->date->getTimestamp()));
+    }
+
+    protected function assembleHeader(): BaseHtmlElement
+    {
+        $header = HtmlElement::create('header');
+
+        $title = HtmlElement::create(
+            'div',
+            Attributes::create(['class' => 'feed-item-title']),
+        );
+
+        $hasLink = $this->getLink() !== null;
+
+        $title->add(HtmlElement::create(
+            $hasLink ? 'a' : 'span',
+            Attributes::create([
+                'class' => 'feed-item-info',
+                'target' => '_blank',
+                'href' => $this->getLink(),
+            ]),
+            [
+                $this->getIconElement(),
+                $this->getTitleElement(),
+            ]
+        ));
+
+        $header->add($title);
+
+        // Once we migrate to IPL ItemRenderer this goes into assembleExtendedInfo
+        $extendedInfo = HtmlElement::create(
+            'div',
+            Attributes::create(['class' => 'feed-item-extended-info text-dim']),
+            [
+                $this->getDate()
+            ],
+        );
+
+        $header->add($extendedInfo);
+
+        return $header;
+    }
+
+    protected function assembleContent(): BaseHtmlElement
+    {
+        $content = HtmlElement::create('section');
+
+        $content->add($this->getContentElement());
+
+        return $content;
+    }
+
     protected function assemble(): void
     {
         $classes = ['feed-item'];
+
         if ($this->compact) {
             $classes[] = 'compact';
         }
-        $hasLink = $this->getLink() !== null;
-        $this->addHtml(
-            HtmlElement::create(
-                'div',
-                Attributes::create([
-                    'class' => join(' ', $classes),
-                ]),
-                [
-                    HtmlElement::create(
-                        $hasLink ? 'a' : 'span',
-                        Attributes::create([
-                            'class' => 'feed-item-info',
-                            'target' => '_blank',
-                            'href' => $this->getLink(),
-                        ]),
-                        [
-                            $this->getIconElement(),
-                            $this->getTitleElement(),
-                        ]
-                    ),
-                    $this->compact ? null : [
-                        $this->getCategoriesElement(),
-                        $this->getContentElement(),
-                    ],
-                ]
-            )
-        );
+
+        $container = HtmlElement::create('div', Attributes::create(['class' => join(' ', $classes),]));
+
+        $container->addHtml($this->assembleHeader());
+
+        if (!$this->compact) {
+            $container->add($this->getCategoriesElement());
+            $container->addHtml($this->assembleContent());
+        }
+
+        $this->addHtml($container);
     }
 }
