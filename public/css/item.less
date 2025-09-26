@@ -32,8 +32,6 @@
     gap: 0.5rem;
 
     & span {
-        overflow: hidden;
-        text-overflow: ellipsis;
         font-weight: bold;
         font-size: 1.2em;
     }
@@ -42,6 +40,10 @@
         color: @icinga-blue;
         text-decoration: none;
     }
+}
+
+.feed-item-title {
+     .text-ellipsis();
 }
 
 .feed-item-icon {
