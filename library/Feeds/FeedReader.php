@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Feeds;
 
+use Icinga\Application\Config;
 use Icinga\Application\Icinga;
 use Icinga\Application\Version;
 use Icinga\Module\Feeds\Parser\Result\Feed;
@@ -20,6 +21,7 @@ class FeedReader
 {
     public function __construct(
         protected string $url,
+        protected Config $config,
         protected FeedType $type = FeedType::Auto,
     ) {
     }
@@ -41,9 +43,10 @@ class FeedReader
 
     protected function fetchFeed(): string
     {
+        $timeoutInSeconds = $this->config->get('http', 'timeout', 5);
+
         $client = new Client([
-             // Magic number I know, but just to be safe
-            'timeout' => 10,
+            'timeout' => $timeoutInSeconds,
         ]);
 
         $response = $client->request('GET', $this->url, [
@@ -105,11 +108,13 @@ class FeedReader
     /**
     * fetch loads a feed either from the cache or from its URL
     */
-    public function fetch(?string $cacheKey = null, int $cacheDuration = 0): ?Feed
+    public function fetch(?string $cacheKey = null): ?Feed
     {
+        $cacheDurationInSeconds = $this->config->get('cache', 'duration', 900);
         $cache = FeedCache::instance('feeds');
-        if ($cacheKey !== null && $cacheDuration > 0) {
-            if (!$cache->has($cacheKey, time() - $cacheDuration)) {
+
+        if ($cacheKey !== null && $cacheDurationInSeconds > 0) {
+            if (!$cache->has($cacheKey, time() - $cacheDurationInSeconds)) {
                 $data = $this->fetchImpl();
                 $cache->store($cacheKey, serialize($data));
             } else {
