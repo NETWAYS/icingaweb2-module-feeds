@@ -16,7 +16,7 @@ class FeedContent extends HtmlString
     ];
 
     protected const TEXT_REPLACEMENTS = [
-        "</br>",
+        '</br>',
     ];
 
     /**
@@ -26,7 +26,10 @@ class FeedContent extends HtmlString
     public function __construct(string $text)
     {
         $text = HtmlPurifier::process($text);
-        $text = preg_replace(self::TEXT_PATTERNS, self::TEXT_REPLACEMENTS, $text);
+        $isHtml = (bool) preg_match('~<\w+(?>\s\w+=[^>]*)?>~', $text);
+        if (!$isHtml) {
+            $text = preg_replace(self::TEXT_PATTERNS, self::TEXT_REPLACEMENTS, $text);
+        }
         $text = trim($text);
 
         // Add zero-width space after commas which are not followed by a whitespace character
