@@ -2,6 +2,9 @@
 
 namespace Icinga\Module\Feeds\Storage;
 
+/**
+ * StorageInterface needs to be implemented by a storage engine
+ */
 interface StorageInterface
 {
     public function getFeeds(): array;

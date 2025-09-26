@@ -2,26 +2,27 @@
 
 namespace Icinga\Module\Feeds\Controller;
 
-use GuzzleHttp\Psr7\ServerRequest;
+use Icinga\Module\Feeds\Web\FeedViewModeSwitcher;
+
 use Icinga\Application\Config;
 use Icinga\Application\Logger;
 use Icinga\Data\ConfigObject;
 use Icinga\Exception\Json\JsonDecodeException;
 use Icinga\Module\Feeds\Web\Item;
-
-use Icinga\Module\Feeds\Web\FeedViewModeSwitcher;
 use Icinga\User\Preferences;
 use Icinga\User\Preferences\PreferencesStore;
 use Icinga\Util\Json;
+
 use ipl\Html\Attributes;
 use ipl\Html\Form;
 use ipl\Html\HtmlElement;
 use ipl\Web\Compat\CompatController;
-
-use Exception;
-use DateTime;
 use ipl\Web\Control\LimitControl;
 use ipl\Web\Url;
+
+use DateTime;
+use Exception;
+use GuzzleHttp\Psr7\ServerRequest;
 
 class BaseController extends CompatController
 {

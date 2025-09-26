@@ -4,6 +4,9 @@ namespace Icinga\Module\Feeds\Parser\Result;
 
 use \DateTime;
 
+/**
+ * FeedItem represents a single item in a Feed
+ */
 class FeedItem
 {
     public ?Feed $feed = null;

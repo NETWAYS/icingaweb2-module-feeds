@@ -4,6 +4,9 @@ namespace Icinga\Module\Feeds\Storage;
 
 use Icinga\Module\Feeds\Parser\FeedType;
 
+/**
+ * FeedDefinition represents a feed in the configuration
+ */
 class FeedDefinition
 {
     public function __construct(

@@ -2,6 +2,9 @@
 
 namespace Icinga\Module\Feeds\Parser\Result;
 
+/**
+ * Feed represents a Feed that contains FeedItems
+ */
 class Feed
 {
     public ?string $title = null;

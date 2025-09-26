@@ -3,6 +3,7 @@
 namespace Icinga\Module\Feeds\Web;
 
 use Icinga\Web\Helper\HtmlPurifier;
+
 use ipl\Html\HtmlString;
 
 /**

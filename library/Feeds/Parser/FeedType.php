@@ -4,6 +4,9 @@ namespace Icinga\Module\Feeds\Parser;
 
 use Exception;
 
+/**
+ * FeedType represents the types of supported feeds
+ */
 enum FeedType: int
 {
     case Auto = 0;
@@ -11,6 +14,9 @@ enum FeedType: int
     case Atom = 2;
     case Jsonfeed = 3;
 
+    /**
+     * display returns the string representation of the type
+     */
     public function display(): string
     {
         return match ($this) {
@@ -22,6 +28,9 @@ enum FeedType: int
         };
     }
 
+    /**
+     * fromDisplay returns the type given the string representation
+     */
     public static function fromDisplay(string $display): static
     {
         return match ($display) {

@@ -2,17 +2,18 @@
 
 namespace Icinga\Module\Feeds\Controllers;
 
+use Icinga\Module\Feeds\Controller\BaseController;
 use Icinga\Module\Feeds\FeedReader;
 use Icinga\Module\Feeds\Forms\FeedForm;
-use Icinga\Module\Feeds\Storage\StorageFactory;
-use Icinga\Module\Feeds\Controller\BaseController;
 use Icinga\Module\Feeds\Parser\FeedType;
+use Icinga\Module\Feeds\Storage\StorageFactory;
+
+use Icinga\Application\Benchmark;
+use Icinga\Web\Notification;
 
 use ipl\Html\Attributes;
 use ipl\Html\Form;
 use ipl\Html\HtmlElement;
-use Icinga\Application\Benchmark;
-use Icinga\Web\Notification;
 
 use Exception;
 
@@ -24,8 +25,8 @@ class FeedController extends BaseController
 
         $this->getTabs()
             ->add('view', [
-                'label'     => $this->translate('View'),
-                'url'       => $this->getRequest()->getUrl()
+                'label' => $this->translate('View'),
+                'url' => $this->getRequest()->getUrl()
             ])
             ->activate('view');
 
@@ -119,8 +120,8 @@ class FeedController extends BaseController
 
         $this->getTabs()
             ->add('create', [
-                'label'     => $this->translate('Create'),
-                'url'       => $this->getRequest()->getUrl()
+                'label' => $this->translate('Create'),
+                'url' => $this->getRequest()->getUrl()
             ])
             ->activate('create');
 
@@ -145,8 +146,8 @@ class FeedController extends BaseController
 
         $this->getTabs()
             ->add('edit', [
-                'label'     => $this->translate('Edit'),
-                'url'       => $this->getRequest()->getUrl()
+                'label' => $this->translate('Edit'),
+                'url' => $this->getRequest()->getUrl()
             ])
             ->activate('edit');
 

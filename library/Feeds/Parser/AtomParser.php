@@ -10,8 +10,14 @@ use Exception;
 use DateTime;
 use DateTimeInterface;
 
+/**
+ * AtomParser is used to parse Atom feeds
+ */
 class AtomParser
 {
+    /**
+     * parse tries to parse the given string into a Feed object
+     */
     public static function parse(string $raw): Feed
     {
         // FIXME: This assumes that the string is valid xml

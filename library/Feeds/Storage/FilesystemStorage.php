@@ -5,6 +5,9 @@ namespace Icinga\Module\Feeds\Storage;
 use Icinga\Application\Icinga;
 use Icinga\Exception\SystemPermissionException;
 
+/**
+ * FilesystemStorage is used to store the feeds configuration locally
+ */
 class FilesystemStorage implements StorageInterface
 {
     const FILE_NAME = "feeds.json";
