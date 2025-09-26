@@ -12,6 +12,7 @@ use ipl\Html\Attributes;
 use ipl\Html\Form;
 use ipl\Html\HtmlElement;
 use Icinga\Application\Benchmark;
+use Icinga\Web\Notification;
 
 use Exception;
 
@@ -114,6 +115,7 @@ class FeedController extends BaseController
         $form = new FeedForm($storage, null);
 
         $form->on(Form::ON_SUCCESS, function () {
+            Notification::success($this->translate('Created new feed'));
             $this->redirectNow('__CLOSE__');
         });
 
@@ -152,6 +154,8 @@ class FeedController extends BaseController
         ]);
 
         $form->on(Form::ON_SUCCESS, function () {
+            // TODO: Should have a different message for deletion
+            Notification::success($this->translate('Updated feed'));
             $this->redirectNow('__CLOSE__');
         });
 
