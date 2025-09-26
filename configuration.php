@@ -2,14 +2,19 @@
 
 use Icinga\Authentication\Auth;
 
+$feedMenu = $this->menuSection('Feeds')
+    ->setIcon('rss');
+
 $auth = Auth::getInstance();
 if ($auth->hasPermission('feeds/list')) {
-    $rssMenu = $this->menuSection('Feeds')
-        ->setIcon('rss')
+    $feedMenu->add('List')
+        ->setIcon('edit')
         ->setUrl('feeds/feeds/list');
-} elseif ($auth->hasPermission('feeds/view')) {
-    $rssMenu = $this->menuSection('Feeds')
-        ->setIcon('rss')
+}
+
+if ($auth->hasPermission('feeds/view')) {
+    $feedMenu->add('View')
+        ->setIcon('bars')
         ->setUrl('feeds/feeds');
 }
 

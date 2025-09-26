@@ -45,7 +45,12 @@ class FeedsController extends BaseController
     {
         $this->assertPermission('feeds/view');
 
-        $this->addTabs('view', false);
+        $this->getTabs()
+            ->add('view', [
+                'label' => $this->translate('View'),
+                'url' => 'feeds/feeds'
+            ])
+            ->activate('view');
 
         $controlWrapper = HtmlElement::create(
             'div',
@@ -125,7 +130,13 @@ class FeedsController extends BaseController
     {
         $this->assertPermission('feeds/list');
 
-        $this->addTabs('list');
+        $this->getTabs()
+            ->add('list', [
+                'label' => $this->translate('List'),
+                'url' => 'feeds/list'
+            ])
+            ->activate('list');
+
         $this->addTitle($this->translate('Feeds'));
 
         if ($this->hasPermission('feeds/modify')) {
