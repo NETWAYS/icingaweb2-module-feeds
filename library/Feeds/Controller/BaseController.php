@@ -40,12 +40,15 @@ class BaseController extends CompatController
     protected function addTitle(string $title, ?HtmlElement $parent = null): HtmlElement
     {
         $titleElement = HtmlElement::create('h1', null, $title);
+
         if ($parent !== null) {
             $parent->add($titleElement);
         } else {
             $this->addControl($titleElement);
         }
+
         $this->setTitle($title);
+
         return $titleElement;
     }
 
@@ -57,12 +60,15 @@ class BaseController extends CompatController
     ): void {
         $index = 1;
         $elements = [];
+
         foreach ($items as $item) {
             if ($date !== null && $item->date < $date) {
                 continue;
             }
+
             $elements[] = new Item($item, $compact);
             $index++;
+
             if ($index > $limit) {
                 break;
             }
@@ -100,6 +106,7 @@ class BaseController extends CompatController
     protected function getDateParam(): DateTime|bool|null
     {
         $date = $this->params->shift('date');
+
         if ($date !== null) {
             try {
                 return new DateTime($date);
@@ -108,10 +115,9 @@ class BaseController extends CompatController
                 return false;
             }
         }
+
         return null;
     }
-
-
 
     /**
      * Create and return the ViewModeSwitcher
@@ -132,6 +138,7 @@ class BaseController extends CompatController
         $viewModeSwitcher->setIdProtector([$this->getRequest(), 'protectId']);
 
         $user = $this->Auth()->getUser();
+
         if (($preferredModes = $user->getAdditional('feeds.view_modes')) === null) {
             try {
                 $preferredModes = Json::decode(
@@ -147,6 +154,7 @@ class BaseController extends CompatController
         }
 
         $requestRoute = $this->getRequest()->getUrl()->getPath();
+
         if (isset($preferredModes[$requestRoute])) {
             $viewModeSwitcher->setDefaultViewMode($preferredModes[$requestRoute]);
         }
@@ -207,6 +215,7 @@ class BaseController extends CompatController
         )->handleRequest(ServerRequest::fromGlobals());
 
         $viewMode = $viewModeSwitcher->getViewMode();
+
         if ($viewMode === 'minimal' || $viewMode === 'grid') {
             $hasLimitParam = Url::fromRequest()->hasParam($limitControl->getLimitParam());
 
@@ -216,6 +225,7 @@ class BaseController extends CompatController
         }
 
         $requestPath =  $session->get('request_path');
+
         if ($requestPath && $requestPath !== $requestRoute) {
             $session->clear();
         }

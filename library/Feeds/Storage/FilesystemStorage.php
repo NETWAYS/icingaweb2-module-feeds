@@ -45,9 +45,8 @@ class FilesystemStorage implements StorageInterface
         $this->ensureConfigDir();
 
         if (!is_file($file)) {
-            $data = [
-                'version' => self::VERSION,
-            ];
+            $data = ['version' => self::VERSION];
+
             if (file_put_contents($file, json_encode($data, static::JSON_FLAGS)) === false) {
                 throw new SystemPermissionException('Could not write config file "%s"', dirname($file));
             }
@@ -77,19 +76,24 @@ class FilesystemStorage implements StorageInterface
         }
 
         unset($this->feeds[$feed]);
+
         $this->flush();
+
         return true;
     }
 
     public function addFeed(FeedDefinition $feed): bool
     {
         $this->load();
+
         if ($this->getFeedByName($feed->name)) {
             return false;
         }
 
         $this->feeds[$feed->name] = $feed;
+
         $this->flush();
+
         return true;
     }
 
@@ -99,12 +103,15 @@ class FilesystemStorage implements StorageInterface
             'version' => self::VERSION,
             'feeds' => []
         ];
+
         foreach ($this->getFeeds() as $feed) {
             $data['feeds'][] = $feed->toArray();
         }
+
         $this->ensureConfigFile();
 
         $file = $this->getConfigFile();
+
         if (file_put_contents($file, json_encode($data, static::JSON_FLAGS)) === false) {
             throw new SystemPermissionException('Could not write config file "%s"', dirname($file));
         }
@@ -120,10 +127,13 @@ class FilesystemStorage implements StorageInterface
 
         $this->ensureConfigFile();
         $rawData = file_get_contents($this->getConfigFile());
+
         if ($rawData === false) {
             throw new SystemPermissionException('Could not read config file "%s"', $this->getConfigFile());
         }
+
         $json = json_decode($rawData, true);
+
         if ($json === null) {
             throw new SystemPermissionException('Could not read config file "%s"', $this->getConfigFile());
         }

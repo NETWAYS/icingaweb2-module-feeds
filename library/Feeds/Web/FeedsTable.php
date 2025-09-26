@@ -59,6 +59,7 @@ class FeedsTable extends Table
                     Url::fromPath('feeds/feed/edit', ['feed' => $feed->name]),
                     ['class' => 'action-link']
                 );
+
                 $edit = Html::tag('li')->add($l);
                 $quickActions->add($edit);
             }

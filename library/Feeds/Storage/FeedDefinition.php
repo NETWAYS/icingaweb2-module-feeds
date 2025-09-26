@@ -27,6 +27,7 @@ class FeedDefinition
     public static function fromArray(array $data): FeedDefinition
     {
         $description = $data['description'] ?? null;
+
         return new self(
             trim($data['name']),
             trim($data['url']),

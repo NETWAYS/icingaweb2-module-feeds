@@ -59,14 +59,19 @@ class FeedsController extends BaseController
             ]),
             []
         );
+
         $this->addControl($controlWrapper);
 
         $this->addTitle($this->translate('Feeds'), $controlWrapper);
+
         $feeds = $this->params->shift('feeds');
+
         if ($feeds !== null) {
             $feeds = explode(',', $feeds);
         }
+
         $date = $this->getDateParam();
+
         if ($date !== null) {
             return;
         }
@@ -119,6 +124,7 @@ class FeedsController extends BaseController
         $controlWrapper->add($viewModeSwitcher);
 
         $size = $viewModeSwitcher->getViewMode();
+
         $this->renderItems(
             $items,
             $limitControl->getLimit(),
@@ -131,22 +137,26 @@ class FeedsController extends BaseController
 
     protected function renderFailedFeedNotification(array $failed): void
     {
-        if (count($failed) > 0) {
-            if (count($failed) === 1) {
-                $text = sprintf($this->translate('Feed %s failed to load'), $failed[0]);
-            } elseif (count($failed) <= 3) {
-                $failedNames = join(', ', $failed);
-                $text = sprintf($this->translate('Feeds %s failed to load'), $failedNames);
-            } else {
-                $failedNames = join(', ', array_slice($failed, 0, 3));
-                $text = sprintf($this->translate('%d feeds failed to load, including: %s'), count($failed), $failedNames);
-            }
-            $this->addContent(HtmlElement::create(
-                'span',
-                Attributes::create(['class' => 'feed-list-error']),
-                $text
-            ));
+        if (count($failed) < 1) {
+            return;
         }
+
+        if (count($failed) === 1) {
+            $text = sprintf($this->translate('Failed to load feed: %s'), $failed[0]);
+        } elseif (count($failed) <= 3) {
+            $failedNames = join(', ', $failed);
+            $text = sprintf($this->translate('Failed to load %d feeds: %s'), count($failed), $failedNames);
+        } else {
+            // We cannot show an endless message, thus only three error
+            $failedNames = join(', ', array_merge(array_slice($failed, 0, 3), ['...']));
+            $text = sprintf($this->translate('Failed to load %d feeds: %s'), count($failed), $failedNames);
+        }
+
+        $this->addContent(HtmlElement::create(
+            'span',
+            Attributes::create(['class' => 'feed-list-error']),
+            $text
+        ));
     }
 
     public function listAction(): void

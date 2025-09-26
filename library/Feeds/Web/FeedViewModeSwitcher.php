@@ -167,6 +167,7 @@ class FeedViewModeSwitcher extends Form
                 'type'  => 'radio',
                 'value' => $viewMode
             ]);
+
             $input->getAttributes()->registerAttributeCallback('checked', function () use ($viewMode) {
                 return $viewMode === $this->getViewMode();
             });
@@ -198,6 +199,7 @@ class FeedViewModeSwitcher extends Form
     {
         $active = null;
         $inactive = null;
+
         switch ($viewMode) {
             case 'minimal':
                 $active = t('Minimal view active');
