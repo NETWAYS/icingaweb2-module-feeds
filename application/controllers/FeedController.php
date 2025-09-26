@@ -50,10 +50,9 @@ class FeedController extends BaseController
 
         Benchmark::measure('Started fetching feed');
 
-        $cacheDuration = $this->Config()->get('cache', 'duration', 900);
         try {
-            $reader = new FeedReader($url, $type);
-            $data = $reader->fetch($name, $cacheDuration);
+            $reader = new FeedReader($url, $this->Config(), $type);
+            $data = $reader->fetch($name);
         } catch (Exception $ex) {
             $this->displayError($ex->getMessage());
             return;

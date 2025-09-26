@@ -78,15 +78,15 @@ class FeedsController extends BaseController
         Benchmark::measure('Started fetching feeds');
 
         $failed = [];
-        $cacheDuration = $this->Config()->get('cache', 'duration', 900);
+
         foreach ($storage->getFeeds() as $feed) {
             if ($feeds !== null && !in_array($feed->name, $feeds)) {
                 continue;
             }
 
             try {
-                $reader = new FeedReader($feed->url, $feed->type);
-                $data = $reader->fetch('feed-' . $feed->name, $cacheDuration);
+                $reader = new FeedReader($feed->url, $this->Config(), $feed->type);
+                $data = $reader->fetch('feed-' . $feed->name);
                 $feedsCounter++;
             } catch (Exception) {
                 $failed[] = $feed->name;
