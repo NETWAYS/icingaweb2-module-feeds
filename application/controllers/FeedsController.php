@@ -59,14 +59,19 @@ class FeedsController extends BaseController
             ]),
             []
         );
+
         $this->addControl($controlWrapper);
 
         $this->addTitle($this->translate('Feeds'), $controlWrapper);
+
         $feeds = $this->params->shift('feeds');
+
         if ($feeds !== null) {
             $feeds = explode(',', $feeds);
         }
+
         $date = $this->getDateParam();
+
         if ($date !== null) {
             return;
         }
@@ -119,6 +124,7 @@ class FeedsController extends BaseController
         $controlWrapper->add($viewModeSwitcher);
 
         $size = $viewModeSwitcher->getViewMode();
+
         $this->renderItems(
             $items,
             $limitControl->getLimit(),

@@ -36,14 +36,19 @@ class FeedController extends BaseController
             ]),
             []
         );
+
         $this->addControl($controlWrapper);
 
         $this->addTitle($this->translate('Feed'), $controlWrapper);
+
         [$url, $type, $name] = $this->getFeedInfo();
+
         if ($url === null) {
             return;
         }
+
         $date = $this->getDateParam();
+
         if ($date === false) {
             return;
         }
@@ -80,17 +85,21 @@ class FeedController extends BaseController
     protected function getFeedInfo(): array
     {
         $name = $this->params->shift('feed');
+
         if ($name !== null && $name !== '') {
             $storage = StorageFactory::getStorage();
             $feed = $storage->getFeedByName($name);
+
             if ($feed === null) {
                 $this->displayError('Feed not found');
                 return [null, null, null];
             }
+
             return [$feed->url, $feed->type, 'feed-' . $feed->name];
         }
 
         $url = $this->params->shift('url');
+
         if ($url === null or $url === '') {
             $this->displayError($this->translate('No feed configured'));
             return [null, null, null];
@@ -147,6 +156,7 @@ class FeedController extends BaseController
         $storage = StorageFactory::getStorage();
 
         $feed = $storage->getFeedByName($name);
+
         if ($feed === null) {
             $this->displayError($this->translate('Feed not found'));
             return;

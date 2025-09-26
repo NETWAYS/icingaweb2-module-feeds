@@ -27,9 +27,11 @@ class FeedContent extends HtmlString
     {
         $text = HtmlPurifier::process($text);
         $isHtml = (bool) preg_match('~<\w+(?>\s\w+=[^>]*)?>~', $text);
+
         if (!$isHtml) {
             $text = preg_replace(self::TEXT_PATTERNS, self::TEXT_REPLACEMENTS, $text);
         }
+
         $text = trim($text);
 
         // Add zero-width space after commas which are not followed by a whitespace character

@@ -76,6 +76,7 @@ class AtomParser
     {
         $rel = null;
         $href = null;
+
         foreach ($xml->attributes() as $key => $value) {
             switch ($key) {
                 case 'rel':
@@ -100,6 +101,7 @@ class AtomParser
     {
         $term = null;
         $label = null;
+
         foreach ($xml->attributes() as $key => $value) {
             switch ($key) {
                 case 'term':
@@ -122,6 +124,7 @@ class AtomParser
     {
         $name = null;
         $email = null;
+
         foreach ($xml->children() as $elementName => $element) {
             switch ($elementName) {
                 case 'name':

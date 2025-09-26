@@ -33,6 +33,7 @@ class JsonfeedParser
         $feed->description = $json['description'] ?? null;
 
         $items = $json['items'] ?? null;
+
         if ($items === null) {
             throw new Exception('JSONfeed contains no items');
         }
@@ -80,11 +81,13 @@ class JsonfeedParser
         $item->description = $json['content_html'] ?? $json['content_text'] ?? $json['summary'] ?? null;
 
         $item->categories = $json['tags'] ?? [];
+
         if (array_key_exists('author', $json)) {
             $item->creator = $json['author']['name'] ?? null;
         } elseif (array_key_exists('authors', $json)) {
             $item->creator = $json['authors'][0]['name'] ?? null;
         }
+
         $item->image = $json['image'] ?? null;
         $item->date = static::parseDateTime($json['date_modified'] ?? '') ?? static::parseDateTime($json['date_published'] ?? '') ?? null;
 
