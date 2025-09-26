@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Feeds\Forms;
 
+use Icinga\Module\Feeds\FeedCache;
 use ipl\Web\Compat\CompatForm;
 use ipl\Validator\StringLengthValidator;
 use ipl\Validator\CallbackValidator;
@@ -149,7 +150,9 @@ class FeedForm extends CompatForm
 
     protected function onSuccess(): void
     {
+        $cache = FeedCache::instance('feeds');
         if ($this->shouldBeDeleted()) {
+            $cache->clear('feed-' . $this->feed->name);
             $this->storage->removeFeed($this->feed);
         } elseif ($this->getSubmitButton()->hasBeenPressed() ?? false) {
             $name = $this->getValue('name');
@@ -181,6 +184,7 @@ class FeedForm extends CompatForm
                     Notification::error("A feed with the name {$name} already exists");
                     return;
                 }
+                $cache->clear('feed-' . $this->feed->name);
                 $this->storage->removeFeed($this->feed);
             }
 

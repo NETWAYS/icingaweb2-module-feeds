@@ -39,7 +39,7 @@ class FeedController extends BaseController
         $this->addControl($controlWrapper);
 
         $this->addTitle($this->translate('Feed'), $controlWrapper);
-        [$url, $type] = $this->getFeedInfo();
+        [$url, $type, $name] = $this->getFeedInfo();
         if ($url === null) {
             return;
         }
@@ -50,9 +50,10 @@ class FeedController extends BaseController
 
         Benchmark::measure('Started fetching feed');
 
+        $cacheDuration = $this->Config()->get('cache', 'duration', 900);
         try {
             $reader = new FeedReader($url, $type);
-            $data = $reader->fetch();
+            $data = $reader->fetch($name, $cacheDuration);
         } catch (Exception $ex) {
             $this->displayError($ex->getMessage());
             return;
@@ -85,22 +86,23 @@ class FeedController extends BaseController
             $feed = $storage->getFeedByName($name);
             if ($feed === null) {
                 $this->displayError('Feed not found');
-                return [null, null];
+                return [null, null, null];
             }
-            return [$feed->url, $feed->type];
+            return [$feed->url, $feed->type, 'feed-' . $feed->name];
         }
 
         $url = $this->params->shift('url');
         if ($url === null or $url === '') {
             $this->displayError($this->translate('No feed configured'));
-            return [null, null];
+            return [null, null, null];
         }
 
         $this->assertPermission('feeds/view/arbitrary');
 
         $type = $this->params->shift('type') ?? 'auto';
+        $name = 'url-' . sha1($url . ':' . $type);
 
-        return [$url, FeedType::fromDisplay($type)];
+        return [$url, FeedType::fromDisplay($type), $name];
     }
 
     public function createAction(): void

@@ -91,7 +91,7 @@ class FeedReader
         }
     }
 
-    public function fetch(): ?Feed
+    protected function fetchImpl(): ?Feed
     {
         try {
             $response = $this->fetchFeed();
@@ -100,5 +100,23 @@ class FeedReader
         }
 
         return $this->parse($response);
+    }
+
+    /**
+    * fetch loads a feed either from the cache or from its URL
+    */
+    public function fetch(?string $cacheKey = null, int $cacheDuration = 0): ?Feed
+    {
+        $cache = FeedCache::instance('feeds');
+        if ($cacheKey !== null && $cacheDuration > 0) {
+            if (!$cache->has($cacheKey, time() - $cacheDuration)) {
+                $data = $this->fetchImpl();
+                $cache->store($cacheKey, serialize($data));
+            } else {
+                $data = unserialize($cache->get($cacheKey));
+            }
+            return $data;
+        }
+        return $this->fetchImpl();
     }
 }
