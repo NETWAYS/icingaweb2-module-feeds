@@ -155,10 +155,10 @@ class FeedForm extends CompatForm
             $cache->clear('feed-' . $this->feed->name);
             $this->storage->removeFeed($this->feed);
         } elseif ($this->getSubmitButton()->hasBeenPressed() ?? false) {
-            $name = $this->getValue('name');
-            $url = $this->getValue('url');
+            $name = trim($this->getValue('name'));
+            $url = trim($this->getValue('url'));
             $type = FeedType::fromDisplay($this->getValue('type') ?? 'auto');
-            $description = $this->getValue('description');
+            $description = trim($this->getValue('description'));
 
             if ($this->isCreateForm()) {
                 $feed = new FeedDefinition(
