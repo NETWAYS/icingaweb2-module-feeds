@@ -1,3 +1,8 @@
+/*
+module.less contains styles for central elements and the feeds table
+*/
+
+// So that the controls and the headline are on the same row
 .control-wrapper {
     display: grid;
     flex-direction: row;
@@ -14,6 +19,7 @@
     }
 }
 
+// For secondary text that is not that important
 .text-dim {
     opacity: 0.5;
 }
@@ -42,7 +48,7 @@
 
     a,
     button {
-        padding: .25em;
+        padding: 0 .33em;
         .rounded-corners();
         display: inline-flex;
         align-items: baseline;
@@ -53,7 +59,7 @@
     }
 
     li {
-        margin: 0 .25em .5em .25em;
+        margin: 0 .25em;
         vertical-align: middle;
         white-space: nowrap;
     }
