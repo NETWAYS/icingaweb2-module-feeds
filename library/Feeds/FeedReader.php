@@ -105,7 +105,10 @@ class FeedReader
         }
     }
 
-    protected function fetchImpl(): ?Feed
+    /**
+    * fetchAndParse is just a small wrapper to fetch and parse a feed
+    */
+    protected function fetchAndParse(): ?Feed
     {
         try {
             $response = $this->fetchFeed();
@@ -126,13 +129,14 @@ class FeedReader
 
         if ($cacheKey !== null && $cacheDurationInSeconds > 0) {
             if (!$cache->has($cacheKey, time() - $cacheDurationInSeconds)) {
-                $data = $this->fetchImpl();
+                $data = $this->fetchAndParse();
                 $cache->store($cacheKey, serialize($data));
             } else {
                 $data = unserialize($cache->get($cacheKey));
             }
             return $data;
         }
-        return $this->fetchImpl();
+
+        return $this->fetchAndParse();
     }
 }
