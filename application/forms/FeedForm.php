@@ -24,6 +24,9 @@ class FeedForm extends CompatForm
 
     protected ?string $deleteButtonName = null;
 
+    // Pattern to valide feed names
+    protected const VALID_NAME = '/^[a-zA-Z0-9\-_\. ]+$/';
+
     public function __construct(
         protected StorageInterface $storage,
         protected ?FeedDefinition $feed,
@@ -43,7 +46,7 @@ class FeedForm extends CompatForm
             'validators' => [
                 new StringLengthValidator(['max' => 255]),
                 new CallbackValidator(function (string $value, CallbackValidator $validator) {
-                    if (!preg_match('/^[a-zA-Z0-9\-_ ]+$/', $value)) {
+                    if (!preg_match(static::VALID_NAME, $value)) {
                         $validator->addMessage($this->translate('The name must only contain alphanumeric characters'));
                         return false;
                     }
