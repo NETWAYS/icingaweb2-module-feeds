@@ -13,7 +13,7 @@ timeout = 5
 
 [cache]
 ; Lifetime of feed data in the cache in seconds
-duration = 900
+duration = 43200
 ```
 
 ## Feeds

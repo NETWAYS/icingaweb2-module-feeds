@@ -159,9 +159,11 @@ class FeedForm extends CompatForm
     protected function onSuccess(): void
     {
         $cache = FeedCache::instance('feeds');
+
         if ($this->shouldBeDeleted()) {
-            $cache->clear('feed-' . $this->feed->name);
             $this->storage->removeFeed($this->feed);
+            // Clear the cache on a delete
+            $cache->clear('feed-' . $this->feed->name);
         } elseif ($this->getSubmitButton()->hasBeenPressed() ?? false) {
             $name = trim($this->getValue('name'));
             $url = trim($this->getValue('url'));
@@ -177,22 +179,23 @@ class FeedForm extends CompatForm
                 );
 
                 if ($this->storage->getFeedByName($name) !== null) {
-                    Notification::error("A feed with the name {$name} already exists");
+                    Notification::error($this->translate(sprintf("A feed with the name %s already exists", $name)));
                     return;
                 }
 
                 $this->storage->addFeed($feed);
                 return;
             }
+            // Always clear the cache on an edit
+            $cache->clear('feed-' . $this->feed->name);
 
             $isRename = $name !== $this->feed->name;
 
             if ($isRename) {
                 if ($this->storage->getFeedByName($name) !== null) {
-                    Notification::error("A feed with the name {$name} already exists");
+                    Notification::error($this->translate(sprintf("A feed with the name %s already exists", $name)));
                     return;
                 }
-                $cache->clear('feed-' . $this->feed->name);
                 $this->storage->removeFeed($this->feed);
             }
 
