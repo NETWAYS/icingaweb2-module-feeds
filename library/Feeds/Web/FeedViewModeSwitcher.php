@@ -34,7 +34,7 @@ class FeedViewModeSwitcher extends Form
         'common'   => 'default'
     ];
 
-    protected string $defaultViewMode;
+    protected string $defaultViewMode = self::DEFAULT_VIEW_MODE;
 
     /** @var string */
     protected $method = 'POST';
@@ -51,7 +51,7 @@ class FeedViewModeSwitcher extends Form
      */
     public function getDefaultViewMode(): string
     {
-        return $this->defaultViewMode ?: static::DEFAULT_VIEW_MODE;
+        return $this->defaultViewMode;
     }
 
     /**
