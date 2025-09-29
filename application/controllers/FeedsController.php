@@ -174,13 +174,25 @@ class FeedsController extends BaseController
         $this->addTitle($this->translate('Feeds'));
 
         if ($this->hasPermission('feeds/modify')) {
-            $this->addControl(
-                new Link($this->translate('Add'), 'feeds/feed/create', Attributes::create([
-                    'title' => $this->translate('Create a new feed'),
-                    'class' => 'icon-plus action-link',
-                    'data-base-target' => '_next',
-                ]))
+            // If there are more links we could move this to library/
+            $quickActions = HtmlElement::create(
+                'ul',
+                Attributes::create(['class' => 'quick-actions']),
             );
+
+            $quickActions->add(
+                HtmlElement::create(
+                    'li',
+                    [],
+                    (new Link($this->translate('Add'), 'feeds/feed/create', Attributes::create([
+                        'title' => $this->translate('Create a new feed'),
+                        'class' => 'icon-plus action-link',
+                        'data-base-target' => '_next',
+                    ])))
+                )
+            );
+
+            $this->addControl($quickActions);
         }
 
         $storage = StorageFactory::getStorage();
