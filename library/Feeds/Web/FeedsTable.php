@@ -64,11 +64,14 @@ class FeedsTable extends Table
                 $quickActions->add($edit);
             }
 
-            $r = Table::row([
-                $name,
-                Text::create($feed->type->display()),
-                $quickActions,
-            ]);
+            $r = Table::tr();
+            $rname = Table::td($name);
+            $rtype = Table::td(Text::create($feed->type->display()), ['class' => 'text-dim']);
+            $ractions = Table::td($quickActions, ['class' => 'action-col']);
+
+            $r->addHtml($rname);
+            $r->addHtml($rtype);
+            $r->addHtml($ractions);
 
             $tbody->addHtml($r);
         }
