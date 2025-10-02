@@ -86,6 +86,18 @@ class FeedForm extends CompatForm
             ],
         ]);
 
+        $this->addElement(
+            'checkbox',
+            'is_active',
+            [
+                'label' => $this->translate('Active'),
+                'value' => true,
+                'description' => $this->translate(
+                    'Enable or disable this feed. Disabled feeds will not be fetched in the feed view'
+                )
+            ]
+        );
+
         $this->addElement('textarea', 'description', [
             'label'       => $this->translate('Description'),
             'description' => $this->translate(
@@ -167,6 +179,7 @@ class FeedForm extends CompatForm
         } elseif ($this->getSubmitButton()->hasBeenPressed() ?? false) {
             $name = trim($this->getValue('name'));
             $url = trim($this->getValue('url'));
+            $isActive = $this->getElement('is_active')->isChecked();
             $type = FeedType::fromDisplay($this->getValue('type') ?? 'auto');
             $description = trim($this->getValue('description'));
 
@@ -175,6 +188,7 @@ class FeedForm extends CompatForm
                     $name,
                     $url,
                     $description,
+                    $isActive,
                     $type,
                 );
 
@@ -202,6 +216,7 @@ class FeedForm extends CompatForm
             $this->feed->name = $name;
             $this->feed->url = $url;
             $this->feed->type = $type;
+            $this->feed->isActive = $isActive;
             $this->feed->description = $description;
 
             if ($isRename) {
