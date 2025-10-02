@@ -90,6 +90,11 @@ class FeedsController extends BaseController
                 continue;
             }
 
+            // Skip inactive feeds
+            if (!$feed->isActive) {
+                continue;
+            }
+
             try {
                 $reader = new FeedReader($feed->url, $this->Config(), $feed->type);
                 $data = $reader->fetch('feed-' . $feed->name);
