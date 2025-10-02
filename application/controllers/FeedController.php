@@ -175,6 +175,7 @@ class FeedController extends BaseController
             'name' => $feed->name,
             'url' => $feed->url,
             'description' => $feed->description,
+            'is_active' => $feed->isActive,
             'type' => $feed->type->display(),
         ]);
 

@@ -13,6 +13,7 @@ class FeedDefinition
         public string   $name,
         public string   $url,
         public string   $description = '',
+        public bool     $isActive = true,
         public FeedType $type = FeedType::Auto,
     ) {
     }
@@ -23,6 +24,7 @@ class FeedDefinition
             'name' => trim($this->name),
             'url' => trim($this->url),
             'description' => trim($this->description),
+            'is_active' => $this->isActive,
             'type' => $this->type->display(),
         ];
     }
@@ -35,6 +37,7 @@ class FeedDefinition
             trim($data['name']),
             trim($data['url']),
             trim($data['description']),
+            $data['is_active'],
             FeedType::fromDisplay(trim($data['type']) ?? 'auto'),
         );
     }
