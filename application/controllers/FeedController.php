@@ -45,12 +45,14 @@ class FeedController extends BaseController
         [$url, $type, $name] = $this->getFeedInfo();
 
         if ($url === null) {
+            $this->displayError($this->translate('No such feed configured'));
             return;
         }
 
         $date = $this->getDateParam();
 
         if ($date === false) {
+            $this->displayError($this->translate('Invalid date'));
             return;
         }
 
@@ -83,6 +85,9 @@ class FeedController extends BaseController
         $this->setAutorefreshInterval(300);
     }
 
+    /**
+     * getFeedInfo returns information feed from the storage
+     */
     protected function getFeedInfo(): array
     {
         $name = $this->params->shift('feed');
@@ -92,7 +97,6 @@ class FeedController extends BaseController
             $feed = $storage->getFeedByName($name);
 
             if ($feed === null) {
-                $this->displayError('Feed not found');
                 return [null, null, null];
             }
 
@@ -102,7 +106,6 @@ class FeedController extends BaseController
         $url = $this->params->shift('url');
 
         if ($url === null or $url === '') {
-            $this->displayError($this->translate('No feed configured'));
             return [null, null, null];
         }
 
