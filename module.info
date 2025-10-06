@@ -1,6 +1,6 @@
 Module: Feeds
 Version: 0.1.0
 Requires:
-  Libraries: icinga-php-thirdparty (>=0.11.0)
+  Libraries: icinga-php-library (>=0.16.0), icinga-php-thirdparty (>=0.11.0)
 Description: Simple Feed Reader Module
   This module fetches external feeds and provides both merged and single view.
