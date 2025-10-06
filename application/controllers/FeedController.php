@@ -42,7 +42,7 @@ class FeedController extends BaseController
 
         $this->addTitle($this->translate('Feed'), $controlWrapper);
 
-        [$url, $type, $name] = $this->getFeedInfo();
+        [$url, $type, $name, $isActive] = $this->getFeedInfo();
 
         if ($url === null) {
             $this->displayError($this->translate('No such feed configured'));
@@ -97,16 +97,16 @@ class FeedController extends BaseController
             $feed = $storage->getFeedByName($name);
 
             if ($feed === null) {
-                return [null, null, null];
+                return [null, null, null, null];
             }
 
-            return [$feed->url, $feed->type, 'feed-' . $feed->name];
+            return [$feed->url, $feed->type, 'feed-' . $feed->name, $feed->isActive];
         }
 
         $url = $this->params->shift('url');
 
         if ($url === null or $url === '') {
-            return [null, null, null];
+            return [null, null, null, null];
         }
 
         $this->assertPermission('feeds/view/arbitrary');
@@ -114,7 +114,7 @@ class FeedController extends BaseController
         $type = $this->params->shift('type') ?? 'auto';
         $name = 'url-' . sha1($url . ':' . $type);
 
-        return [$url, FeedType::fromDisplay($type), $name];
+        return [$url, FeedType::fromDisplay($type), $name, true];
     }
 
     public function createAction(): void
