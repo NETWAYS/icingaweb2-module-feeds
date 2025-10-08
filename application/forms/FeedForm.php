@@ -93,7 +93,7 @@ class FeedForm extends CompatForm
                 'label' => $this->translate('Active'),
                 'value' => true,
                 'description' => $this->translate(
-                    'Enable or disable this feed. Disabled feeds will not be fetched in the feed view'
+                    'Enable or disable this feed. Disabled feeds will not be fetched in the feeds view by default. They can still explicitly requested via their name.'
                 )
             ]
         );
