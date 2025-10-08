@@ -4,6 +4,7 @@ namespace Icinga\Module\Feeds\Controllers;
 
 use Icinga\Module\Feeds\Controller\BaseController;
 use Icinga\Module\Feeds\FeedReader;
+use Icinga\Module\Feeds\Storage\FeedDefinition;
 use Icinga\Module\Feeds\Storage\StorageFactory;
 use Icinga\Module\Feeds\Web\FeedsTable;
 
@@ -86,12 +87,7 @@ class FeedsController extends BaseController
         $failed = [];
 
         foreach ($storage->getFeeds() as $feed) {
-            if ($feeds !== null && !in_array($feed->name, $feeds)) {
-                continue;
-            }
-
-            // Skip inactive feeds
-            if (!$feed->isActive) {
+            if (!$this->shouldShowFeed($feeds, $feed)) {
                 continue;
             }
 
@@ -139,6 +135,14 @@ class FeedsController extends BaseController
         );
 
         $this->setAutorefreshInterval(300);
+    }
+
+    protected function shouldShowFeed(?array $feeds, FeedDefinition $feed): bool
+    {
+        if ($feeds !== null) {
+            return in_array($feed->name, $feeds);
+        }
+        return $feed->isActive;
     }
 
     protected function renderFailedFeedNotification(array $failed): void
