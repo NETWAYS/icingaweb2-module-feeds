@@ -142,7 +142,7 @@ class FeedsController extends BaseController
         if ($feeds !== null) {
             return in_array($feed->name, $feeds);
         }
-        return $feed->isActive;
+        return $feed->isVisible;
     }
 
     protected function renderFailedFeedNotification(array $failed): void

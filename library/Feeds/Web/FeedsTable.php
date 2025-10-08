@@ -36,7 +36,7 @@ class FeedsTable extends Table
         $this->getHeader()->addHtml(self::row([
             $this->translate('Name'),
             $this->translate('Type'),
-            $this->translate('Active'),
+            $this->translate('Visible'),
             '', // For QuickActions
         ], null, 'th'));
 
@@ -68,7 +68,7 @@ class FeedsTable extends Table
             $r = Table::tr();
             $rname = Table::td($name);
             $rtype = Table::td(Text::create($feed->type->display()), ['class' => 'text-dim']);
-            $ractive = Table::td($feed->isActive ? $this->translate('yes') : $this->translate('no'));
+            $ractive = Table::td($feed->isVisible ? $this->translate('yes') : $this->translate('no'));
             $ractions = Table::td($quickActions, ['class' => 'action-col']);
 
             $r->addHtml($rname);
