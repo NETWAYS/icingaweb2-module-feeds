@@ -137,6 +137,9 @@ class FeedsController extends BaseController
         $this->setAutorefreshInterval(300);
     }
 
+    /**
+     * shouldShowFeed is a small helper to decide whether or not to show a need
+     */
     protected function shouldShowFeed(?array $feeds, FeedDefinition $feed): bool
     {
         if ($feeds !== null) {
@@ -145,6 +148,9 @@ class FeedsController extends BaseController
         return $feed->isVisible;
     }
 
+    /**
+     * renderFailedFeedNotification renders an error message for failed a list of feeds
+     */
     protected function renderFailedFeedNotification(array $failed): void
     {
         if (count($failed) < 1) {
