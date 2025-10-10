@@ -25,10 +25,14 @@ The list of configured feeds is stored here: `/etc/icingaweb2/modules/feeds/feed
 To configure feed in the dashboard you can adjust the URLs. Example:
 
 ```
+# Single feed with the last 25 articles
 feeds/feed?feed=myfeed&limit=25
 
-feeds/feed?feed=myfeed&limit=20&view=minimal
+# Single feed with the last 10 articles in the minimal or common view
+feeds/feed?feed=myfeed&limit=10&view=minimal
+feeds/feed?feed=myfeed&limit=10&view=common
 
+# Multiple feeds with the last 10 articles
 feeds/feeds?feeds=myfeed,yourfeed&limit=10
 ```
 

@@ -18,6 +18,15 @@ if ($auth->hasPermission('feeds/view')) {
         ->setUrl('feeds/feeds');
 }
 
+$this->provideConfigTab(
+    'general',
+    [
+        'title' => $this->translate('General'),
+        'label' => $this->translate('General'),
+        'url' => 'config/general'
+    ]
+);
+
 $this->provideCssFile('item.less');
 $this->provideCssFile('view-mode-switcher.less');
 
