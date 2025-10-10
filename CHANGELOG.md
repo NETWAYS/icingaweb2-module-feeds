@@ -5,6 +5,7 @@
 - Make style more consistent with IcingaDB
 - Add name of feed in lists
 - Add option to enable and disable feeds
+- Add configuration form
 
 ## v0.1.0
 
