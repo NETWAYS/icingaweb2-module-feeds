@@ -7,6 +7,7 @@ use Icinga\Module\Feeds\Parser\Result\FeedItem;
 use ipl\Html\Attributes;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\HtmlElement;
+use ipl\Html\Text;
 use ipl\Web\Widget\Icon;
 use ipl\Web\Widget\TimeAgo;
 
@@ -148,6 +149,16 @@ class Item extends BaseHtmlElement
             ]
         ));
 
+        $feedTitle = new HtmlElement(
+            'span',
+            Attributes::create(['class' => 'text-dim']),
+            Text::create($this->item->feed->title)
+        );
+
+        $title->add(
+            $feedTitle
+        );
+
         $header->add($title);
 
         // Once we migrate to IPL ItemRenderer this goes into assembleExtendedInfo
@@ -155,7 +166,7 @@ class Item extends BaseHtmlElement
             'div',
             Attributes::create(['class' => 'feed-item-extended-info text-dim']),
             [
-                $this->item->feed->title, ' | ', $this->getDate()
+                $this->getDate()
             ],
         );
 
