@@ -18,6 +18,9 @@ class FeedDefinition
     ) {
     }
 
+    /**
+     * toArray returns an array representation of the object
+     */
     public function toArray(): array
     {
         return [
@@ -29,6 +32,9 @@ class FeedDefinition
         ];
     }
 
+    /**
+     * fromArray returns object representation of a feed array
+     */
     public static function fromArray(array $data): FeedDefinition
     {
         return new self(

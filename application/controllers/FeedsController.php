@@ -16,6 +16,9 @@ use ipl\Web\Widget\Link;
 
 use Exception;
 
+/**
+ * FeedControllers is for viewings multiple feed
+ */
 class FeedsController extends BaseController
 {
     protected function addTabs(
@@ -43,6 +46,9 @@ class FeedsController extends BaseController
         }
     }
 
+    /**
+     * indexAction lists the items of all feeds
+     */
     public function indexAction(): void
     {
         $this->assertPermission('feeds/view');
@@ -87,6 +93,7 @@ class FeedsController extends BaseController
         $failed = [];
 
         foreach ($storage->getFeeds() as $feed) {
+            // Skip disabled feeds
             if (!$this->shouldShowFeed($feeds, $feed)) {
                 continue;
             }
@@ -112,7 +119,7 @@ class FeedsController extends BaseController
 
         Benchmark::measure('Started merging feeds');
 
-        // Sort items
+        // Sort items by newest date
         usort($items, function ($a, $b) {
             return -($a->compareDate($b));
         });
@@ -175,6 +182,9 @@ class FeedsController extends BaseController
         ));
     }
 
+    /**
+     * listAction lists all available feeds in the storage
+     */
     public function listAction(): void
     {
         $this->assertPermission('feeds/list');
