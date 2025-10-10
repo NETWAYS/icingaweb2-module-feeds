@@ -4,4 +4,4 @@ Requires:
   Libraries: icinga-php-library (>=0.16.0), icinga-php-thirdparty (>=0.11.0)
 Description: Icinga Web Feeds
   This module fetches external RSS, JSONFeed and Atom feeds.
-  It provides both a merged and single view that can be included in dashbaords.
+  It provides both a merged and single view that can be included in dashboards.
