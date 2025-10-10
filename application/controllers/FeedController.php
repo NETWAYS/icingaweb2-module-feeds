@@ -17,8 +17,14 @@ use ipl\Html\HtmlElement;
 
 use Exception;
 
+/**
+ * FeedController is for managing and viewing a single feed
+ */
 class FeedController extends BaseController
 {
+    /**
+     * indexAction lists the items of a feed
+     */
     public function indexAction(): void
     {
         $this->assertPermission('feeds/view');
@@ -117,6 +123,9 @@ class FeedController extends BaseController
         return [$url, FeedType::fromDisplay($type), $name];
     }
 
+    /**
+     * createFeed creates a new feed in the storage
+     */
     public function createAction(): void
     {
         $this->assertPermission('feeds/modify');
@@ -143,6 +152,9 @@ class FeedController extends BaseController
         $this->addContent($form);
     }
 
+    /**
+     * editAction is for modifying a feed in the storage
+     */
     public function editAction(): void
     {
         $this->assertPermission('feeds/modify');
