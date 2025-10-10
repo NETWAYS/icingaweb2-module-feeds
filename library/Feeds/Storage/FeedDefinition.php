@@ -34,8 +34,8 @@ class FeedDefinition
         return new self(
             trim($data['name']),
             trim($data['url']),
-            trim($data['description']),
-            $data['is_visible'],
+            trim($data['description'] ?? ''),
+            $data['is_visible'] ?? true,
             FeedType::fromDisplay(trim($data['type']) ?? 'auto'),
         );
     }
