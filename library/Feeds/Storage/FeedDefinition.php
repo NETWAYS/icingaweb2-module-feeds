@@ -13,6 +13,7 @@ class FeedDefinition
         public string   $name,
         public string   $url,
         public string   $description = '',
+        public bool     $isVisible = true,
         public FeedType $type = FeedType::Auto,
     ) {
     }
@@ -23,18 +24,18 @@ class FeedDefinition
             'name' => trim($this->name),
             'url' => trim($this->url),
             'description' => trim($this->description),
+            'is_visible' => $this->isVisible,
             'type' => $this->type->display(),
         ];
     }
 
     public static function fromArray(array $data): FeedDefinition
     {
-        $description = $data['description'] ?? null;
-
         return new self(
             trim($data['name']),
             trim($data['url']),
-            trim($data['description']),
+            trim($data['description'] ?? ''),
+            $data['is_visible'] ?? true,
             FeedType::fromDisplay(trim($data['type']) ?? 'auto'),
         );
     }
