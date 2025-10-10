@@ -155,7 +155,7 @@ class Item extends BaseHtmlElement
             'div',
             Attributes::create(['class' => 'feed-item-extended-info text-dim']),
             [
-                $this->getDate()
+                $this->item->feed->title, ' | ', $this->getDate()
             ],
         );
 
