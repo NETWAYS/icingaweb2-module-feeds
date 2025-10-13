@@ -4,6 +4,8 @@
 
 Icinga Web Module for web feeds like RSS or Atom.
 
+![Icinga Feeds Light Mode](doc/_images/screenshot_light.png)
+
 ## Features
 
 * Supports RSS, JSONFeed and Atom feeds
