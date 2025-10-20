@@ -100,7 +100,7 @@ class FeedsController extends BaseController
 
             try {
                 $reader = new FeedReader($feed->url, $this->Config(), $feed->type);
-                $data = $reader->fetch('feed-' . $feed->name);
+                $data = $reader->fetch('feed-' . $feed->name, $feed->pollingInterval);
                 $feedsCounter++;
             } catch (Exception) {
                 $failed[] = $feed->name;

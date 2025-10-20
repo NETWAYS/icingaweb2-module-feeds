@@ -122,11 +122,13 @@ class FeedReader
     /**
     * fetch loads a feed either from the cache or from its URL
     */
-    public function fetch(?string $cacheKey = null): ?Feed
+    public function fetch(?string $cacheKey = null, ?int $cacheDurationInSeconds = null): ?Feed
     {
         // We don't expect feeds to update very frequently, to avoid
         // 429 errors we set the default to 12 hours
-        $cacheDurationInSeconds = $this->config->get('cache', 'duration', 43200);
+        if ($cacheDurationInSeconds === null) {
+            $cacheDurationInSeconds = $this->config->get('cache', 'duration', 43200);
+        }
         $cache = FeedCache::instance('feeds');
 
         if ($cacheKey !== null && $cacheDurationInSeconds > 0) {
