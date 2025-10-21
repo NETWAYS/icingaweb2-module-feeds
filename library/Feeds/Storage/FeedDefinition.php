@@ -15,6 +15,7 @@ class FeedDefinition
         public string   $description = '',
         public bool     $isVisible = true,
         public FeedType $type = FeedType::Auto,
+        public ?int     $pollingInterval = null,
     ) {
     }
 
@@ -29,6 +30,7 @@ class FeedDefinition
             'description' => trim($this->description),
             'is_visible' => $this->isVisible,
             'type' => $this->type->display(),
+            'polling_interval' => $this->pollingInterval,
         ];
     }
 
@@ -43,6 +45,7 @@ class FeedDefinition
             trim($data['description'] ?? ''),
             $data['is_visible'] ?? true,
             FeedType::fromDisplay(trim($data['type']) ?? 'auto'),
+            $data['polling_interval'] ?? null,
         );
     }
 }

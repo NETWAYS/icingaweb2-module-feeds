@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Feeds\Forms;
 
+use Icinga\Application\Config;
 use Icinga\Module\Feeds\FeedCache;
 
 use Icinga\Module\Feeds\Parser\FeedType;
@@ -24,10 +25,11 @@ class FeedForm extends CompatForm
 
     protected ?string $deleteButtonName = null;
 
-    // Pattern to valide feed names
+    // Pattern to validate feed names
     protected const VALID_NAME = '/^[a-zA-Z0-9\-_\. ]+$/';
 
     public function __construct(
+        protected Config $config,
         protected StorageInterface $storage,
         protected ?FeedDefinition $feed,
     ) {
@@ -95,6 +97,19 @@ class FeedForm extends CompatForm
                 'description' => $this->translate(
                     'Show or hide this feed. Hidden feeds will not be fetched in the feeds view by default. They can still explicitly requested via their name.'
                 )
+            ]
+        );
+
+        $cacheDurationInSeconds = $this->config->get('cache', 'duration', 43200);
+        $this->addElement(
+            'number',
+            'polling_interval',
+            [
+                'label' => $this->translate('Polling interval'),
+                'description' => $this->translate(
+                    'How often the feed should be updated from the source (in seconds)'
+                ),
+                'placeholder' => $cacheDurationInSeconds . " (" . $this->translate('inherited from module configuration') . ")",
             ]
         );
 
@@ -181,6 +196,7 @@ class FeedForm extends CompatForm
             $url = trim($this->getValue('url'));
             $isVisible = $this->getElement('is_visible')->isChecked();
             $type = FeedType::fromDisplay($this->getValue('type') ?? 'auto');
+            $pollingInterval = $this->getValue('polling_interval') ?? null;
             $description = trim($this->getValue('description'));
 
             if ($this->isCreateForm()) {
@@ -190,6 +206,7 @@ class FeedForm extends CompatForm
                     $description,
                     $isVisible,
                     $type,
+                    $pollingInterval,
                 );
 
                 if ($this->storage->getFeedByName($name) !== null) {
@@ -218,6 +235,7 @@ class FeedForm extends CompatForm
             $this->feed->type = $type;
             $this->feed->isVisible = $isVisible;
             $this->feed->description = $description;
+            $this->feed->pollingInterval = $pollingInterval;
 
             if ($isRename) {
                 $this->storage->addFeed($this->feed);

@@ -48,7 +48,7 @@ class FeedController extends BaseController
 
         $this->addTitle($this->translate('Feed'), $controlWrapper);
 
-        [$url, $type, $name] = $this->getFeedInfo();
+        [$url, $type, $name, $interval] = $this->getFeedInfo();
 
         if ($url === null) {
             $this->displayError($this->translate('No such feed configured'));
@@ -66,7 +66,7 @@ class FeedController extends BaseController
 
         try {
             $reader = new FeedReader($url, $this->Config(), $type);
-            $data = $reader->fetch($name);
+            $data = $reader->fetch($name, $interval);
         } catch (Exception $ex) {
             $this->displayError($ex->getMessage());
             return;
@@ -103,16 +103,16 @@ class FeedController extends BaseController
             $feed = $storage->getFeedByName($name);
 
             if ($feed === null) {
-                return [null, null, null];
+                return [null, null, null, null];
             }
 
-            return [$feed->url, $feed->type, 'feed-' . $feed->name];
+            return [$feed->url, $feed->type, 'feed-' . $feed->name, $feed->pollingInterval];
         }
 
         $url = $this->params->shift('url');
 
         if ($url === null or $url === '') {
-            return [null, null, null];
+            return [null, null, null, null];
         }
 
         $this->assertPermission('feeds/view/arbitrary');
@@ -120,7 +120,7 @@ class FeedController extends BaseController
         $type = $this->params->shift('type') ?? 'auto';
         $name = 'url-' . sha1($url . ':' . $type);
 
-        return [$url, FeedType::fromDisplay($type), $name];
+        return [$url, FeedType::fromDisplay($type), $name, null];
     }
 
     /**
@@ -140,7 +140,7 @@ class FeedController extends BaseController
         $this->addTitle($this->translate('Create a new feed'));
 
         $storage = StorageFactory::getStorage();
-        $form = new FeedForm($storage, null);
+        $form = new FeedForm($this->Config(), $storage, null);
 
         $form->on(Form::ON_SUCCESS, function () {
             Notification::success($this->translate('Created new feed'));
@@ -181,7 +181,7 @@ class FeedController extends BaseController
         $title = $this->translate('Edit feed');
         $this->setTitle($title);
 
-        $form = new FeedForm($storage, $feed);
+        $form = new FeedForm($this->Config(), $storage, $feed);
 
         $form->populate([
             'name' => $feed->name,
@@ -189,6 +189,7 @@ class FeedController extends BaseController
             'description' => $feed->description,
             'is_visible' => $feed->isVisible,
             'type' => $feed->type->display(),
+            'polling_interval' => $feed->pollingInterval,
         ]);
 
         $form->on(Form::ON_SUCCESS, function () {
