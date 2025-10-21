@@ -2,7 +2,6 @@
 
 namespace Icinga\Module\Feeds\Forms;
 
-use Icinga\Data\ResourceFactory;
 use Icinga\Forms\ConfigForm as IcingaConfigForm;
 
 class ConfigForm extends IcingaConfigForm
@@ -21,8 +20,8 @@ class ConfigForm extends IcingaConfigForm
         ]);
 
         $this->addElement('number', 'cache_duration', [
-            'label' => t('Lifetime of feed data in the cache in seconds'),
-            'description' => t('Lifetime of feed data in the cache in seconds'),
+            'label' => t('Update interval'),
+            'description' => t('How often to check for new feed updates (in seconds)'),
             'placeholder' => 43200,
         ]);
     }

@@ -12,7 +12,7 @@ Example:
 timeout = 5
 
 [cache]
-; Lifetime of feed data in the cache in seconds
+; Lifetime of feed data in the cache in seconds. This is effectively the polling rate for feeds
 duration = 43200
 ```
 
