@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.2
+
+- Fix some rendering of images in feeds
+- Update documentation
+- Allow setting the refresh rate per feed
+
 ## v0.1.1
 
 - Make style more consistent with IcingaDB
