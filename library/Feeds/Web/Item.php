@@ -103,7 +103,7 @@ class Item extends BaseHtmlElement
 
     protected function getContentElement(): ?BaseHtmlElement
     {
-        $text = $this->item->description;
+        $text = $this->item->description ?? '';
         $description = new FeedContent($text);
 
         return HtmlElement::create(
@@ -122,7 +122,10 @@ class Item extends BaseHtmlElement
 
     protected function getDate(): BaseHtmlElement
     {
-        return (new TimeAgo($this->item->date->getTimestamp()));
+        $d = $this->item->date;
+        $ts = $this->item->date !== null ? $this->item->date->getTimestamp() : 0;
+
+        return (new TimeAgo($ts));
     }
 
     protected function assembleHeader(): BaseHtmlElement

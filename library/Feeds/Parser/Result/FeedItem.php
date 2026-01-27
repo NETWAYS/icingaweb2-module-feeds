@@ -12,7 +12,7 @@ class FeedItem
     public ?Feed $feed = null;
     public ?string $title = null;
     public ?string $link = null;
-    public ?string $description = null;
+    public string $description = '';
     public array $categories = [];
     public ?string $creator = null;
     public ?string $image = null;
@@ -20,8 +20,8 @@ class FeedItem
 
     public function compareDate(FeedItem $other): int
     {
-        $ad = $this->date ?? new DateTime('NOW');
-        $bd = $other->date ?? new DateTime('NOW');
+        $ad = $this->date ?? new DateTime('@0');
+        $bd = $other->date ?? new DateTime('@0');
 
         if ($ad == $bd) {
             return 0;
