@@ -8,7 +8,7 @@ class StorageFactory
 
     protected static function getStorageImpl(): StorageInterface
     {
-        // TODO: Once there are multiple storage options they can be determined
+        // NOTE: Once there are multiple storage options they can be determined
         // from the config file
         return new FilesystemStorage();
     }

@@ -20,7 +20,7 @@ duration = 43200
 
 Feeds can be added, configured and removed in Icinga Web.
 
-The list of configured feeds is stored here: `/etc/icingaweb2/modules/feeds/feeds.json`
+The the configured feeds are stored here: `/etc/icingaweb2/modules/feeds/`
 
 To configure feed in the dashboard you can adjust the URLs. Example:
 

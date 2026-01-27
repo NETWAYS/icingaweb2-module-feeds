@@ -40,11 +40,11 @@ class FeedDefinition
     public static function fromArray(array $data): FeedDefinition
     {
         return new self(
-            trim($data['name']),
-            trim($data['url']),
+            trim($data['name'] ?? ''),
+            trim($data['url'] ?? ''),
             trim($data['description'] ?? ''),
             $data['is_visible'] ?? true,
-            FeedType::fromDisplay(trim($data['type']) ?? 'auto'),
+            FeedType::fromDisplay(trim($data['type'] ?? 'auto')),
             $data['polling_interval'] ?? null,
         );
     }

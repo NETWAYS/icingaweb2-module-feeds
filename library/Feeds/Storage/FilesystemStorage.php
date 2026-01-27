@@ -3,32 +3,40 @@
 namespace Icinga\Module\Feeds\Storage;
 
 use Icinga\Application\Icinga;
+use Icinga\Exception\NotReadableError;
+use Icinga\Exception\NotWritableError;
 use Icinga\Exception\SystemPermissionException;
+use Icinga\Util\DirectoryIterator;
+use Icinga\Util\Json;
 
 /**
  * FilesystemStorage is used to store the feeds configuration locally
  */
 class FilesystemStorage implements StorageInterface
 {
-    const FILE_NAME = "feeds.json";
+    const FILE_SUFFIX = ".json";
     const JSON_FLAGS = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;
-    const VERSION = 1;
 
     protected array $feeds = [];
     protected bool $loaded = false;
 
-    protected function getConfigFile(): string
+    /**
+     * getConfigDir returns this module's configuration directory
+     */
+    protected function getConfigDir(): string
     {
         return Icinga::app()
             ->getModuleManager()
             ->getModule('feeds')
-            ->getConfigDir() . DIRECTORY_SEPARATOR . self::FILE_NAME;
+            ->getConfigDir();
     }
 
+    /**
+     * ensureConfigDir ensures the module's configuration directory exists
+     */
     protected function ensureConfigDir(): void
     {
-        $file = $this->getConfigFile();
-        $dir = dirname($file);
+        $dir = $this->getConfigDir();
 
         if (!is_dir($dir)) {
             if (!is_dir(dirname($dir))) {
@@ -42,18 +50,65 @@ class FilesystemStorage implements StorageInterface
         }
     }
 
-    protected function ensureConfigFile(): void
+    /**
+     * loadFeedFile loads a feed's file by its name
+     */
+    protected function loadFeedFile(string $filename): FeedDefinition
     {
-        $file = $this->getConfigFile();
-        $this->ensureConfigDir();
+        $filePath = $this->getConfigDir() . DIRECTORY_SEPARATOR . $filename;
 
-        if (!is_file($file)) {
-            $data = ['version' => self::VERSION];
+        if (!is_readable($filePath)) {
+            throw new NotReadableError('Could not read file %s', $filePath);
+        }
 
-            if (file_put_contents($file, json_encode($data, static::JSON_FLAGS)) === false) {
-                throw new SystemPermissionException('Could not write config file "%s"', dirname($file));
+        $data = file_get_contents($filePath);
+
+        if ($data === false) {
+            throw new NotReadableError('Could not read file %s', $filePath);
+        }
+
+        $json = Json::decode($data, true);
+        $feed = FeedDefinition::fromArray($json);
+
+        return $feed;
+    }
+
+    /**
+     * storeFeedFile stores a feed as JSON in the configuration directory
+     */
+    protected function storeFeedFile(FeedDefinition $feed): void
+    {
+        // Note: The frontend form validates the characters in a feed's name
+        $filePath = $this->getConfigDir() . DIRECTORY_SEPARATOR . $feed->name . self::FILE_SUFFIX;
+
+        $exists = file_exists($filePath);
+        $content = Json::encode($feed->toArray(), static::JSON_FLAGS);
+        // Not atomic but that's fine for now
+        if (file_put_contents($filePath, $content, LOCK_EX) === false) {
+            throw new NotWritableError('Could not save to %s', $filePath);
+        }
+
+        // If this is a new file, we make sure to set the mode
+        if ($exists === false) {
+            $fileMode = intval('0660', 8);
+            if (false === @chmod($filePath, $fileMode)) {
+                throw new NotWritableError('Failed to set file mode "0660" on file "%s"', $filePath);
             }
         }
+    }
+
+    /**
+     * removeFeedFile removes a feed's file by its anme
+     */
+    public function removeFeedFile(string $filename): bool
+    {
+        $filePath = $this->getConfigDir() . DIRECTORY_SEPARATOR . $filename . self::FILE_SUFFIX;
+
+        if (file_exists($filePath)) {
+            return unlink($filePath);
+        }
+
+        return false;
     }
 
     public function getFeeds(): array
@@ -68,21 +123,10 @@ class FilesystemStorage implements StorageInterface
         return $this->feeds[$name] ?? null;
     }
 
-    public function removeFeed(string|FeedDefinition $feed): bool
+    public function removeFeed(string $feedname): bool
     {
-        if (!is_string($feed)) {
-            return $this->removeFeed($feed->name);
-        }
-
-        if (!$this->getFeedByName($feed)) {
-            return false;
-        }
-
-        unset($this->feeds[$feed]);
-
-        $this->flush();
-
-        return true;
+        // TODO: This won't work when the feedname and filename don't match
+        return $this->removeFeedFile($feedname);
     }
 
     public function addFeed(FeedDefinition $feed): bool
@@ -102,21 +146,10 @@ class FilesystemStorage implements StorageInterface
 
     public function flush(): void
     {
-        $data = [
-            'version' => self::VERSION,
-            'feeds' => []
-        ];
+        $this->ensureConfigDir();
 
         foreach ($this->getFeeds() as $feed) {
-            $data['feeds'][] = $feed->toArray();
-        }
-
-        $this->ensureConfigFile();
-
-        $file = $this->getConfigFile();
-
-        if (file_put_contents($file, json_encode($data, static::JSON_FLAGS)) === false) {
-            throw new SystemPermissionException('Could not write config file "%s"', dirname($file));
+            $this->storeFeedFile($feed);
         }
     }
 
@@ -127,29 +160,24 @@ class FilesystemStorage implements StorageInterface
         }
 
         $this->feeds = [];
+        $this->ensureConfigDir();
 
-        $this->ensureConfigFile();
-        $rawData = file_get_contents($this->getConfigFile());
+        // Load the JSON files for the feeds from the config directory
+        $directory = new DirectoryIterator($this->getConfigDir(), self::FILE_SUFFIX);
 
-        if ($rawData === false) {
-            throw new SystemPermissionException('Could not read config file "%s"', $this->getConfigFile());
-        }
-
-        $json = json_decode($rawData, true);
-
-        if ($json === null) {
-            throw new SystemPermissionException('Could not read config file "%s"', $this->getConfigFile());
-        }
-
-        if (!array_key_exists('version', $json)) {
-            throw new SystemPermissionException("Config file doesn't contain a version number. File: %s", $this->getConfigFile());
-        }
-
-        if (array_key_exists('feeds', $json)) {
-            foreach ($json['feeds'] as $feedData) {
-                $feed = FeedDefinition::fromArray($feedData);
-                $this->feeds[$feed->name] = $feed;
+        foreach ($directory as $name => $path) {
+            if (is_dir($path)) {
+                // Do not descend and ignore directories
+                continue;
             }
+
+            $feed = $this->loadFeedFile($name);
+
+            if ($feed->name === '') {
+                continue;
+            }
+
+            $this->feeds[$feed->name] = $feed;
         }
 
         $this->loaded = true;
@@ -159,7 +187,7 @@ class FilesystemStorage implements StorageInterface
     {
         // NOTE: This completely removes the old data before loading the new data.
         // So if the new version is invalid there is no fallback data to rely on.
-        $this->loaded = true;
+        $this->loaded = false;
         $this->load();
     }
 }
