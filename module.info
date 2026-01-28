@@ -1,5 +1,5 @@
 Module: Feeds
-Version: 0.1.2
+Version: 0.2.0
 Requires:
   Libraries: icinga-php-library (>=0.16.0), icinga-php-thirdparty (>=0.11.0)
 Description: Icinga Web Feeds

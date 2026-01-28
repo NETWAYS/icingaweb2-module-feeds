@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.0
+
+- Refactor FilesystemStorage to use single files per feed
+- Fix error on missing item date and description
+
 ## v0.1.2
 
 - Fix some rendering of images in feeds

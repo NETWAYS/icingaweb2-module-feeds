@@ -2,9 +2,7 @@
 
 The module configuration is stored in `/etc/icingaweb2/modules/feeds/config.ini`.
 
-All options use defaults, there is no need to create this file.
-
-Example:
+All options use defaults, there is no need to create this file. Example:
 
 ```ini
 [http]
@@ -15,6 +13,8 @@ timeout = 5
 ; Lifetime of feed data in the cache in seconds. This is effectively the polling rate for feeds
 duration = 43200
 ```
+
+The module uses the Icinga Web2 FileCache to cache fetched data.
 
 ## Feeds
 
