@@ -188,7 +188,7 @@ class FeedForm extends CompatForm
         $cache = FeedCache::instance('feeds');
 
         if ($this->shouldBeDeleted()) {
-            $this->storage->removeFeed($this->feed);
+            $this->storage->removeFeed($this->feed->name);
             // Clear the cache on a delete
             $cache->clear('feed-' . $this->feed->name);
         } elseif ($this->getSubmitButton()->hasBeenPressed() ?? false) {
@@ -227,7 +227,7 @@ class FeedForm extends CompatForm
                     Notification::error($this->translate(sprintf("A feed with the name %s already exists", $name)));
                     return;
                 }
-                $this->storage->removeFeed($this->feed);
+                $this->storage->removeFeed($this->feed->name);
             }
 
             $this->feed->name = $name;
