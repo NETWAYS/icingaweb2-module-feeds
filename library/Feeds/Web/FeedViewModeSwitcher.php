@@ -99,7 +99,7 @@ class FeedViewModeSwitcher extends Form
      */
     public function getViewMode(): string
     {
-        $viewMode = $this->getPopulatedValue($this->getViewModeParam(), $this->getDefaultViewMode());
+        $viewMode = $this->getPopulatedValue($this->getViewModeParam()) ?? $this->getDefaultViewMode();
 
         if (array_key_exists($viewMode, static::$viewModes)) {
             return $viewMode;
