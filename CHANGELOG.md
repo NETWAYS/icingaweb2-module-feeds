@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.1
+
+- Fix non-RSS 2.0 feeds not working
+- Use Null coalescing operator instead of default value of getPopulatedValue
+
 ## v0.2.0
 
 - Refactor FilesystemStorage to use single files per feed
