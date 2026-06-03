@@ -13,6 +13,7 @@ enum FeedType: int
     case RSS = 1;
     case Atom = 2;
     case Jsonfeed = 3;
+    case RSS1 = 4;
 
     /**
      * display returns the string representation of the type
@@ -22,6 +23,7 @@ enum FeedType: int
         return match ($this) {
             self::Auto => 'auto',
             self::RSS => 'rss',
+            self::RSS1 => 'rss1.0',
             self::Atom => 'atom',
             self::Jsonfeed => 'jsonfeed',
             default => throw new Exception('Unreachable code')
@@ -36,6 +38,7 @@ enum FeedType: int
         return match ($display) {
             'auto' => self::Auto,
             'rss' => self::RSS,
+            'rss1.0' => self::RSS1,
             'atom' => self::Atom,
             'jsonfeed' => self::Jsonfeed,
             default => throw new Exception('Invalid FeedType')

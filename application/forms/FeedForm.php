@@ -82,7 +82,8 @@ class FeedForm extends CompatForm
             ),
             'multiOptions' => [
                 'auto' => $this->translate('Determine automatically'),
-                'rss' => $this->translate('RSS'),
+                'rss' => $this->translate('RSS2.0'),
+                'rss1.0' => $this->translate('RSS1.0'),
                 'atom' => $this->translate('Atom'),
                 'jsonfeed' => $this->translate('JSONfeed'),
             ],
