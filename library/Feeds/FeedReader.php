@@ -6,6 +6,7 @@ use Icinga\Module\Feeds\Parser\AtomParser;
 use Icinga\Module\Feeds\Parser\FeedType;
 use Icinga\Module\Feeds\Parser\JsonfeedParser;
 use Icinga\Module\Feeds\Parser\RSSParser;
+use Icinga\Module\Feeds\Parser\RSS1Parser;
 use Icinga\Module\Feeds\Parser\Result\Feed;
 
 use Icinga\Application\Config;
@@ -78,7 +79,13 @@ class FeedReader
                 try {
                     return RSSParser::parse($rawResponse);
                 } catch (Exception $ex) {
-                    // Not an RSS feed
+                    // Not an RSS 2.0 feed
+                }
+
+                try {
+                    return RSS1Parser::parse($rawResponse);
+                } catch (Exception $ex) {
+                    // Not an RSS 1.0 feed
                 }
 
                 try {
@@ -96,6 +103,8 @@ class FeedReader
                 throw new Exception('Unsupported feed type or invalid data in feed');
             case FeedType::RSS:
                 return RSSParser::parse($rawResponse);
+            case FeedType::RSS1:
+                return RSS1Parser::parse($rawResponse);
             case FeedType::Atom:
                 return AtomParser::parse($rawResponse);
             case FeedType::Jsonfeed:
