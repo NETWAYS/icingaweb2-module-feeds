@@ -14,7 +14,7 @@ Note that this is not intended to be a full-featured feed reader.
 
 ## Installation Requirements
 
-* PHP version ≥ 8.1
+* PHP version ≥ 8.2
 
 ## Documentation
 
