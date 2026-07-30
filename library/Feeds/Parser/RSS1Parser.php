@@ -25,7 +25,7 @@ class RSS1Parser
         $xmlElement->registerXPathNamespace('dc', 'http://purl.org/dc/elements/1.1/');
 
         if ($xmlElement->getName() !== 'RDF') {
-            throw new Exception('Invalid RSS1.0-Feed');
+            throw new InvalidFeedTypeException('Invalid RSS1.0-Feed');
         }
 
         $xmlElement->rewind();

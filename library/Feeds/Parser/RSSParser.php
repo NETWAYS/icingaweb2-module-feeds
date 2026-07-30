@@ -24,7 +24,7 @@ class RSSParser
         $xmlElement = new SimpleXMLElement($raw);
 
         if ($xmlElement->getName() !== 'rss') {
-            throw new Exception('Invalid RSS2.0-Feed');
+            throw new InvalidFeedTypeException('Invalid RSS2.0-Feed');
         }
 
         $xmlElement->rewind();

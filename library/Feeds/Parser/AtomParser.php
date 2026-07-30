@@ -24,7 +24,7 @@ class AtomParser
         $xmlElement = new SimpleXMLElement($raw);
 
         if ($xmlElement->getName() !== 'feed') {
-            throw new Exception('Invalid Atom-Feed');
+            throw new InvalidFeedTypeException('Invalid Atom-Feed');
         }
 
         $xmlElement->rewind();
@@ -174,8 +174,7 @@ class AtomParser
             try {
                 $datetime = new DateTime($dateStr);
             } catch (Exception $ex) {
-                // NOTE: Nothing to do here, but be ultimately failed to parse
-                // the time
+                // NOTE: Nothing to do here, but be ultimately failed to parse the time
                 $datetime = false;
             }
         }

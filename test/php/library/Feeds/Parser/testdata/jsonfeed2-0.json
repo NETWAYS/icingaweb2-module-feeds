@@ -1,0 +1,7 @@
+{
+    "version": "https://jsonfeed.org/version/2",
+    "title": "JSONFeed 2.0",
+    "home_page_url": "https://example.org/homepage",
+    "feed_url": "https://example.org/feed.json",
+    "description": "JSONFeed 2.0 does not exist (yet)"
+}

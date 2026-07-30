@@ -6,6 +6,7 @@ use Icinga\Module\Feeds\Parser\Result\Feed;
 use Icinga\Module\Feeds\Parser\Result\FeedItem;
 
 use Exception;
+use JsonException;
 use DateTime;
 use DateTimeInterface;
 
@@ -14,17 +15,28 @@ use DateTimeInterface;
  */
 class JsonfeedParser
 {
+    protected const JSONFEED_V10 = 'https://jsonfeed.org/version/1';
+    protected const JSONFEED_V11 = 'https://jsonfeed.org/version/1.1';
+
     /**
      * parse tries to parse the given string into a Feed object
      */
     public static function parse(string $raw): Feed
     {
-        $json = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
-        if ($json === null) {
-            throw new Exception('Invalid JSONfeed');
+        try {
+            $json = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            throw new InvalidFeedTypeException('Invalid JSONfeed');
         }
 
-        // TODO: validate version field
+        if ($json === null) {
+            throw new InvalidFeedTypeException('Invalid JSONfeed');
+        }
+
+        $version = $json['version'] ?? '';
+        if (!str_contains($version, self::JSONFEED_V10)) {
+            throw new InvalidFeedDataException('Unsupported JSONfeed version');
+        }
 
         return static::parseFeed($json);
     }
@@ -41,7 +53,7 @@ class JsonfeedParser
         $items = $json['items'] ?? null;
 
         if ($items === null) {
-            throw new Exception('JSONfeed contains no items');
+            throw new InvalidFeedDataException('JSONfeed contains no items');
         }
 
         foreach ($items as $jsonItem) {
@@ -63,8 +75,7 @@ class JsonfeedParser
             try {
                 $datetime = new DateTime($dateStr);
             } catch (Exception $ex) {
-                // NOTE: Nothing to do here, but be ultimately failed to parse
-                // the time
+                // NOTE: Nothing to do here, but be ultimately failed to parse the time
                 $datetime = false;
             }
         }
