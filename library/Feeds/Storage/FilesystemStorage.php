@@ -3,6 +3,7 @@
 namespace Icinga\Module\Feeds\Storage;
 
 use Icinga\Application\Icinga;
+use Icinga\Application\Logger;
 use Icinga\Exception\NotReadableError;
 use Icinga\Exception\NotWritableError;
 use Icinga\Exception\SystemPermissionException;
@@ -67,6 +68,7 @@ class FilesystemStorage implements StorageInterface
             throw new NotReadableError('Could not read file %s', $filePath);
         }
 
+        // This will throw an expection, which we will catch just like the others
         $json = Json::decode($data, true);
         $feed = FeedDefinition::fromArray($json);
 
@@ -171,7 +173,12 @@ class FilesystemStorage implements StorageInterface
                 continue;
             }
 
-            $feed = $this->loadFeedFile($name);
+            try {
+                $feed = $this->loadFeedFile($name);
+            } catch (Exception $ex) {
+                Logger::error('Failed to load feed file  "%s": %s', $name, $e);
+                continue;
+            }
 
             if ($feed->name === '') {
                 continue;

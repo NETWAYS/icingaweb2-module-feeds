@@ -87,13 +87,6 @@ class RSSParser
         }
 
         if ($datetime === false) {
-            $datetime = DateTime::createFromFormat(
-                DateTimeInterface::RFC7231,
-                $dateStr,
-            );
-        }
-
-        if ($datetime === false) {
             try {
                 $datetime = new DateTime($dateStr);
             } catch (Exception $ex) {
