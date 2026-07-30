@@ -11,7 +11,7 @@ class ConfigForm extends IcingaConfigForm
         $this->setSubmitLabel(t('Save Changes'));
     }
 
-    public function createElements(array $formData)
+    public function createElements(array $formData): void
     {
         $this->addElement('number', 'http_timeout', [
             'label' => t('Timeout for HTTP calls in seconds'),

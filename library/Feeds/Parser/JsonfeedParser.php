@@ -19,7 +19,7 @@ class JsonfeedParser
      */
     public static function parse(string $raw): Feed
     {
-        $json = json_decode($raw, true);
+        $json = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
         if ($json === null) {
             throw new Exception('Invalid JSONfeed');
         }

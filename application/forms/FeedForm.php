@@ -141,7 +141,7 @@ class FeedForm extends CompatForm
         }
     }
 
-    public function isValid()
+    public function isValid(): bool
     {
         if ($this->getPressedSubmitElement()->getName() === 'delete') {
             $csrfElement = $this->getElement('CSRFToken');
@@ -175,7 +175,7 @@ class FeedForm extends CompatForm
         return $this->deleteButtonName !== null;
     }
 
-    public function shouldBeDeleted()
+    public function shouldBeDeleted(): bool
     {
         if (!$this->hasDeleteButton()) {
             return false;
