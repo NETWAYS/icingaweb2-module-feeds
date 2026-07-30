@@ -193,7 +193,6 @@ class FeedController extends BaseController
         ]);
 
         $form->on(Form::ON_SUCCESS, function () {
-            // TODO: Should have a different message for deletion
             Notification::success($this->translate('Updated feeds'));
             $this->redirectNow('__CLOSE__');
         });

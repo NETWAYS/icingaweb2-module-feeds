@@ -8,6 +8,8 @@ use Icinga\Module\Feeds\Parser\JsonfeedParser;
 use Icinga\Module\Feeds\Parser\RSSParser;
 use Icinga\Module\Feeds\Parser\RSS1Parser;
 use Icinga\Module\Feeds\Parser\Result\Feed;
+use Icinga\Module\Feeds\Parser\InvalidFeedDataException;
+use Icinga\Module\Feeds\Parser\InvalidFeedTypeException;
 
 use Icinga\Application\Config;
 use Icinga\Application\Icinga;
@@ -73,44 +75,32 @@ class FeedReader
     {
         Benchmark::measure('Started parsing feed');
 
-        switch ($this->type) {
-            case FeedType::Auto:
-                try {
-                    return RSSParser::parse($rawResponse);
-                } catch (Exception $ex) {
-                    // Not an RSS 2.0 feed
-                }
+        return match ($this->type) {
+            FeedType::Auto => $this->parseAuto($rawResponse),
+            FeedType::RSS => RSSParser::parse($rawResponse),
+            FeedType::RSS1 => RSS1Parser::parse($rawResponse),
+            FeedType::Atom => AtomParser::parse($rawResponse),
+            FeedType::Jsonfeed => JsonfeedParser::parse($rawResponse),
+            default => throw new InvalidFeedTypeException('Unsupported feed type'),
+        };
+    }
 
-                try {
-                    return RSS1Parser::parse($rawResponse);
-                } catch (Exception $ex) {
-                    // Not an RSS 1.0 feed
-                }
 
-                try {
-                    return AtomParser::parse($rawResponse);
-                } catch (Exception $ex) {
-                    // Not an Atom feed
-                }
+    protected function parseAuto(string $rawResponse): ?Feed
+    {
+        $parsers = [RSSParser::class, RSS1Parser::class, AtomParser::class, JsonfeedParser::class];
 
-                try {
-                    return JsonfeedParser::parse($rawResponse);
-                } catch (Exception $ex) {
-                    // Not an JSONFeed feed
-                }
-
-                throw new Exception('Unsupported feed type or invalid data in feed');
-            case FeedType::RSS:
-                return RSSParser::parse($rawResponse);
-            case FeedType::RSS1:
-                return RSS1Parser::parse($rawResponse);
-            case FeedType::Atom:
-                return AtomParser::parse($rawResponse);
-            case FeedType::Jsonfeed:
-                return JsonfeedParser::parse($rawResponse);
-            default:
-                throw new Exception('Unsupported feed type');
+        foreach ($parsers as $parser) {
+            try {
+                return $parser::parse($rawResponse);
+            } catch (InvalidFeedDataException $e) {
+                throw new Exception('Invalid data in feed: ' . $e->getMessage(), $e->getCode(), $e);
+            } catch (Exception) {
+                // Let's try the next format
+            }
         }
+
+        throw new Exception('Unsupported feed type');
     }
 
     /**

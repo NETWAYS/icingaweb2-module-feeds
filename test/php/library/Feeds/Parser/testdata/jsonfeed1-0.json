@@ -1,6 +1,6 @@
 {
     "version": "https://jsonfeed.org/version/1",
-    "title": "JSONFeed Sample Feed",
+    "title": "JSONFeed 1.0 Sample Feed",
     "home_page_url": "https://example.org/homepage",
     "feed_url": "https://example.org/feed.json",
     "description": "This is my feed description",
