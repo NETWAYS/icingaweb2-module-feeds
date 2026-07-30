@@ -26,6 +26,7 @@ class FeedReader
         protected string $url,
         protected Config $config,
         protected FeedType $type = FeedType::Auto,
+        protected ?Client $client = null,
     ) {
     }
 
@@ -54,9 +55,7 @@ class FeedReader
     {
         $timeoutInSeconds = $this->config->get('http', 'timeout', 5);
 
-        $client = new Client([
-            'timeout' => $timeoutInSeconds,
-        ]);
+        $client = $this->client ?? new Client(['timeout' => $timeoutInSeconds]);
 
         $response = $client->request('GET', $this->url, [
             'headers' => [

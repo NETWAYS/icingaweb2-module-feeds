@@ -1,0 +1,13 @@
+{
+    "require-dev": {
+        "overtrue/phplint": "^9.7",
+        "phpunit/phpunit": "^13.2"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Icinga\\": "_icingaweb2/library/Icinga/",
+            "Icinga\\Module\\Feeds\\": "library/Feeds/",
+            "GuzzleHttp\\Psr7\\": "_libraries/vendor/vendor/guzzlehttp/psr7/src/"
+        }
+    }
+}
