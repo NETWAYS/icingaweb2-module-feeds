@@ -176,7 +176,7 @@ class FilesystemStorage implements StorageInterface
             try {
                 $feed = $this->loadFeedFile($name);
             } catch (Exception $ex) {
-                Logger::error('Failed to load feed file  "%s": %s', $name, $e);
+                Logger::error('Failed to load feed file  "%s": %s', $name, $ex);
                 continue;
             }
 
