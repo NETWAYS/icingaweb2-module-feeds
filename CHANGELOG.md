@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.0
+
+- Bump minimum required version to PHP 8.2
+- Add Csp hook (requires Icinga Web 2.14)
+- Add clicommand to clear cache
+- Validate JSONFeed version and rework feed detection
+- Add connect_timeout to Guzzle Client
+- Various small fixes and more logging
+
 ## v0.2.1
 
 - Fix non-RSS 2.0 feeds not working
