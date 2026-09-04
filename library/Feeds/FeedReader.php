@@ -57,7 +57,10 @@ class FeedReader
     {
         $timeoutInSeconds = $this->config->get('http', 'timeout', 5);
 
-        $client = $this->client ?? new Client(['timeout' => $timeoutInSeconds]);
+        $client = $this->client ?? new Client([
+            'timeout' => $timeoutInSeconds,
+            'connect_timeout' => $timeoutInSeconds,
+        ]);
 
         $response = $client->request('GET', $this->url, [
             'headers' => [
