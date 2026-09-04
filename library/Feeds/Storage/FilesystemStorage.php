@@ -68,7 +68,7 @@ class FilesystemStorage implements StorageInterface
             throw new NotReadableError('Could not read file %s', $filePath);
         }
 
-        // This will throw an expection, which we will catch just like the others
+        // This will throw an exception, which we will catch just like the others
         $json = Json::decode($data, true);
         $feed = FeedDefinition::fromArray($json);
 
@@ -100,7 +100,7 @@ class FilesystemStorage implements StorageInterface
     }
 
     /**
-     * removeFeedFile removes a feed's file by its anme
+     * removeFeedFile removes a feed's file by its name
      */
     public function removeFeedFile(string $filename): bool
     {

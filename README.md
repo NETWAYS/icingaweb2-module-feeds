@@ -15,6 +15,7 @@ Note that this is not intended to be a full-featured feed reader.
 ## Installation Requirements
 
 * PHP version ≥ 8.2
+* Icinga Web2 ≥ 2.14
 
 ## Documentation
 
