@@ -3,7 +3,6 @@
 namespace Icinga\Module\Feeds\ProvidedHook;
 
 use Icinga\Application\Hook\CspHook;
-use Icinga\Authentication\Auth;
 use Icinga\Module\Feeds\Storage\StorageFactory;
 use Icinga\User;
 use ipl\Web\Common\Csp as CspInstance;
@@ -32,7 +31,7 @@ class Csp extends CspHook
 
     public function getCspForUser(User $user): CspInstance
     {
-        if (Auth::getInstance()->hasPermission('feeds/view')) {
+        if ($user->can('feeds/view')) {
             return $this->getCspForAllUsers();
         }
 
