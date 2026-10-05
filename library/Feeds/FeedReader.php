@@ -78,12 +78,14 @@ class FeedReader
     {
         Benchmark::measure('Started parsing feed');
 
+        $response = trim($rawResponse);
+
         return match ($this->type) {
-            FeedType::Auto => $this->parseAuto($rawResponse),
-            FeedType::RSS => RSSParser::parse($rawResponse),
-            FeedType::RSS1 => RSS1Parser::parse($rawResponse),
-            FeedType::Atom => AtomParser::parse($rawResponse),
-            FeedType::Jsonfeed => JsonfeedParser::parse($rawResponse),
+            FeedType::Auto => $this->parseAuto($response),
+            FeedType::RSS => RSSParser::parse($response),
+            FeedType::RSS1 => RSS1Parser::parse($response),
+            FeedType::Atom => AtomParser::parse($response),
+            FeedType::Jsonfeed => JsonfeedParser::parse($response),
             default => throw new InvalidFeedTypeException('Unsupported feed type'),
         };
     }
