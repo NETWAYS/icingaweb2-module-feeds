@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.1
+
+- Fix parsing error for files that do not immediately begin with the XML content
+
 ## v1.0.0
 
 - Bump minimum required version to PHP 8.2
